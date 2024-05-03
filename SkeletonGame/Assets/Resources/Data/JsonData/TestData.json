@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "DataId": 201000,
+      "StringData": "테스트"
+    },
+    {
+      "DataId": 201001,
+      "StringData": "데이터"
+    },
+    {
+      "DataId": 202001,
+      "StringData": "예시"
+    },
+    {
+      "DataId": 202002,
+      "StringData": "입니다"
+    },
+    {
+      "DataId": 202003,
+      "StringData": "네네"
+    },
+    {
+      "DataId": 202004,
+      "StringData": "그렇습니다"
+    }
+  ]
+}
