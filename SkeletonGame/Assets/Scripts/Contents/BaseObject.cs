@@ -18,7 +18,7 @@ public class BaseObject : InitBase
         set
         {
             lookLeft = value;
-            Flip(!value);
+            Flip(value);
         }
     }
 
@@ -28,13 +28,13 @@ public class BaseObject : InitBase
             return false;
 
         Collider = gameObject.GetComponent<Collider2D>();
-        SpriteRender = GetComponent<SpriteRenderer>();
         RigidBody = GetComponent<Rigidbody2D>();
+        SpriteRender = GetComponent<SpriteRenderer>();
 
         return true;
     }
 
-    public void Flip(bool flag)
+    protected virtual void Flip(bool flag)
     {
         if (SpriteRender == null)
             return;

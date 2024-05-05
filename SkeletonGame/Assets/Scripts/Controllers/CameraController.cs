@@ -18,9 +18,8 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-
-
-        FollowingTarget();
+        if(target != null)
+            FollowingTarget();
     }
 
     private void Init()
