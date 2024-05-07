@@ -7,7 +7,6 @@ using static Define;
 public class BaseObject : InitBase
 {
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
-    public Collider2D Collider { get; private set; }
     public SpriteRenderer SpriteRender { get; protected set; }
 
     public override bool Init()
@@ -15,7 +14,6 @@ public class BaseObject : InitBase
         if (base.Init() == false)
             return false;
 
-        Collider = gameObject.GetComponent<Collider2D>();
         SpriteRender = GetComponent<SpriteRenderer>();
 
         return true;
@@ -27,5 +25,10 @@ public class BaseObject : InitBase
             return;
 
         SpriteRender.flipX = flag;
+    }
+
+    public virtual Vector2 GetCenterPosition()
+    {
+        return transform.position;
     }
 }

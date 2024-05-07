@@ -35,14 +35,15 @@ public class Player : Creature
     private Coroutine coPlayerInputController = null;
 
     // 임시 (데이터로 뺄 것)
-    protected float Speed = 5.0f;
-    protected float JumpPower = 10.0f;
+    protected float Speed = 3.0f;
+    protected float JumpPower = 5.0f;
 
 
     private void Start()
     {
         // 임시
         IsPlayerInputControll = true; // 게임 매니저에서 할 것
+        SetInfo(0);
     }
 
     public override bool Init()
@@ -73,6 +74,8 @@ public class Player : Creature
             }
 
             SetRigidVelocityX(moveDirection.x * Speed);
+
+            CreatureState = (moveDirection.x != 0) ? ECreatureState.Move : ECreatureState.Idle;
 
             if (moveDirection.x > 0)
                 LookLeft = false;

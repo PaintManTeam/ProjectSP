@@ -40,6 +40,7 @@ public static class Define
 
     public enum ECreatureState
     {
+        None,
         Idle, // loop
         Move, // loop
         Jump,

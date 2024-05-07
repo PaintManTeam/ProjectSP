@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
     {
         cam = Camera.main;
         cam.transform.position = new Vector3(0, 0, -10);
-
+        cam.orthographicSize = 1.5f;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
     }
@@ -49,8 +49,8 @@ public class CameraController : MonoBehaviour
 
     private void FollowingTarget()
     {
-        clampedX = Mathf.Clamp(_target.transform.position.x, minBound.x + halfWidth, maxBound.x - halfWidth);
-        clampedY = Mathf.Clamp(_target.transform.position.y, minBound.y + halfHeight, maxBound.y - halfHeight);
+        clampedX = Mathf.Clamp(_target.GetCenterPosition().x, minBound.x + halfWidth, maxBound.x - halfWidth);
+        clampedY = Mathf.Clamp(_target.GetCenterPosition().y, minBound.y + halfHeight, maxBound.y - halfHeight);
 
         transform.position = new Vector3(clampedX, clampedY, -10);
     }
