@@ -7,8 +7,8 @@ using static Define;
 public class BaseObject : InitBase
 {
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
-    public Collider2D Collider { get; private set; }
-    public Rigidbody2D RigidBody { get; private set; }
+    protected Collider2D Collider { get; private set; }
+    protected Rigidbody2D RigidBody { get; private set; }
     public SpriteRenderer SpriteRender { get; protected set; }
 
     bool lookLeft = true;
@@ -40,5 +40,20 @@ public class BaseObject : InitBase
             return;
 
         SpriteRender.flipX = flag;
+    }
+
+    protected void SetRigidVelocityX(float x)
+    {
+        RigidBody.velocity = new Vector2(x, RigidBody.velocity.y);
+    }
+
+    protected void SetRigidVelocityY(float y)
+    {
+        RigidBody.velocity = new Vector2(RigidBody.velocity.x, y);
+    }
+
+    protected void SetRigidVelocityZero()
+    {
+        RigidBody.velocity = Vector3.zero;
     }
 }

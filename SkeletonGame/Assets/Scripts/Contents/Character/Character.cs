@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.InputSystem;
 using static Define;
 
 public class Character : BaseObject
@@ -9,6 +10,10 @@ public class Character : BaseObject
     public ECharacterState CharacterState { get; protected set; }
 
     private Animator animator;
+
+    // 임시
+    protected float Speed = 5.0f;
+    protected float JumpPower = 10.0f;
 
     public override bool Init()
     {
@@ -27,6 +32,7 @@ public class Character : BaseObject
 
     }
 
+    #region Animation
     protected void PlayAnimation(ECharacterState state)
     {
         if (animator == null)
@@ -52,4 +58,5 @@ public class Character : BaseObject
     {
         return stateInfo.normalizedTime >= 1.0f;
     }
+    #endregion
 }
