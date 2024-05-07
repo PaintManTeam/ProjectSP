@@ -23,8 +23,21 @@ public static class Define
         Background = 6,
 
     }
-    
-    public enum ECharacterState
+
+    public enum EObjectType
+    {
+        None,
+        Creature,
+        Interaction,
+    }
+
+    public enum ECreatureType
+    {
+        Player,
+        Npc,
+    }
+
+    public enum ECreatureState
     {
         Idle,
         Move,
@@ -33,25 +46,19 @@ public static class Define
         Dead
     }
 
-    public enum EObjectType
+    public enum EInteractionObjectType
     {
-        None,
-        Player,
-        Npc,
-        Interaction,
+
+    }
+
+    public enum EInteractionState
+    {
+
     }
 
     public enum EMapType
     {
         None,
-
-    }
-
-    public enum EInputKey
-    {
-        Left,
-        Right,
-        Jump,
-        Interaction,
+        TestMap
     }
 }

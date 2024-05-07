@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Define;
 
-public class Player : Character
+public class Player : Creature
 {
     // 플레이어를 조작할 수 있는 경우
     private bool _isPlayerInputControll = false;
@@ -33,10 +33,16 @@ public class Player : Character
 
     private Coroutine coPlayerInputController = null;
 
+    // 임시
+    protected float Speed = 5.0f;
+    protected float JumpPower = 10.0f;
+
+
     private void Start()
     {
         // 임시
         IsPlayerInputControll = true;
+        Camera.main.GetComponent<CameraController>().Target = this;
     }
 
     public override bool Init()
@@ -63,7 +69,6 @@ public class Player : Character
                 // 사다리가 있는지 확인해서 사다리를 오르거나 내림
             }
 
-            
             SetRigidVelocityX(moveDirection.x * Speed);
 
             yield return new WaitForFixedUpdate();

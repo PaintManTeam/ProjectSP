@@ -5,11 +5,18 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     Camera cam;
-    Transform target = null;
+    BaseMap map;
 
-    Vector2 maxBound, minBound;
-    float halfHeight, halfWidth;
-    float clampedX, clampedY;
+    public BaseObject _target;
+    public BaseObject Target
+    {
+        get { return _target; }
+        set { _target = value; }
+    }
+
+    public Vector2 maxBound, minBound;
+    public float halfHeight, halfWidth;
+    public float clampedX, clampedY;
 
     private void Awake()
     {
@@ -18,8 +25,10 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(target != null)
+        if(_target != null)
+        {
             FollowingTarget();
+        }
     }
 
     private void Init()
@@ -27,9 +36,11 @@ public class CameraController : MonoBehaviour
         cam = Camera.main;
         cam.transform.position = new Vector3(0, 0, -10);
 
+        halfHeight = cam.orthographicSize;
+        halfWidth = halfHeight * cam.aspect;
     }
 
-    private void SetCameraBounds(Vector2 _maxBound, Vector2 _minBound)
+    public void SetCameraBounds(Vector2 _minBound, Vector2 _maxBound)
     {
         minBound = _minBound;
         maxBound = _maxBound;
@@ -37,8 +48,8 @@ public class CameraController : MonoBehaviour
 
     private void FollowingTarget()
     {
-        clampedX = Mathf.Clamp(target.transform.position.x, minBound.x + halfWidth, maxBound.x - halfWidth);
-        clampedY = Mathf.Clamp(target.transform.position.y, minBound.y + halfHeight, maxBound.y - halfHeight);
+        clampedX = Mathf.Clamp(_target.transform.position.x, minBound.x + halfWidth, maxBound.x - halfWidth);
+        clampedY = Mathf.Clamp(_target.transform.position.y, minBound.y + halfHeight, maxBound.y - halfHeight);
 
         transform.position = new Vector3(clampedX, clampedY, -10);
     }
