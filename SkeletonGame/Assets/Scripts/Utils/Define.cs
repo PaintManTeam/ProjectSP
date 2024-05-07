@@ -28,7 +28,8 @@ public static class Define
     {
         None,
         Creature,
-        Interaction,
+        GimmickObject,
+        
     }
 
     public enum ECreatureType
@@ -39,21 +40,38 @@ public static class Define
 
     public enum ECreatureState
     {
-        Idle,
-        Move,
+        Idle, // loop
+        Move, // loop
         Jump,
-        Climb,
+        FallDown,
+        Climb, // loop
+        Interaction, // loop
         Dead
     }
 
-    public enum EInteractionObjectType
+    public enum EPlayerType
     {
+        TestPlayer,
 
     }
 
-    public enum EInteractionState
+    public enum ENpcType
     {
+        TestNpc,
 
+    }
+
+    public enum EGimmickObjectType
+    {
+        Interaction, // 상호 작용을 하면 기믹 발동
+        Trigger, // 닿을 경우 기믹 발동
+    }
+
+    public enum EGimmickObjectState
+    {
+        StandBy, // 소환만 된 상태
+        Ready, // 기믹 수행이 가능한 상태
+        Complete, // 기믹 완료 상태
     }
 
     public enum EMapType

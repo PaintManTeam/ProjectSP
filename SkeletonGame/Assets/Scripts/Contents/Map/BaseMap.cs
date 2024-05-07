@@ -9,8 +9,8 @@ public class BaseMap : InitBase
 
     public SpriteRenderer boundMapSprite;
 
-    public Vector2 minBound;
-    public Vector2 maxBound;
+    public Vector2 MinBound { get; private set; }
+    public Vector2 MaxBound { get; private set; }
 
     public List<LayerMap> layers = new List<LayerMap>();
 
@@ -22,9 +22,10 @@ public class BaseMap : InitBase
         if (boundMapSprite == null)
             Debug.LogError("BoundMap를 참조하고 있지 않습니다.!");
 
-        minBound = new Vector2(boundMapSprite.bounds.min.x, boundMapSprite.bounds.min.y);
-        maxBound = new Vector2(boundMapSprite.bounds.max.x, boundMapSprite.bounds.max.y);
+        MinBound = new Vector2(boundMapSprite.bounds.min.x, boundMapSprite.bounds.min.y);
+        MaxBound = new Vector2(boundMapSprite.bounds.max.x, boundMapSprite.bounds.max.y);
 
+        /*
         // 바로 아래에 있는 자식들에게 접근해 레이어 맵을 전부 가져옴
         foreach (Transform child in transform)
         {
@@ -33,6 +34,7 @@ public class BaseMap : InitBase
             if (map != null)
                 layers.Add(map);
         }
+        */
 
         return true;
     }
@@ -45,6 +47,6 @@ public class BaseMap : InitBase
 
     public virtual void SetInfo()
     {
-        Camera.main.GetComponent<CameraController>().SetCameraBounds(minBound, maxBound);
+        Camera.main.GetComponent<CameraController>().SetCameraBounds(this);
     }
 }

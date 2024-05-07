@@ -8,5 +8,8 @@ public static class Path
     public const string UI_POPUP_PATH = "UI/Popup";
     public const string UI_WINDOW_PATH = "UI/Window";
 
+    public const string OBJECT_CREATURE_PATH = "Object/Creature";
+    public const string OBJECT_GIMMICK_PATH = "Object/GimmickObject";
+
 
 }

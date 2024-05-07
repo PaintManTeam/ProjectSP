@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     Camera cam;
-    BaseMap map;
+    BaseMap map = null;
 
     public BaseObject _target;
     public BaseObject Target
@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(_target != null)
+        if(_target != null && map != null)
         {
             FollowingTarget();
         }
@@ -40,10 +40,11 @@ public class CameraController : MonoBehaviour
         halfWidth = halfHeight * cam.aspect;
     }
 
-    public void SetCameraBounds(Vector2 _minBound, Vector2 _maxBound)
+    public void SetCameraBounds(BaseMap map)
     {
-        minBound = _minBound;
-        maxBound = _maxBound;
+        this.map = map;
+        minBound = map.MinBound;
+        maxBound = map.MaxBound;
     }
 
     private void FollowingTarget()

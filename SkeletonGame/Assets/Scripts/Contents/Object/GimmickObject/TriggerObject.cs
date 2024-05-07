@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
-public class Npc : Creature
+public class TriggerObject : GimmickObject
 {
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
-
 
         return true;
     }
@@ -17,6 +17,14 @@ public class Npc : Creature
     {
         base.SetInfo(templateID);
 
-        CreatureType = Define.ECreatureType.Npc;
+        GimmickType = EGimmickObjectType.Interaction;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (GimmickState != EGimmickObjectState.Ready)
+            return;
+
+
     }
 }

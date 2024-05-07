@@ -9,7 +9,7 @@ public class BaseObject : InitBase
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
     public Collider2D Collider { get; private set; }
     public SpriteRenderer SpriteRender { get; protected set; }
-    
+
     public override bool Init()
     {
         if (base.Init() == false)

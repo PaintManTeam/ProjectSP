@@ -6,6 +6,7 @@ using static Define;
 public class Creature : BaseObject
 {
     public ECreatureState CreatureState { get; protected set; }
+    public ECreatureType CreatureType { get; protected set; }
 
     protected Rigidbody2D Rigid { get; private set; }
     protected Animator animator;
@@ -21,6 +22,11 @@ public class Creature : BaseObject
         }
     }
 
+    private void Start()
+    {
+        SetInfo(0); // 임시 (오브젝트 매니저에서 스폰 시 수행) 
+    }
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -32,11 +38,9 @@ public class Creature : BaseObject
         return true;
     }
 
-    public virtual void SetInfo()
+    public virtual void SetInfo(int templateID)
     {
-
         CreatureState = ECreatureState.Idle;
-
     }
 
     #region Rigid

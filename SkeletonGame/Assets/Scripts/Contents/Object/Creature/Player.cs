@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using static Define;
 
 public class Player : Creature
@@ -33,7 +34,7 @@ public class Player : Creature
 
     private Coroutine coPlayerInputController = null;
 
-    // 임시
+    // 임시 (데이터로 뺄 것)
     protected float Speed = 5.0f;
     protected float JumpPower = 10.0f;
 
@@ -41,8 +42,7 @@ public class Player : Creature
     private void Start()
     {
         // 임시
-        IsPlayerInputControll = true;
-        Camera.main.GetComponent<CameraController>().Target = this;
+        IsPlayerInputControll = true; // 게임 매니저에서 할 것
     }
 
     public override bool Init()
@@ -53,10 +53,13 @@ public class Player : Creature
         return true;
     }
 
-    public override void SetInfo()
+    public override void SetInfo(int templateID)
     {
-        base.SetInfo();
+        base.SetInfo(templateID);
 
+        CreatureType = ECreatureType.Player;
+
+        Camera.main.GetComponent<CameraController>().Target = this;
     }
 
     #region Input
@@ -70,6 +73,11 @@ public class Player : Creature
             }
 
             SetRigidVelocityX(moveDirection.x * Speed);
+
+            if (moveDirection.x > 0)
+                LookLeft = false;
+            else if (moveDirection.x < 0)
+                LookLeft = true;
 
             yield return new WaitForFixedUpdate();
         }
