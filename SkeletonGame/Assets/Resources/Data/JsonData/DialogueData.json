@@ -1,0 +1,14 @@
+{
+  "dialogues": [
+    {
+      "DataId": 0,
+      "Name": "화자이름",
+      "Dialogue": "대화내용"
+    },
+    {
+      "DataId": 1,
+      "Name": "Npc",
+      "Dialogue": "안녕?ㅋㅋ"
+    }
+  ]
+}

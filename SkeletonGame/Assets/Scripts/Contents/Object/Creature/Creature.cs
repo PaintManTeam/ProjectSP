@@ -14,6 +14,35 @@ public class Creature : BaseObject
             if (_creatureState == value)
                 return;
 
+            bool isChangeState = true;
+            switch(value)
+            {
+                case ECreatureState.Idle:
+                    isChangeState = IdleStateCondition();
+                    break;
+                case ECreatureState.Move:
+                    isChangeState = MoveStateCondition();
+                    break;
+                case ECreatureState.Jump:
+                    isChangeState = JumpStateCondition();
+                    break;
+                case ECreatureState.FallDown:
+                    isChangeState = FallDownStateCondition();
+                    break;
+                case ECreatureState.Climb:
+                    isChangeState = ClimbStateCondition();
+                    break;
+                case ECreatureState.Interaction:
+                    isChangeState = InteractionStateCondition();
+                    break;
+                case ECreatureState.Dead:
+                    isChangeState = DeadStateCondition();
+                    break;
+            }
+
+            if (isChangeState == false)
+                return;
+
             _creatureState = value;
             PlayAnimation(value);
         }
@@ -23,19 +52,24 @@ public class Creature : BaseObject
     protected Rigidbody2D Rigid { get; private set; }
     protected Animator animator;
 
-    public float ColliderRadius { get { return Collider != null ? Collider.size.y : 0.0f; } }
-    public Vector3 CenterPosition { get { return transform.position + Vector3.up * ColliderRadius; } }
+    public float ColliderCenter { get { return Collider != null ? Collider.size.y / 2 : 0.0f; } }
+    public Vector3 CenterPosition { get { return transform.position + Vector3.up * ColliderCenter; } }
 
-    bool lookLeft = true;
+    bool _lookLeft = false;
     public bool LookLeft
     {
-        get { return lookLeft; }
+        get { return _lookLeft; }
         set
         {
-            lookLeft = value;
+            if(_lookLeft == value)
+                return;
+
+            _lookLeft = value;
             Flip(value);
         }
     }
+
+
 
     private void Start()
     {
@@ -59,9 +93,9 @@ public class Creature : BaseObject
         CreatureState = ECreatureState.Idle;
     }
 
-    public override Vector2 GetCenterPosition()
+    public override Vector2 GetTopPosition()
     {
-        return CenterPosition;
+        return CenterPosition + Vector3.up * ColliderCenter;
     }
 
     #region Rigid
@@ -77,8 +111,23 @@ public class Creature : BaseObject
 
     protected void SetRigidVelocityZero()
     {
-        Rigid.velocity = Vector3.zero;
+        Rigid.velocity = Vector2.zero;
     }
+
+    protected Vector2 GetCurrentRigidVelocity()
+    {
+        return Rigid.velocity;
+    }
+    #endregion
+
+    #region State
+    protected virtual bool IdleStateCondition() { return true; }
+    protected virtual bool MoveStateCondition() { return true; }
+    protected virtual bool JumpStateCondition() { return true; }
+    protected virtual bool FallDownStateCondition() { return true; }
+    protected virtual bool ClimbStateCondition() { return true; }
+    protected virtual bool InteractionStateCondition() { return true; }
+    protected virtual bool DeadStateCondition() { return true; }
     #endregion
 
     #region Animation

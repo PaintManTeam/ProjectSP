@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
-public class BaseObject : InitBase
+public abstract class BaseObject : InitBase
 {
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
     public SpriteRenderer SpriteRender { get; protected set; }
@@ -27,8 +27,5 @@ public class BaseObject : InitBase
         SpriteRender.flipX = flag;
     }
 
-    public virtual Vector2 GetCenterPosition()
-    {
-        return transform.position;
-    }
+    public abstract Vector2 GetTopPosition();
 }

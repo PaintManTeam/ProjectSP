@@ -121,4 +121,55 @@ public class Player : Creature
         
     }
     #endregion
+
+    #region State
+    protected override bool IdleStateCondition()
+    {
+
+        
+        return true;
+    }
+
+    protected override bool MoveStateCondition()
+    {
+
+
+        return true;
+    }
+
+    protected override bool JumpStateCondition()
+    {
+
+
+        return true;
+    }
+
+    protected override bool FallDownStateCondition()
+    {
+
+
+        return true;
+    }
+
+    protected override bool ClimbStateCondition()
+    {
+
+
+        return true;
+    }
+
+    protected override bool InteractionStateCondition()
+    {
+
+
+        return true;
+    }
+
+    protected override bool DeadStateCondition()
+    {
+
+
+        return true;
+    }
+    #endregion
 }

@@ -49,8 +49,8 @@ public class CameraController : MonoBehaviour
 
     private void FollowingTarget()
     {
-        clampedX = Mathf.Clamp(_target.GetCenterPosition().x, minBound.x + halfWidth, maxBound.x - halfWidth);
-        clampedY = Mathf.Clamp(_target.GetCenterPosition().y, minBound.y + halfHeight, maxBound.y - halfHeight);
+        clampedX = Mathf.Clamp(_target.GetTopPosition().x, minBound.x + halfWidth, maxBound.x - halfWidth);
+        clampedY = Mathf.Clamp(_target.GetTopPosition().y, minBound.y + halfHeight, maxBound.y - halfHeight);
 
         transform.position = new Vector3(clampedX, clampedY, -10);
     }

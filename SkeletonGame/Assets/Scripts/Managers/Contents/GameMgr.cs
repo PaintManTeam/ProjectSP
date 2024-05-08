@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GameMgr
 {
-    private CameraController camera;
-    private PlayerCharacterController playerCharaceter;
 
 
 }

@@ -12,11 +12,12 @@ public interface ILoader<Key, Value>
 
 public class DataMgr
 {
-    public Dictionary<int, Data.TestData> TestDict { get; private set; } = new Dictionary<int, Data.TestData>();
+    public Dictionary<int, Data.DialogueData> DialogueDict { get; private set; } = new Dictionary<int, Data.DialogueData>();
+    
 
     public void Init()
     {
-        TestDict = LoadJson<Data.TestDataLoader, int, Data.TestData>("TestData").MakeDict();
+        DialogueDict = LoadJson<Data.DialogueDataLoader, int, Data.DialogueData>("DialogueData").MakeDict();
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

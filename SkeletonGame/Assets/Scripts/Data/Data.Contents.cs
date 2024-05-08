@@ -6,24 +6,25 @@ using UnityEngine;
 
 namespace Data
 {
-    #region TestData
+    #region DialogueData
     [Serializable]
-    public class TestData
+    public class DialogueData
     {
         public int DataId;
-        public string StringData;
+        public string Name;
+        public string Dialogue;
     }
 
     [Serializable]
-    public class TestDataLoader : ILoader<int, TestData>
+    public class DialogueDataLoader : ILoader<int, DialogueData>
     {
-        public List<TestData> tests = new List<TestData>();
+        public List<DialogueData> dialogues = new List<DialogueData>();
 
-        public Dictionary<int, TestData> MakeDict()
+        public Dictionary<int, DialogueData> MakeDict()
         {
-            Dictionary<int, TestData> dict = new Dictionary<int, TestData>();
-            foreach (TestData test in tests)
-                dict.Add(test.DataId, test);
+            Dictionary<int, DialogueData> dict = new Dictionary<int, DialogueData>();
+            foreach (DialogueData dialogue in dialogues)
+                dict.Add(dialogue.DataId, dialogue);
             return dict;
         }
     }
