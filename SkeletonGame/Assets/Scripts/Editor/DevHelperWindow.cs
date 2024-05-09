@@ -5,18 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using static Define;
 
-public struct ButtonInfo
-{
-	public readonly Action onClickMenu;
-	public readonly GUIStyle style;
-
-	public ButtonInfo(Action onClickMenu, GUIStyle style)
-	{
-		this.onClickMenu = onClickMenu;
-		this.style = style;
-	}
-}
-
 public class DevHelperWindow : EditorWindow
 {
 	public enum Axis
