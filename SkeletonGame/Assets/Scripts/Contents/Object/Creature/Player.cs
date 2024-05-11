@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -60,7 +61,7 @@ public class Player : Creature
 
         CreatureType = ECreatureType.Player;
 
-        Camera.main.GetComponent<CameraController>().Target = this;
+        Camera.main.GetOrAddComponent<CameraController>().Target = this;
     }
 
     #region Input
