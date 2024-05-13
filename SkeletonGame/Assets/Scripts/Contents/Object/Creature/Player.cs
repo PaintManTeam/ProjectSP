@@ -62,6 +62,15 @@ public class Player : Creature
         CreatureType = ECreatureType.Player;
 
         Camera.main.GetOrAddComponent<CameraController>().Target = this;
+
+        Managers.Input.OnArrowKeyEntered -= OnMove;
+        Managers.Input.OnArrowKeyEntered += OnMove;
+
+        Managers.Input.OnSpaceKeyEntered -= OnJump;
+        Managers.Input.OnSpaceKeyEntered += OnJump;
+
+        Managers.Input.OnEKeyEntered -= OnInteraction;
+        Managers.Input.OnEKeyEntered += OnInteraction;
     }
 
     #region Input
@@ -90,24 +99,18 @@ public class Player : Creature
         coPlayerInputController = null;
     }
 
-    public void OnMove(InputValue value)
+    public void OnMove(Vector2 value)
     {
         if (!IsPlayerInputControll)
             return;
 
-        moveDirection = value.Get<Vector2>();
+        moveDirection = value;
     }
 
     public void OnJump()
     {
         if (!IsPlayerInputControll)
             return;
-
-        Debug.Log("점프 키 입력");
-
-        // 점프가 가능한 상태인지 체크
-
-        // 가능하다면 중력 초기화 후 점프 (2단점프 고려)
 
         SetRigidVelocityY(JumpPower);
     }

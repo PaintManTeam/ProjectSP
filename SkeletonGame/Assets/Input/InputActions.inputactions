@@ -2,11 +2,11 @@
     "name": "InputActions",
     "maps": [
         {
-            "name": "PlayerActions",
+            "name": "InGame",
             "id": "b1fe882a-13d1-44e3-a2b4-f67b1e0335cc",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "ArrowKey",
                     "type": "Value",
                     "id": "f70674f4-ed7a-4e5b-aa89-b5c24d0d03a3",
                     "expectedControlType": "Vector2",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
+                    "name": "SpaceKey",
                     "type": "Button",
                     "id": "354b95dd-9076-4f08-9778-0797692fd590",
                     "expectedControlType": "Button",
@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Interaction",
+                    "name": "EKey",
                     "type": "Button",
                     "id": "eba49e48-9feb-4819-afa6-3702ed0d4ebc",
                     "expectedControlType": "Button",
@@ -41,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Jump",
+                    "action": "SpaceKey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -52,7 +52,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -63,7 +63,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -74,7 +74,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -85,7 +85,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -96,7 +96,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -107,7 +107,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -118,7 +118,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -129,7 +129,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -140,7 +140,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -151,7 +151,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "ArrowKey",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -162,7 +162,35 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Interaction",
+                    "action": "EKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "OutGame",
+            "id": "6b7d8e8f-195e-46e5-9ad8-2670d1700e5b",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "0d179068-c2a6-42e9-b172-c483dbb87de1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a0f5ceec-43da-4fe7-8e77-aec8c2626d3c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -181,6 +209,17 @@
                 },
                 {
                     "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Gamepad",
+            "bindingGroup": "Gamepad",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
                 }
