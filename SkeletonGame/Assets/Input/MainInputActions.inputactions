@@ -1,5 +1,5 @@
 {
-    "name": "InputActions",
+    "name": "MainInputAction",
     "maps": [
         {
             "name": "InGame",
@@ -171,30 +171,8 @@
         {
             "name": "OutGame",
             "id": "6b7d8e8f-195e-46e5-9ad8-2670d1700e5b",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "0d179068-c2a6-42e9-b172-c483dbb87de1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "a0f5ceec-43da-4fe7-8e77-aec8c2626d3c",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": [

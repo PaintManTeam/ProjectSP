@@ -31,7 +31,6 @@ public class InputMgr : MonoBehaviour
     public void Init()
     {
         playerInput = GetComponent<PlayerInput>();
-
         playerInput.defaultControlScheme = currControlSchemeType.ToString();
         playerInput.defaultActionMap = currActionMapType.ToString();
 
@@ -43,7 +42,22 @@ public class InputMgr : MonoBehaviour
 
     }
 
-    #region InGameInput
+    public void OnDeviceLost()
+    {
+        Debug.Log("OnDeviceLost");
+    }
+
+    public void OnDeviceRegained()
+    {
+        Debug.Log("OnDeviceRegained");
+    }
+
+    public void OnControlsChanged()
+    {
+        Debug.Log("OnControlsChanged");
+    }
+
+    #region Keyboard InputEvent
     public void OnArrowKey(InputValue value)
     {
         Vector2 inputVec = value.Get<Vector2>();
@@ -59,9 +73,5 @@ public class InputMgr : MonoBehaviour
     {
         OnEKeyEntered?.Invoke();
     }
-    #endregion
-
-    #region OutGameInput
-
     #endregion
 }

@@ -19,6 +19,7 @@ public class Player : Creature
                 return;
 
             _isPlayerInputControll = value;
+            ConnectInputActions(value);
 
             if (_isPlayerInputControll && coPlayerInputController == null)
             {
@@ -63,14 +64,21 @@ public class Player : Creature
 
         Camera.main.GetOrAddComponent<CameraController>().Target = this;
 
+        
+    }
+
+    private void ConnectInputActions(bool isConnect)
+    {
         Managers.Input.OnArrowKeyEntered -= OnMove;
-        Managers.Input.OnArrowKeyEntered += OnMove;
-
         Managers.Input.OnSpaceKeyEntered -= OnJump;
-        Managers.Input.OnSpaceKeyEntered += OnJump;
-
         Managers.Input.OnEKeyEntered -= OnInteraction;
-        Managers.Input.OnEKeyEntered += OnInteraction;
+
+        if (isConnect)
+        {
+            Managers.Input.OnArrowKeyEntered += OnMove;
+            Managers.Input.OnSpaceKeyEntered += OnJump;
+            Managers.Input.OnEKeyEntered += OnInteraction;
+        }
     }
 
     #region Input
