@@ -24,6 +24,13 @@ public static class Define
 
     }
 
+    public enum ETag
+    {
+        Untagged,
+
+        Ground,
+    }
+
     public enum EObjectType
     {
         None,

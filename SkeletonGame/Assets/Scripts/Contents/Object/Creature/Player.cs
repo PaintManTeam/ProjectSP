@@ -21,25 +21,23 @@ public class Player : Creature
             _isPlayerInputControll = value;
             ConnectInputActions(value);
 
-            if (_isPlayerInputControll && coPlayerInputController == null)
+            if (_isPlayerInputControll && coPlayerStateController == null)
             {
-                coPlayerInputController = StartCoroutine(CoPlayerInputController());
+                coPlayerStateController = StartCoroutine(CoPlayerStateController());
             }
             else if (!_isPlayerInputControll)
             {
-                StopCoroutine(coPlayerInputController);
+                StopCoroutine(coPlayerStateController);
             }
         }
     }
 
     public  Vector2 moveDirection = Vector2.zero;
 
-    private Coroutine coPlayerInputController = null;
-
     // 임시 (데이터로 뺄 것)
     protected float Speed = 3.0f;
     protected float JumpPower = 5.0f;
-
+    protected float MarginalSpeed = 10.0f;
 
     private void Start()
     {
@@ -64,124 +62,280 @@ public class Player : Creature
 
         Camera.main.GetOrAddComponent<CameraController>().Target = this;
 
-        
-    }
-
-    private void ConnectInputActions(bool isConnect)
-    {
-        Managers.Input.OnArrowKeyEntered -= OnMove;
-        Managers.Input.OnSpaceKeyEntered -= OnJump;
-        Managers.Input.OnEKeyEntered -= OnInteraction;
-
-        if (isConnect)
-        {
-            Managers.Input.OnArrowKeyEntered += OnMove;
-            Managers.Input.OnSpaceKeyEntered += OnJump;
-            Managers.Input.OnEKeyEntered += OnInteraction;
-        }
     }
 
     #region Input
-    private IEnumerator CoPlayerInputController()
+    private void ConnectInputActions(bool isConnect)
     {
-        while (_isPlayerInputControll)
+        Managers.Input.OnArrowKeyEntered -= OnArrowKey;
+        Managers.Input.OnSpaceKeyEntered -= OnJumpKey;
+        Managers.Input.OnEKeyEntered -= OnInteractionKey;
+
+        if (isConnect)
         {
-            if(moveDirection.y != 0)
-            {
-                // 사다리가 있는지 확인해서 사다리를 오르거나 내림
-            }
-
-            SetRigidVelocityX(moveDirection.x * Speed);
-
-            CreatureState = (moveDirection.x != 0) ? ECreatureState.Move : ECreatureState.Idle;
-
-            if (moveDirection.x > 0)
-                LookLeft = false;
-            else if (moveDirection.x < 0)
-                LookLeft = true;
-
-            yield return new WaitForFixedUpdate();
+            Managers.Input.OnArrowKeyEntered += OnArrowKey;
+            Managers.Input.OnSpaceKeyEntered += OnJumpKey;
+            Managers.Input.OnEKeyEntered += OnInteractionKey;
         }
-
-        SetRigidVelocityZero();
-        coPlayerInputController = null;
+        else
+        {
+            if (coPlayerStateController != null)
+            {
+                StopCoroutine(coPlayerStateController);
+                coPlayerStateController = null;
+            }
+        }
     }
 
-    public void OnMove(Vector2 value)
+    public void OnArrowKey(Vector2 value)
     {
         if (!IsPlayerInputControll)
             return;
 
         moveDirection = value;
+
+        if (moveDirection.x != 0)
+            CreatureState = ECreatureState.Move;
     }
 
-    public void OnJump()
+    public void OnJumpKey()
     {
         if (!IsPlayerInputControll)
             return;
 
-        SetRigidVelocityY(JumpPower);
+        CreatureState = ECreatureState.Jump;
     }
 
-    public void OnInteraction()
+    public void OnInteractionKey()
     {
         if (!IsPlayerInputControll)
             return;
 
-        Debug.Log("상호작용 키 입력");
-
-        
+        CreatureState = ECreatureState.Interaction;
     }
     #endregion
 
-    #region State
+    #region State Condition
     protected override bool IdleStateCondition()
     {
+        if (base.IdleStateCondition() == false)
+            return false;
 
-        
+        if (Rigid.velocity != Vector2.zero)
+            return false;
+
         return true;
     }
 
     protected override bool MoveStateCondition()
     {
+        if (base.MoveStateCondition() == false)
+            return false;
 
+        if (creatureFoot.IsLandingGround == false)
+            return false;
 
         return true;
     }
 
     protected override bool JumpStateCondition()
     {
+        if (base.JumpStateCondition() == false)
+            return false;
 
+        if (creatureFoot.IsLandingGround == false)
+            return false;
 
         return true;
     }
 
     protected override bool FallDownStateCondition()
     {
+        if (base.FallDownStateCondition() == false)
+            return false;
 
+        if (Rigid.velocityY >= 0)
+            return false;
 
         return true;
     }
 
     protected override bool ClimbStateCondition()
     {
-
+        if (base.ClimbStateCondition() == false)
+            return false;
 
         return true;
     }
 
     protected override bool InteractionStateCondition()
     {
-
+        if (base.InteractionStateCondition() == false)
+            return false;
 
         return true;
     }
 
     protected override bool DeadStateCondition()
     {
-
+        if (base.InteractionStateCondition() == false)
+            return false;
 
         return true;
+    }
+    #endregion
+   
+    #region State Controll
+    Coroutine coPlayerStateController = null;
+    protected IEnumerator CoPlayerStateController()
+    {
+        yield return null;
+
+        while(IsPlayerInputControll)
+        {
+            switch(CreatureState)
+            {
+                case ECreatureState.Idle:
+                    UpdateIdle();
+                    break;
+                case ECreatureState.Move:
+                    UpdateMove();
+                    break;
+                case ECreatureState.Jump:
+                    UpdateJump();
+                    break;
+                case ECreatureState.FallDown:
+                    UpdateFallDown();
+                    break;
+                case ECreatureState.Climb:
+                    UpdateClimb();
+                    break;
+                case ECreatureState.Interaction:
+                    UpdateInteraction();
+                    break;
+                case ECreatureState.Dead:
+                    StopCoroutine(coPlayerStateController);
+                    coPlayerStateController = null;
+                    break;
+            }
+
+            yield return null;
+        }
+
+        coPlayerStateController = null;
+    }
+
+    private void UpdateIdle()
+    {
+        FallDownCheck();
+    }
+
+    private void UpdateMove()
+    {
+        FallDownCheck();
+        MovementCheck();
+
+        if (moveDirection.x == 0)
+            CreatureState = ECreatureState.Idle;
+    }
+
+    private void UpdateJump()
+    {
+        FallDownCheck();
+        MovementCheck();
+    }
+
+    private void UpdateFallDown()
+    {
+        MovementCheck();
+
+        // 낙하 속도 제한
+        if (Rigid.velocityY < MarginalSpeed * -1.0f)
+            SetRigidVelocityY(MarginalSpeed * -1.0f);
+
+        // 착지 확인
+        if (creatureFoot.IsLandingGround)
+        {
+            CreatureState = ECreatureState.Move;
+            CreatureState = ECreatureState.Idle;
+        }
+    }
+
+    private void UpdateClimb()
+    {
+
+    }
+
+    private void UpdateInteraction()
+    {
+
+    }
+
+    private void MovementCheck()
+    {
+        SetRigidVelocityX(moveDirection.x * Speed);
+
+        if (moveDirection.x > 0)
+            LookLeft = false;
+        else if (moveDirection.x < 0)
+            LookLeft = true;
+    }
+
+    private void FallDownCheck()
+    {
+        if(creatureFoot.IsLandingGround == false && Rigid.velocityY < 0)
+            CreatureState = ECreatureState.FallDown;
+    }
+    #endregion
+
+    #region State Operate
+    protected override void IdleStateOperate()
+    {
+        base.IdleStateOperate();
+
+
+    }
+
+    protected override void MoveStateOperate()
+    {
+        base.MoveStateOperate();
+
+
+    }
+
+    protected override void JumpStateOperate()
+    {
+        base.JumpStateOperate();
+
+        SetRigidVelocityY(JumpPower);
+    }
+
+    protected override void FallDownStateOperate()
+    {
+        base.FallDownStateOperate();
+
+
+    }
+
+    protected override void ClimbStateOperate()
+    {
+
+        base.ClimbStateOperate();
+
+    }
+
+    protected override void InteractionStateOperate()
+    {
+        base.InteractionStateOperate();
+
+
+    }
+
+    protected override void DeadStateOperate()
+    {
+        base.DeadStateOperate();
+
+
     }
     #endregion
 }

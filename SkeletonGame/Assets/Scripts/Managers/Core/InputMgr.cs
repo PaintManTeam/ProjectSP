@@ -23,7 +23,7 @@ public class InputMgr : MonoBehaviour
     EInputControlSchemeType currControlSchemeType = EInputControlSchemeType.PC;
     EInputActionMapType currActionMapType = EInputActionMapType.InGame;
 
-    // Keyboard
+    // Keyboard InputEvent
     public event Action<Vector2> OnArrowKeyEntered;
     public event Action OnSpaceKeyEntered;
     public event Action OnEKeyEntered;
@@ -33,7 +33,6 @@ public class InputMgr : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerInput.defaultControlScheme = currControlSchemeType.ToString();
         playerInput.defaultActionMap = currActionMapType.ToString();
-
         playerInput.notificationBehavior = PlayerNotifications.SendMessages;
     }
 
@@ -42,6 +41,7 @@ public class InputMgr : MonoBehaviour
 
     }
 
+    #region Basic InputEvent
     public void OnDeviceLost()
     {
         Debug.Log("OnDeviceLost");
@@ -56,6 +56,7 @@ public class InputMgr : MonoBehaviour
     {
         Debug.Log("OnControlsChanged");
     }
+    #endregion
 
     #region Keyboard InputEvent
     public void OnArrowKey(InputValue value)
