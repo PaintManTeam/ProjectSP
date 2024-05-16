@@ -198,11 +198,9 @@ public class Creature : BaseObject
             return false;
         }
 
+        // 다른 애니메이션이 재생 중
         if(!IsState(state))
-        {
-            Debug.LogWarning($"체크할 애니메이션 타입 {state}과 다른 애니메이션 재생 중");
             return false;
-        }
 
         return IsEndState(animator.GetCurrentAnimatorStateInfo(0));
     }

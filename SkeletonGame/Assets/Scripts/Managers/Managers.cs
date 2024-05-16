@@ -63,7 +63,7 @@ public class Managers : MonoBehaviour
 
             // 초기화
             s_instance = go.GetComponent<Managers>();
-            Instance._input = Instance._resource.Instantiate(Path.INPUTMANAGER_PATH, Instance.transform).GetComponent<InputMgr>();
+            Instance._input = Instance._resource.Instantiate(PrefabPath.INPUTMANAGER_PATH, Instance.transform).GetComponent<InputMgr>();
 
             Input.Init();
             UI.Init();

@@ -39,7 +39,10 @@ public class SceneMgr
         AsyncOperation AsyncLoad = SceneManager.LoadSceneAsync(GetSceneName(type));
         
         yield return new WaitUntil(() => AsyncLoad.isDone);
-        
+
+        if (type == Define.EScene.GameScene)
+            Managers.Game.Init();
+
         isCompleteLoadingScene = true;
     }
 

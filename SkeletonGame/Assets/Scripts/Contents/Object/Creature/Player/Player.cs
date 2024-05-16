@@ -76,8 +76,6 @@ public class Player : Creature
     {
         this.interactionObject = interactionObject;
     }
-
-    // 상호작용 가능 키 띄우기
     #endregion
 
     #region Input
@@ -242,8 +240,7 @@ public class Player : Creature
                     UpdateInteraction();
                     break;
                 case ECreatureState.Dead:
-                    StopCoroutine(coPlayerStateController);
-                    coPlayerStateController = null;
+                    IsPlayerInputControll = false;
                     break;
             }
 
@@ -307,7 +304,6 @@ public class Player : Creature
     private void UpdateInteraction()
     {
         // 모션 끊기는 조건 확인
-
 
         // 애니메이션 종료 확인
         if(IsEndCurrentState(ECreatureState.Interaction))

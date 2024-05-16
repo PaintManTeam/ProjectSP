@@ -94,7 +94,7 @@ public class UIMgr
 
         if (windowPool.TryGetValue(name, out UI_BaseWindow window) == false)
         {
-            GameObject go = Managers.Resource.Instantiate($"{Path.UI_WINDOW_PATH}/{name}");
+            GameObject go = Managers.Resource.Instantiate($"{PrefabPath.UI_WINDOW_PATH}/{name}");
             window = Util.GetOrAddComponent<T>(go);
             windowPool[name] = window;
             window.CloseWindowUI();
@@ -141,7 +141,7 @@ public class UIMgr
 
         if(popupPool.TryGetValue(name, out UI_BasePopup popup) == false)
         {
-            GameObject go = Managers.Resource.Instantiate($"{Path.UI_POPUP_PATH}/{name}");
+            GameObject go = Managers.Resource.Instantiate($"{PrefabPath.UI_POPUP_PATH}/{name}");
             go.SetActive(false);
             popup = go.GetOrAddComponent<UI_BasePopup>();
             popup.transform.SetParent(UIPopupRoot.transform);
@@ -155,7 +155,7 @@ public class UIMgr
 
         if (popupPool.TryGetValue(name, out UI_BasePopup popup) == false)
         {
-            GameObject go = Managers.Resource.Instantiate($"{Path.UI_POPUP_PATH}/{name}");
+            GameObject go = Managers.Resource.Instantiate($"{PrefabPath.UI_POPUP_PATH}/{name}");
             popup = go.GetOrAddComponent<UI_BasePopup>();
             popupPool[name] = popup;
             popup.ClosePopupUI();

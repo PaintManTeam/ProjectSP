@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class GameMgr
 {
+    public void Init()
+    {
 
+    }
 
+    public void Clear()
+    {
+
+    }
+
+    #region Stage
+
+    #endregion
 }

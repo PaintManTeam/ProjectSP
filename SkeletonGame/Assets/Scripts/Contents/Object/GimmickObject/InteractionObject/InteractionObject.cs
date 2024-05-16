@@ -38,7 +38,7 @@ public class InteractionObject : GimmickObject
 
         if(notifyObject == null)
         {
-            notifyObject = Managers.Resource.Instantiate<InteractionNotifyObject>($"{Path.OBJECT_PATH}").GetComponent<InteractionNotifyObject>();
+            notifyObject = Managers.Resource.Instantiate<InteractionNotifyObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<InteractionNotifyObject>();
             notifyObject.transform.position = this.transform.position;
             notifyObject.SetInfo(spriteRenderer.sortingOrder + 1); // 임시
         }
@@ -49,9 +49,7 @@ public class InteractionObject : GimmickObject
         PlayerInteractionRange playerInteractionRange = collision.GetComponent<PlayerInteractionRange>();
 
         if (notifyObject != null && playerInteractionRange != null)
-        {
             Managers.Resource.Destroy(notifyObject.gameObject);
-        }
     }
 
     public virtual bool Interact()

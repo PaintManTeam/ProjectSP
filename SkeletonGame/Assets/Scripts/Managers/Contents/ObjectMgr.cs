@@ -35,7 +35,7 @@ public class ObjectMgr
     {
         string prefabName = typeof(T).Name;
 
-        GameObject go = Managers.Resource.Instantiate($"{Path.OBJECT_CREATURE_PATH}/{prefabName}");
+        GameObject go = Managers.Resource.Instantiate($"{PrefabPath.OBJECT_CREATURE_PATH}/{prefabName}");
         go.name = prefabName;
         go.transform.position = position;
 
