@@ -5,7 +5,7 @@ using static Define;
 
 public class Creature : BaseObject
 {
-    [SerializeField]
+    [SerializeField] // 확인용
     private ECreatureState _creatureState = ECreatureState.None;
     public ECreatureState CreatureState
     {
@@ -79,7 +79,7 @@ public class Creature : BaseObject
 
     public ECreatureType CreatureType { get; protected set; }
 
-    [SerializeField] protected CreatureFoot creatureFoot;
+    protected CreatureFoot creatureFoot;
 
     protected Rigidbody2D Rigid { get; private set; }
     public CapsuleCollider2D Collider { get; private set; }
@@ -116,18 +116,7 @@ public class Creature : BaseObject
         Rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         
-        if(creatureFoot == null)
-        {
-            for(int i = 0; i < transform.childCount; i++)
-            {
-                Transform child = transform.GetChild(i);
-                if (child.name == "Foot")
-                {
-                    creatureFoot = child.GetComponent<CreatureFoot>();
-                    break;
-                }
-            }
-        }
+        creatureFoot ??= Util.FindChild<CreatureFoot>(gameObject);
 
         return true;
     }
@@ -141,7 +130,7 @@ public class Creature : BaseObject
     {
         return CenterPosition + Vector3.up * ColliderCenter;
     }
-
+    
     #region Rigid
     protected void SetRigidVelocityX(float x)
     {
@@ -196,12 +185,29 @@ public class Creature : BaseObject
         return IsState(animator.GetCurrentAnimatorStateInfo(0), state);
     }
 
-    public bool IsState(AnimatorStateInfo stateInfo, ECreatureState state)
+    private bool IsState(AnimatorStateInfo stateInfo, ECreatureState state)
     {
         return stateInfo.IsName(state.ToString());
     }
 
-    public bool IsEndState(AnimatorStateInfo stateInfo)
+    public bool IsEndCurrentState(ECreatureState state)
+    {
+        if (animator == null)
+        {
+            Debug.LogWarning("animator is Null");
+            return false;
+        }
+
+        if(!IsState(state))
+        {
+            Debug.LogWarning($"체크할 애니메이션 타입 {state}과 다른 애니메이션 재생 중");
+            return false;
+        }
+
+        return IsEndState(animator.GetCurrentAnimatorStateInfo(0));
+    }
+
+    private bool IsEndState(AnimatorStateInfo stateInfo)
     {
         return stateInfo.normalizedTime >= 1.0f;
     }

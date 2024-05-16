@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class CreatureFoot : MonoBehaviour
+public class CreatureFoot : InitBase
 {
-    public bool IsLandingGround { get; private set; } = false;
-    
+    public bool IsLandingGround { get; private set; }
+
+    public override bool Init()
+    {
+        if (base.Init() == false)
+            return false;
+
+        IsLandingGround = false;
+
+        return true;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == ETag.Ground.ToString())

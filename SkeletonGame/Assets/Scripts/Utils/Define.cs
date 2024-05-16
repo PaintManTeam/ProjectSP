@@ -21,14 +21,21 @@ public static class Define
         Water = 4,
         UI = 5,
         Background = 6,
-
+        Ground = 7,
+        Object = 8,
+        Player = 9,
     }
 
     public enum ETag
     {
         Untagged,
+        
+        MainCamera,
+        Player,
+        GameController,
 
         Ground,
+        Interaction,
     }
 
     public enum EObjectType

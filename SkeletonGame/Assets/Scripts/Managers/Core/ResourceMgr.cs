@@ -26,6 +26,22 @@ public class ResourceMgr
         return go;
     }
 
+    public GameObject Instantiate<T>(string path, Transform parent = null)
+    {
+        path += $"/{typeof(T).Name}";
+
+        GameObject original = Load<GameObject>($"Prefabs/{path}");
+        if (original == null)
+        {
+            Debug.Log($"Failed to load prefab : {path}");
+            return null;
+        }
+
+        GameObject go = Object.Instantiate(original, parent);
+        go.name = original.name;
+        return go;
+    }
+
     public void Destroy(GameObject go)
     {
         if (go == null)

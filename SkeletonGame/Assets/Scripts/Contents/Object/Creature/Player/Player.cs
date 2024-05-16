@@ -8,6 +8,8 @@ using static Define;
 
 public class Player : Creature
 {
+    protected PlayerInteractionRange interactionRange;
+
     // 플레이어를 조작할 수 있는 경우
     private bool _isPlayerInputControll = false;
     public bool IsPlayerInputControll
@@ -32,11 +34,12 @@ public class Player : Creature
         }
     }
 
-    public  Vector2 moveDirection = Vector2.zero;
-
-    // 임시 (데이터로 뺄 것)
+    // 플레이어 데이터
     protected float Speed = 3.0f;
     protected float JumpPower = 5.0f;
+    protected float InteractionRangeRadius = 0.5f;
+
+    // 공통 데이터
     protected float MarginalSpeed = 10.0f;
 
     private void Start()
@@ -51,6 +54,8 @@ public class Player : Creature
         if (base.Init() == false)
             return false;
 
+        interactionRange ??= Util.FindChild<PlayerInteractionRange>(gameObject);
+        
         return true;
     }
 
@@ -62,9 +67,22 @@ public class Player : Creature
 
         Camera.main.GetOrAddComponent<CameraController>().Target = this;
 
+        interactionRange.SetInfo(OnDetectInteractionObject, ColliderCenter, InteractionRangeRadius);
     }
 
+    #region Interaction
+    [SerializeField] InteractionObject interactionObject = null;
+    public void OnDetectInteractionObject(InteractionObject interactionObject)
+    {
+        this.interactionObject = interactionObject;
+    }
+
+    // 상호작용 가능 키 띄우기
+    #endregion
+
     #region Input
+    private Vector2 moveDirection = Vector2.zero;
+
     private void ConnectInputActions(bool isConnect)
     {
         Managers.Input.OnArrowKeyEntered -= OnArrowKey;
@@ -165,6 +183,8 @@ public class Player : Creature
         if (base.ClimbStateCondition() == false)
             return false;
 
+        // 오르거나 내릴 수 있는 사다리가 범위 내에 있는지 확인
+
         return true;
     }
 
@@ -173,6 +193,12 @@ public class Player : Creature
         if (base.InteractionStateCondition() == false)
             return false;
 
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
+        if (interactionObject == null || interactionObject.GimmickState != EGimmickObjectState.Ready)
+            return false;
+        
         return true;
     }
 
@@ -180,6 +206,8 @@ public class Player : Creature
     {
         if (base.InteractionStateCondition() == false)
             return false;
+
+        // 캐릭터가 죽는 조건 체크
 
         return true;
     }
@@ -241,6 +269,14 @@ public class Player : Creature
 
     private void UpdateJump()
     {
+        // 착지 확인
+        if (creatureFoot.IsLandingGround)
+        {
+            CreatureState = ECreatureState.Move;
+            CreatureState = ECreatureState.Idle;
+            return;
+        }
+
         FallDownCheck();
         MovementCheck();
     }
@@ -263,12 +299,25 @@ public class Player : Creature
 
     private void UpdateClimb()
     {
+        // 사다리 끝에 도달했는지 확인
 
+        // 위아래 이동
     }
 
     private void UpdateInteraction()
     {
+        // 모션 끊기는 조건 확인
 
+
+        // 애니메이션 종료 확인
+        if(IsEndCurrentState(ECreatureState.Interaction))
+        {
+            if (interactionObject != null)
+                interactionObject.Interact();
+
+            CreatureState = ECreatureState.Move;
+            CreatureState = ECreatureState.Idle;
+        }
     }
 
     private void MovementCheck()
@@ -328,7 +377,7 @@ public class Player : Creature
     {
         base.InteractionStateOperate();
 
-
+        SetRigidVelocityZero();
     }
 
     protected override void DeadStateOperate()
