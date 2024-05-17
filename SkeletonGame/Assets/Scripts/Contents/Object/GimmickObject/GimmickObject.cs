@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
-public class GimmickObject : BaseObject
+public interface IGimmick
 {
-    [SerializeField]
+}
+
+public class GimmickObject : BaseObject, IGimmick
+{
     public EGimmickObjectState GimmickState { get; protected set; }
+
     public EGimmickObjectType GimmickType { get; protected set; }
 
     // 아마 무조건 박스 콜라이더가 되지 않을까?

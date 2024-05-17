@@ -21,6 +21,7 @@ public static class PrefabPath
     public const string OBJECT_PATH = "Object";
     public const string OBJECT_CREATURE_PATH = "Object/Creature";
     public const string OBJECT_GIMMICK_PATH = "Object/GimmickObject";
+    public const string OBJECT_MAP_PATH = "Object/Map";
 
     public const string INPUTMANAGER_PATH = "InputManager/InputManager";
 }

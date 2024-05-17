@@ -31,12 +31,12 @@ public class ObjectMgr
         }
     }
 
-    public T SpawnCreature<T>(Vector3 position, int templateID) where T : Creature
+    public T SpawnCreature<T>(Vector3 position, int templateID = 1) where T : Creature
     {
         string prefabName = typeof(T).Name;
+        string path = $"{PrefabPath.OBJECT_CREATURE_PATH}/{prefabName}";
 
-        GameObject go = Managers.Resource.Instantiate($"{PrefabPath.OBJECT_CREATURE_PATH}/{prefabName}");
-        go.name = prefabName;
+        GameObject go = Managers.Resource.Instantiate(path, CreatureRoot.transform);
         go.transform.position = position;
 
         Creature obj = go.GetComponent<Creature>();
@@ -60,9 +60,18 @@ public class ObjectMgr
         return obj as T;
     }
 
-    public void SpawnGimmickObject()
+    public BaseMap SpawnMap(string mapName, int templateId = 1)
     {
+        string path = $"{PrefabPath.OBJECT_MAP_PATH}/{mapName}";
 
+        GameObject go = Managers.Resource.Instantiate(path);
+        go.transform.position = Vector3.zero;
+
+        BaseMap map = go.GetComponent<BaseMap>();
+
+        map.SetInfo(templateId);
+
+        return map;
     }
 
     public void Despawn<T>(T obj) where T : Creature

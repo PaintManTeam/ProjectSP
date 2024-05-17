@@ -9,6 +9,11 @@ public class GameMgr
 
     }
 
+    public void StartGame(int stageNum)
+    {
+
+    }
+
     public void Clear()
     {
 

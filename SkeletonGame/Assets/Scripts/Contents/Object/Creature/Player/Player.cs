@@ -71,6 +71,7 @@ public class Player : Creature
     }
 
     #region Interaction
+    IGimmick gimmickTarget = null; // 얘로 해야할 거 같음 다이얼로그도 묶어서
     [SerializeField] InteractionObject interactionObject = null;
     public void OnDetectInteractionObject(InteractionObject interactionObject)
     {
@@ -140,6 +141,9 @@ public class Player : Creature
         if (Rigid.velocity != Vector2.zero)
             return false;
 
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
         return true;
     }
 
@@ -147,6 +151,9 @@ public class Player : Creature
     {
         if (base.MoveStateCondition() == false)
             return false;
+
+        if (moveDirection.x == 0)
+            return false; 
 
         if (creatureFoot.IsLandingGround == false)
             return false;
