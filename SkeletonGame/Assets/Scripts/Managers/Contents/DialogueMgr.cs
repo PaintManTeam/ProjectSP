@@ -16,4 +16,6 @@ public class DialogueMgr
     {
 
     }
+
+    // 다이얼로그를 띄워달라는 명령 전달?
 }

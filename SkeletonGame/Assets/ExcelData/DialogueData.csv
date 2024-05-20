@@ -1,3 +1,5 @@
 ﻿DataId,Name,Dialogue
-0,화자이름,대화내용
-1,Npc,안녕?ㅋㅋ
+0,캐릭터 이름,대사
+1,TestNpc,a
+,,s
+2,Skeleton,d

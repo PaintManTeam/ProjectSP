@@ -13,4 +13,9 @@ public class UI_DialogueWindow : UI_BaseWindow
 
         return true;
     }
+
+    public void SetInfo(int templateID)
+    {
+
+    }
 }

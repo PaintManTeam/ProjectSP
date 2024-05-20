@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
@@ -39,6 +40,12 @@ public class Creature : BaseObject
                 case ECreatureState.Interaction:
                     isChangeState = InteractionStateCondition();
                     break;
+                case ECreatureState.EnterPortal:
+                    isChangeState = EnterPortalStateCondition();
+                    break;
+                case ECreatureState.ComeOutPortal:
+                    isChangeState = ComeOutPortalStateCondition();
+                    break;
                 case ECreatureState.Dead:
                     isChangeState = DeadStateCondition();
                     break;
@@ -69,6 +76,12 @@ public class Creature : BaseObject
                     break;
                 case ECreatureState.Interaction:
                     InteractionStateOperate();
+                    break;
+                case ECreatureState.EnterPortal:
+                    EnterPortalStateOperate();
+                    break;
+                case ECreatureState.ComeOutPortal:
+                    ComeOutPortalStateOperate();
                     break;
                 case ECreatureState.Dead:
                     DeadStateOperate();
@@ -155,6 +168,8 @@ public class Creature : BaseObject
     protected virtual bool FallDownStateCondition() { return true; }
     protected virtual bool ClimbStateCondition() { return true; }
     protected virtual bool InteractionStateCondition() { return true; }
+    protected virtual bool EnterPortalStateCondition() { return true; }
+    protected virtual bool ComeOutPortalStateCondition() { return true; }
     protected virtual bool DeadStateCondition() { return true; }
     #endregion
 
@@ -165,6 +180,8 @@ public class Creature : BaseObject
     protected virtual void FallDownStateOperate() { }
     protected virtual void ClimbStateOperate() { }
     protected virtual void InteractionStateOperate() { }
+    protected virtual void EnterPortalStateOperate() { }
+    protected virtual void ComeOutPortalStateOperate() { }
     protected virtual void DeadStateOperate() { }
     #endregion
 

@@ -61,6 +61,8 @@ public static class Define
         FallDown,
         Climb, // loop
         Interaction, // loop
+        EnterPortal,
+        ComeOutPortal,
         
         Dead
     }

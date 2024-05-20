@@ -71,7 +71,7 @@ public class Player : Creature
     }
 
     #region Interaction
-    IInteraction interactionTarget = null; // 얘로 해야할 거 같음 다이얼로그도 묶어서
+    IInteraction interactionTarget = null;
     public void OnDetectInteractionObject(IInteraction interactionTarget)
     {
         this.interactionTarget = interactionTarget;
@@ -211,6 +211,22 @@ public class Player : Creature
         return true;
     }
 
+    protected override bool EnterPortalStateCondition()
+    {
+        if (base.EnterPortalStateCondition() == false)
+            return false;
+
+        return true;
+    }
+
+    protected override bool ComeOutPortalStateCondition()
+    {
+        if (base.ComeOutPortalStateCondition() == false)
+            return false;
+
+        return true;
+    }
+
     protected override bool DeadStateCondition()
     {
         if (base.InteractionStateCondition() == false)
@@ -250,6 +266,7 @@ public class Player : Creature
                 case ECreatureState.Interaction:
                     UpdateInteraction();
                     break;
+                
                 case ECreatureState.Dead:
                     IsPlayerInputControll = false;
                     break;
@@ -327,6 +344,16 @@ public class Player : Creature
         }
     }
 
+    private void UpdateEnterPortal()
+    {
+
+    }
+
+    private void UpdateComeOutPortal()
+    {
+
+    }
+
     private void MovementCheck()
     {
         SetRigidVelocityX(moveDirection.x * Speed);
@@ -375,7 +402,6 @@ public class Player : Creature
 
     protected override void ClimbStateOperate()
     {
-
         base.ClimbStateOperate();
 
     }
@@ -385,6 +411,20 @@ public class Player : Creature
         base.InteractionStateOperate();
 
         SetRigidVelocityZero();
+    }
+
+    protected override void ComeOutPortalStateOperate()
+    {
+        base.ComeOutPortalStateOperate();
+
+
+    }
+
+    protected override void EnterPortalStateOperate()
+    {
+        base.EnterPortalStateOperate();
+
+
     }
 
     protected override void DeadStateOperate()
