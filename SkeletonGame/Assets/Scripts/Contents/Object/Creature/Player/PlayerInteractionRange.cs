@@ -7,9 +7,8 @@ using static Define;
 public class PlayerInteractionRange : InitBase
 {
     CircleCollider2D circleCollider;
-
-    List<InteractionObject> interactionObjectList = new List<InteractionObject>();
-    Action<InteractionObject> onDetectObjectChanged;
+    List<IInteraction> interactionRangeList;
+    Action<IInteraction> OnDetectTargetChanged;
 
     public override bool Init()
     {
@@ -17,13 +16,14 @@ public class PlayerInteractionRange : InitBase
             return false;
 
         circleCollider = GetComponent<CircleCollider2D>();
+        interactionRangeList = new List<IInteraction>();
 
         return true;
     }
 
-    public void SetInfo(Action<InteractionObject> onDetectionObjectChanged, float colliderCenter, float radius)
+    public void SetInfo(Action<IInteraction> onDetectionTargetChanged, float colliderCenter, float radius)
     {
-        this.onDetectObjectChanged = onDetectionObjectChanged;
+        this.OnDetectTargetChanged = onDetectionTargetChanged;
         transform.localPosition = new Vector2(0, colliderCenter);
         circleCollider.radius = radius;
     }
@@ -32,12 +32,12 @@ public class PlayerInteractionRange : InitBase
     {
         if (collision.tag == ETag.Interaction.ToString())
         {
-            InteractionObject interactionObject = collision.GetComponent<InteractionObject>();
+            IInteraction interactionTarget = collision.GetComponent<InteractionObject>();
             
-            if(interactionObject != null && !interactionObjectList.Contains(interactionObject))
+            if(interactionTarget != null && !interactionRangeList.Contains(interactionTarget))
             {
-                interactionObjectList.Add(interactionObject);
-                onDetectObjectChanged(FindClosestInRange());
+                interactionRangeList.Add(interactionTarget);
+                OnDetectTargetChanged(FindClosestInRange());
             }
         }
     }
@@ -46,32 +46,35 @@ public class PlayerInteractionRange : InitBase
     {
         if (collision.tag == ETag.Interaction.ToString())
         {
-            InteractionObject interactionObject = collision.GetComponent<InteractionObject>();
+            IInteraction interactionTarget = collision.GetComponent<IInteraction>();
 
-            if (interactionObject != null && interactionObjectList.Contains(interactionObject))
+            if (interactionTarget != null && interactionRangeList.Contains(interactionTarget))
             {
-                interactionObjectList.Remove(interactionObject);
-                onDetectObjectChanged(FindClosestInRange());
+                interactionRangeList.Remove(interactionTarget);
+                OnDetectTargetChanged(FindClosestInRange());
             }
         }
     }
 
-    private InteractionObject FindClosestInRange()
+    private IInteraction FindClosestInRange()
     {
-        if (interactionObjectList.Count == 0)
+        if (interactionRangeList.Count == 0)
             return null;
+
+        if (interactionRangeList.Count == 1)
+            return interactionRangeList[0];
 
         InteractionObject target = null;
 
         float bestDistanceSqr = float.MaxValue;
 
-        foreach(InteractionObject interactionObject in interactionObjectList)
+        foreach(InteractionObject interactionObject in interactionRangeList)
         {
             // 상호작용 가능 상태인지 확인
             if (interactionObject.GimmickState != EGimmickObjectState.Ready)
                 continue;
 
-            Vector3 dir = interactionObjectList[0].transform.position - transform.position;
+            Vector3 dir = interactionRangeList[0].WorldPosition - transform.position;
             float distToTargetSqr = dir.sqrMagnitude;
 
             // 이미 더 좋은 후보를 찾았으면 스킵.

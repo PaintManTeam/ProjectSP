@@ -71,11 +71,10 @@ public class Player : Creature
     }
 
     #region Interaction
-    IGimmick gimmickTarget = null; // 얘로 해야할 거 같음 다이얼로그도 묶어서
-    [SerializeField] InteractionObject interactionObject = null;
-    public void OnDetectInteractionObject(InteractionObject interactionObject)
+    IInteraction interactionTarget = null; // 얘로 해야할 거 같음 다이얼로그도 묶어서
+    public void OnDetectInteractionObject(IInteraction interactionTarget)
     {
-        this.interactionObject = interactionObject;
+        this.interactionTarget = interactionTarget;
     }
     #endregion
 
@@ -201,7 +200,12 @@ public class Player : Creature
         if (creatureFoot.IsLandingGround == false)
             return false;
 
-        if (interactionObject == null || interactionObject.GimmickState != EGimmickObjectState.Ready)
+        if (interactionTarget == null)
+            return false;
+
+        IGimmick gimmick = interactionTarget as IGimmick;
+
+        if (gimmick != null && gimmick.GimmickState != EGimmickObjectState.Ready)
             return false;
         
         return true;
@@ -315,8 +319,8 @@ public class Player : Creature
         // 애니메이션 종료 확인
         if(IsEndCurrentState(ECreatureState.Interaction))
         {
-            if (interactionObject != null)
-                interactionObject.Interact();
+            if (interactionTarget != null)
+                interactionTarget.Interact();
 
             CreatureState = ECreatureState.Move;
             CreatureState = ECreatureState.Idle;

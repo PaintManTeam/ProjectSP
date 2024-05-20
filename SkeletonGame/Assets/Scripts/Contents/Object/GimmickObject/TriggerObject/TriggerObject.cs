@@ -17,7 +17,7 @@ public class TriggerObject : GimmickObject
     {
         base.SetInfo(templateID);
 
-        GimmickType = EGimmickObjectType.Interaction;
+        GimmickType = EGimmickType.Interaction;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

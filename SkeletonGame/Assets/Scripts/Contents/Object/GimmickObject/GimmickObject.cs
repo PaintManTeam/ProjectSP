@@ -7,16 +7,15 @@ using static Define;
 
 public interface IGimmick
 {
+    public EGimmickObjectState GimmickState { get; }
+    public EGimmickType GimmickType { get; }
 }
 
 public class GimmickObject : BaseObject, IGimmick
 {
     public EGimmickObjectState GimmickState { get; protected set; }
-
-    public EGimmickObjectType GimmickType { get; protected set; }
-
-    // 아마 무조건 박스 콜라이더가 되지 않을까?
-
+    public EGimmickType GimmickType { get; protected set; }
+    
 
     private void Start()
     {

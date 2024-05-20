@@ -4,9 +4,20 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
-public class InteractionObject : GimmickObject
+public interface IInteraction
 {
-    protected InteractionNotifyObject notifyObject = null;
+    public EInteractionType InteractionType { get; }
+    public Vector3 WorldPosition { get; }
+
+    public bool Interact();
+}
+
+public class InteractionObject : GimmickObject, IInteraction
+{
+    public EInteractionType InteractionType { get; protected set; }
+    public Vector3 WorldPosition { get { return this.transform.position; } }
+
+    protected NotifyInteractionObject notifyObject = null;
     SpriteRenderer spriteRenderer;
 
     public override bool Init()
@@ -23,7 +34,7 @@ public class InteractionObject : GimmickObject
     {
         base.SetInfo(templateID);
 
-        GimmickType = EGimmickObjectType.Interaction;
+        GimmickType = EGimmickType.Interaction;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -38,7 +49,7 @@ public class InteractionObject : GimmickObject
 
         if(notifyObject == null)
         {
-            notifyObject = Managers.Resource.Instantiate<InteractionNotifyObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<InteractionNotifyObject>();
+            notifyObject = Managers.Resource.Instantiate<NotifyInteractionObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<NotifyInteractionObject>();
             notifyObject.transform.position = this.transform.position;
             notifyObject.SetInfo(spriteRenderer.sortingOrder + 1); // 임시
         }

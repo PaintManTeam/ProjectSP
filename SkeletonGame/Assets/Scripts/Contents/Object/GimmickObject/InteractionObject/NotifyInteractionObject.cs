@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionNotifyObject : InitBase
+public class NotifyInteractionObject : InitBase
 {
     SpriteRenderer spriteRenderer;
     [SerializeField] MeshRenderer textMeshRenderer;

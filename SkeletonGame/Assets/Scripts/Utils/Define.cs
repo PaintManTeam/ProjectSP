@@ -77,10 +77,16 @@ public static class Define
 
     }
 
-    public enum EGimmickObjectType
+    public enum EGimmickType
     {
         Interaction, // 상호 작용을 하면 기믹 발동
         Trigger, // 닿을 경우 기믹 발동
+    }
+
+    public enum EInteractionType
+    {
+        Dialogue,
+        
     }
 
     public enum EGimmickObjectState
