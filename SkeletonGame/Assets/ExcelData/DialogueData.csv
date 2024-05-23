@@ -1,5 +1,7 @@
 ﻿DataId,Name,Dialogue
 0,캐릭터 이름,대사
-1,TestNpc,a
-,,s
-2,Skeleton,d
+1,TestNpc,안녕 반가워 ㅁㅇㄻㄴㅇㄻㄴㅇㄻㄴㅇㄹ \n
+2,TestNpc,"나는 누구누구야, "
+3,TestNpc,넌 이름이뭐니
+4,,
+5,Skeleton,대사3

@@ -11,35 +11,14 @@
       "DataId": 1,
       "Name": "TestNpc",
       "Dialogue": [
-        "\"[안녕 나는 테스트 NPC야"
+        "a"
       ]
     },
     {
       "DataId": 2,
       "Name": "Skeleton",
       "Dialogue": [
-        "뭐냐고… 왜 안돼?"
-      ]
-    },
-    {
-      "DataId": 3,
-      "Name": "A",
-      "Dialogue": [
-        "\"[\"\"아니 시발\"\""
-      ]
-    },
-    {
-      "DataId": 4,
-      "Name": "B",
-      "Dialogue": [
-        "\"{아니 ㅋㅋ"
-      ]
-    },
-    {
-      "DataId": 5,
-      "Name": "C",
-      "Dialogue": [
-        "\"{\"\"이것도\"\""
+        "d"
       ]
     }
   ]
