@@ -30,4 +30,5 @@ public abstract class BaseObject : InitBase
     }
 
     public abstract Vector2 GetTopPosition();
+    public abstract Vector2 GetBottomPosition();
 }

@@ -18,11 +18,13 @@ public class UILoadingParam : UIParam
 public class UIFadeEffectParam : UIParam
 {
     public Func<bool> fadeInEffectCondition;
-    public Action fadeOutInCallBack;
+    public Action onFadeOutCallBack;
+    public Action onFadeInCallBack;
 
-    public UIFadeEffectParam(Func<bool> fadeInEffectCondition, Action fadeOutInCallBack = null)
+    public UIFadeEffectParam(Func<bool> fadeInEffectCondition = null, Action onFadeOutCallBack = null, Action onFadeInCallBack = null)
     {
         this.fadeInEffectCondition = fadeInEffectCondition;
-        this.fadeOutInCallBack = fadeOutInCallBack;
+        this.onFadeOutCallBack = onFadeOutCallBack;
+        this.onFadeInCallBack = onFadeInCallBack;
     }  
 }

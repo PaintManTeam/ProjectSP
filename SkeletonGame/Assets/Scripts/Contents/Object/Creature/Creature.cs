@@ -128,7 +128,7 @@ public class Creature : BaseObject
         Collider = GetComponent<CapsuleCollider2D>();
         Rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        
+
         creatureFoot ??= Util.FindChild<CreatureFoot>(gameObject);
 
         return true;
@@ -145,7 +145,12 @@ public class Creature : BaseObject
     {
         return CenterPosition + Vector3.up * ColliderCenter;
     }
-    
+
+    public override Vector2 GetBottomPosition()
+    {
+        return CenterPosition + Vector3.down * ColliderCenter;
+    }
+
     #region Rigid
     protected void SetRigidVelocityX(float x)
     {

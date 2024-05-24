@@ -27,7 +27,7 @@ public class Player : Creature
             {
                 coPlayerStateController = StartCoroutine(CoPlayerStateController());
             }
-            else if (!_isPlayerInputControll)
+            else if (!_isPlayerInputControll && coPlayerStateController != null)
             {
                 StopCoroutine(coPlayerStateController);
             }
@@ -70,43 +70,6 @@ public class Player : Creature
         interactionRange.SetInfo(OnDetectInteractionObject, ColliderCenter, InteractionRangeRadius);
     }
 
-    #region Interaction
-    IInteraction interactionTarget = null;
-    public void OnDetectInteractionObject(IInteraction interactionTarget)
-    {
-        this.interactionTarget = interactionTarget;
-    }
-
-    Transform teleportTarget = null;
-    public void InteractTarget()
-    {
-        if (interactionTarget == null)
-        {
-            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
-            return;
-        }
-        
-        switch (interactionTarget.InteractionType)
-        {
-            case EInteractionType.Dialogue:
-                // 
-                break;
-            case EInteractionType.Portal:
-
-                break;
-        }
-    }
-
-    public void OnTeleportTarget(Transform teleportTarget)
-    {
-        if (teleportTarget == null)
-            Debug.LogWarning("teleportTarget is Null!");
-
-        this.teleportTarget = teleportTarget;
-        CreatureState = ECreatureState.EnterPortal;
-    }
-    #endregion
-
     #region Input
     private Vector2 moveDirection = Vector2.zero;
 
@@ -121,14 +84,6 @@ public class Player : Creature
             Managers.Input.OnArrowKeyEntered += OnArrowKey;
             Managers.Input.OnSpaceKeyEntered += OnJumpKey;
             Managers.Input.OnEKeyEntered += OnInteractionKey;
-        }
-        else
-        {
-            if (coPlayerStateController != null)
-            {
-                StopCoroutine(coPlayerStateController);
-                coPlayerStateController = null;
-            }
         }
     }
 
@@ -156,129 +111,20 @@ public class Player : Creature
         if (!IsPlayerInputControll)
             return;
 
-        CreatureState = ECreatureState.Interaction;
+        InteractTarget();
     }
     #endregion
 
-    #region State Condition
-    protected override bool IdleStateCondition()
-    {
-        if (base.IdleStateCondition() == false)
-            return false;
+    #region CreatureState Controll
 
-        if (Rigid.velocity != Vector2.zero)
-            return false;
-
-        if (creatureFoot.IsLandingGround == false)
-            return false;
-
-        return true;
-    }
-
-    protected override bool MoveStateCondition()
-    {
-        if (base.MoveStateCondition() == false)
-            return false;
-
-        if (moveDirection.x == 0)
-            return false; 
-
-        if (creatureFoot.IsLandingGround == false)
-            return false;
-
-        return true;
-    }
-
-    protected override bool JumpStateCondition()
-    {
-        if (base.JumpStateCondition() == false)
-            return false;
-
-        if (creatureFoot.IsLandingGround == false)
-            return false;
-
-        return true;
-    }
-
-    protected override bool FallDownStateCondition()
-    {
-        if (base.FallDownStateCondition() == false)
-            return false;
-
-        if (Rigid.velocityY >= 0)
-            return false;
-
-        return true;
-    }
-
-    protected override bool ClimbStateCondition()
-    {
-        if (base.ClimbStateCondition() == false)
-            return false;
-
-        // 오르거나 내릴 수 있는 사다리가 범위 내에 있는지 확인
-
-        return true;
-    }
-
-    protected override bool InteractionStateCondition()
-    {
-        if (base.InteractionStateCondition() == false)
-            return false;
-
-        if (creatureFoot.IsLandingGround == false)
-            return false;
-
-        if (interactionTarget == null)
-            return false;
-
-        IGimmick gimmick = interactionTarget as IGimmick;
-
-        if (gimmick != null && gimmick.GimmickState != EGimmickObjectState.Ready)
-            return false;
-        
-        return true;
-    }
-
-    protected override bool EnterPortalStateCondition()
-    {
-        if (base.EnterPortalStateCondition() == false)
-            return false;
-
-        if(teleportTarget == null)
-            return false;
-
-        return true;
-    }
-
-    protected override bool ComeOutPortalStateCondition()
-    {
-        if (base.ComeOutPortalStateCondition() == false)
-            return false;
-
-        return true;
-    }
-
-    protected override bool DeadStateCondition()
-    {
-        if (base.InteractionStateCondition() == false)
-            return false;
-
-        // 캐릭터가 죽는 조건 체크
-
-        return true;
-    }
-    #endregion
-   
-    #region State Controll
     Coroutine coPlayerStateController = null;
     protected IEnumerator CoPlayerStateController()
     {
         yield return null;
 
-        while(IsPlayerInputControll)
+        while (IsPlayerInputControll)
         {
-            switch(CreatureState)
+            switch (CreatureState)
             {
                 case ECreatureState.Idle:
                     UpdateIdle();
@@ -315,9 +161,47 @@ public class Player : Creature
         coPlayerStateController = null;
     }
 
+    #region Idle Motion
+    protected override bool IdleStateCondition()
+    {
+        if (base.IdleStateCondition() == false)
+            return false;
+
+        if (Rigid.velocity != Vector2.zero)
+            return false;
+
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
+        return true;
+    }
+
     private void UpdateIdle()
     {
         FallDownCheck();
+    }
+
+    protected override void IdleStateOperate()
+    {
+        base.IdleStateOperate();
+
+
+    }
+    #endregion
+
+    #region Move Motion
+    protected override bool MoveStateCondition()
+    {
+        if (base.MoveStateCondition() == false)
+            return false;
+
+        if (moveDirection.x == 0)
+            return false;
+
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
+        return true;
     }
 
     private void UpdateMove()
@@ -327,6 +211,36 @@ public class Player : Creature
 
         if (moveDirection.x == 0)
             CreatureState = ECreatureState.Idle;
+    }
+
+    protected override void MoveStateOperate()
+    {
+        base.MoveStateOperate();
+
+
+    }
+
+    private void MovementCheck()
+    {
+        SetRigidVelocityX(moveDirection.x * Speed);
+
+        if (moveDirection.x > 0)
+            LookLeft = false;
+        else if (moveDirection.x < 0)
+            LookLeft = true;
+    }
+    #endregion
+
+    #region Jump Motion
+    protected override bool JumpStateCondition()
+    {
+        if (base.JumpStateCondition() == false)
+            return false;
+
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
+        return true;
     }
 
     private void UpdateJump()
@@ -341,6 +255,26 @@ public class Player : Creature
 
         FallDownCheck();
         MovementCheck();
+    }
+
+    protected override void JumpStateOperate()
+    {
+        base.JumpStateOperate();
+
+        SetRigidVelocityY(JumpPower);
+    }
+    #endregion
+
+    #region FallDown Motion
+    protected override bool FallDownStateCondition()
+    {
+        if (base.FallDownStateCondition() == false)
+            return false;
+
+        if (Rigid.velocityY >= 0)
+            return false;
+
+        return true;
     }
 
     private void UpdateFallDown()
@@ -359,6 +293,31 @@ public class Player : Creature
         }
     }
 
+    protected override void FallDownStateOperate()
+    {
+        base.FallDownStateOperate();
+
+
+    }
+
+    private void FallDownCheck()
+    {
+        if (creatureFoot.IsLandingGround == false && Rigid.velocityY < 0)
+            CreatureState = ECreatureState.FallDown;
+    }
+    #endregion
+
+    #region Climb Motion
+    protected override bool ClimbStateCondition()
+    {
+        if (base.ClimbStateCondition() == false)
+            return false;
+
+        // 오르거나 내릴 수 있는 사다리가 범위 내에 있는지 확인
+
+        return true;
+    }
+
     private void UpdateClimb()
     {
         // 사다리 끝에 도달했는지 확인
@@ -368,86 +327,45 @@ public class Player : Creature
         // 좌우이동은 제한
     }
 
+    protected override void ClimbStateOperate()
+    {
+        base.ClimbStateOperate();
+
+    }
+    #endregion
+
+    #region Interaction Motion
+    protected override bool InteractionStateCondition()
+    {
+        if (base.InteractionStateCondition() == false)
+            return false;
+
+        if (creatureFoot.IsLandingGround == false)
+            return false;
+
+        if (interactionTarget == null)
+            return false;
+
+        IGimmick gimmick = interactionTarget as IGimmick;
+
+        if (gimmick != null && gimmick.GimmickState != EGimmickObjectState.Ready)
+            return false;
+
+        return true;
+    }
+
     private void UpdateInteraction()
     {
         // 모션 끊기는 조건 확인
 
         // 애니메이션 종료 확인
-        if(IsEndCurrentState(ECreatureState.Interaction))
+        if (IsEndCurrentState(ECreatureState.Interaction))
         {
             InteractTarget();
 
             CreatureState = ECreatureState.Move;
             CreatureState = ECreatureState.Idle;
         }
-    }
-
-    private void UpdateEnterPortal()
-    {
-        // 애니메이션 모션이 끝나면 페이드 아웃
-
-        // -> 페이드 아웃 후 캐릭터 이동
-
-        // 페이드 인
-
-        // 페이드 인 후 나오는 애니메이션 재생 ( Idle 모션이 되는지 확인 )
-    }
-
-    private void UpdateComeOutPortal()
-    {
-        // 애니메이션 모션이 끝나면 Input 다시 연결
-    }
-
-    private void MovementCheck()
-    {
-        SetRigidVelocityX(moveDirection.x * Speed);
-
-        if (moveDirection.x > 0)
-            LookLeft = false;
-        else if (moveDirection.x < 0)
-            LookLeft = true;
-    }
-
-    private void FallDownCheck()
-    {
-        if(creatureFoot.IsLandingGround == false && Rigid.velocityY < 0)
-            CreatureState = ECreatureState.FallDown;
-    }
-    #endregion
-
-    #region State Operate
-    protected override void IdleStateOperate()
-    {
-        base.IdleStateOperate();
-
-
-    }
-
-    protected override void MoveStateOperate()
-    {
-        base.MoveStateOperate();
-
-
-    }
-
-    protected override void JumpStateOperate()
-    {
-        base.JumpStateOperate();
-
-        SetRigidVelocityY(JumpPower);
-    }
-
-    protected override void FallDownStateOperate()
-    {
-        base.FallDownStateOperate();
-
-
-    }
-
-    protected override void ClimbStateOperate()
-    {
-        base.ClimbStateOperate();
-
     }
 
     protected override void InteractionStateOperate()
@@ -457,19 +375,170 @@ public class Player : Creature
         SetRigidVelocityZero();
     }
 
-    protected override void ComeOutPortalStateOperate()
+    IInteraction interactionTarget = null;
+    public void OnDetectInteractionObject(IInteraction interactionTarget)
     {
-        base.ComeOutPortalStateOperate();
+        this.interactionTarget = interactionTarget;
+    }
 
+    public void InteractTarget()
+    {
+        if (interactionTarget == null)
+        {
+            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
+            return;
+        }
 
+        switch (interactionTarget.InteractionType)
+        {
+            case EInteractionType.Dialogue:
+                InteractDialogue();
+                break;
+            case EInteractionType.Portal:
+                InteractPortal();
+                break;
+        }
+    }
+
+    public void InteractDialogue()
+    {
+        Debug.Log("InteractDialogue 미구현");
+    }
+    #endregion
+
+    #region EnterPortal Motion
+    protected override bool EnterPortalStateCondition()
+    {
+        if (base.EnterPortalStateCondition() == false)
+            return false;
+
+        if (teleportTarget == null)
+            return false;
+
+        return true;
+    }
+
+    private void UpdateEnterPortal()
+    {
+        Color tempColor = SpriteRender.color;
+
+        if (tempColor.a > 0.05f)
+        {
+            tempColor.a -= 2.0f * Time.deltaTime; // 시간 조절
+            SpriteRender.color = tempColor;
+        }
+        else
+        {
+            tempColor.a = 0.0f;
+            SpriteRender.color = tempColor;
+            isWaitFadeInEffect = true;
+            CreatureState = ECreatureState.ComeOutPortal;
+
+            if (CreatureState != ECreatureState.ComeOutPortal)
+                return;
+
+            UIFadeEffectParam param = new UIFadeEffectParam(
+                fadeInEffectCondition: () => CreatureState == ECreatureState.ComeOutPortal,
+                onFadeOutCallBack: OnTeleportFadeOut,
+                onFadeInCallBack: OnTeleportFadeIn);
+            Managers.UI.OpenPopupUI<UI_FadeEffectPopup>(param);
+        }
     }
 
     protected override void EnterPortalStateOperate()
     {
         base.EnterPortalStateOperate();
 
-        // 포탈에 타면 플레이어 조작 제한
-        IsPlayerInputControll = false;
+        if (interactionTarget is PortalObject portalObejct)
+        {
+            SetRigidVelocityZero();
+            this.transform.position = portalObejct.GetBottomPosition();
+        }
+
+        interactionTarget = null; // 상호작용 중인 타겟 제거
+        ConnectInputActions(false); // 키 입력 제한
+    }
+
+    public void OnTeleportFadeOut()
+    {
+        // 포탈에 타고 페이드 아웃 - 페이드 인 사이에 실행
+        if (teleportTarget != null)
+            this.transform.position = teleportTarget.GetBottomPosition();
+    }
+    bool isWaitFadeInEffect = true; // 임시 (맘에 안듦)
+    public void OnTeleportFadeIn()
+    {
+        isWaitFadeInEffect = false;
+    }
+
+    BaseObject teleportTarget = null;
+    public void InteractPortal()
+    {
+        if (interactionTarget == null)
+        {
+            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
+            return;
+        }
+
+        PortalParam param = new PortalParam(OnTeleportTarget);
+        interactionTarget.Interact(param);
+    }
+    public void OnTeleportTarget(BaseObject teleportTarget)
+    {
+        if (teleportTarget == null)
+            Debug.LogWarning("teleportTarget is Null!");
+
+        this.teleportTarget = teleportTarget;
+        CreatureState = ECreatureState.EnterPortal;
+    }
+    #endregion
+
+    #region ComeOutPortal Motion
+    protected override bool ComeOutPortalStateCondition()
+    {
+        if (base.ComeOutPortalStateCondition() == false)
+            return false;
+
+        return true;
+    }
+
+    private void UpdateComeOutPortal()
+    {
+        if (isWaitFadeInEffect)
+            return;
+
+        Color tempColor = SpriteRender.color;
+
+        if (tempColor.a < 0.95f)
+        {
+            tempColor.a += Time.deltaTime / 1f; // 페이드 시간 조절
+            SpriteRender.color = tempColor;
+        }
+        else
+        {
+            tempColor.a = 1.0f;
+            SpriteRender.color = tempColor;
+            CreatureState = ECreatureState.Idle;
+            ConnectInputActions(true);
+        }
+    }
+
+    protected override void ComeOutPortalStateOperate()
+    {
+        base.ComeOutPortalStateOperate();
+
+    }
+    #endregion
+
+    #region Dead Motion
+    protected override bool DeadStateCondition()
+    {
+        if (base.InteractionStateCondition() == false)
+            return false;
+
+        // 캐릭터가 죽는 조건 체크
+
+        return true;
     }
 
     protected override void DeadStateOperate()
@@ -478,5 +547,7 @@ public class Player : Creature
 
 
     }
+    #endregion
+    
     #endregion
 }

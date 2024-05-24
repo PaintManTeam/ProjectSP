@@ -10,7 +10,8 @@ public class UI_FadeEffectPopup : UI_BasePopup
 
     private Coroutine fadeEffectCoroutine = null;
     private Func<bool> fadeInEffectCondition = null;
-    private Action fadeOutInCallBack = null;
+    private Action onFadeOutCallBack = null;
+    private Action onFadeInCallBack = null;
 
     public override bool Init()
     {
@@ -36,12 +37,11 @@ public class UI_FadeEffectPopup : UI_BasePopup
     {
         base.SetInfo(param);
 
-        if (param is UIFadeEffectParam)
+        if (param is UIFadeEffectParam fadeEffectParam)
         {
-            var fadeEffectParam = (UIFadeEffectParam)param;
-            
             this.fadeInEffectCondition = fadeEffectParam.fadeInEffectCondition;
-            this.fadeOutInCallBack = fadeEffectParam.fadeOutInCallBack;
+            this.onFadeOutCallBack = fadeEffectParam.onFadeOutCallBack;
+            this.onFadeInCallBack = fadeEffectParam.onFadeInCallBack;
         }
     }
 
@@ -50,7 +50,8 @@ public class UI_FadeEffectPopup : UI_BasePopup
         base.ClosePopupUI();
 
         fadeInEffectCondition = null;
-        fadeOutInCallBack = null;
+        onFadeOutCallBack = null;
+        onFadeInCallBack = null;
     }
 
     public override void DeActivePopup()
@@ -79,7 +80,7 @@ public class UI_FadeEffectPopup : UI_BasePopup
         fadeEffectImage.color = tempColor;
 
         // Wait Condition
-        fadeOutInCallBack?.Invoke();
+        onFadeOutCallBack?.Invoke();
 
         if (fadeInEffectCondition != null)
         {
@@ -98,6 +99,8 @@ public class UI_FadeEffectPopup : UI_BasePopup
 
             yield return null;
         }
+
+        onFadeInCallBack?.Invoke();
 
         fadeEffectImage.color = tempColor;
         fadeEffectCoroutine = null;
