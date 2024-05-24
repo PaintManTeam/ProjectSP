@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_DialogueWindow : UI_BaseWindow
+public class UI_DialoguePopup : UI_BasePopup
 {
     [SerializeField] Image speakerImage;
     [SerializeField] Text dialogueText;
@@ -39,8 +39,6 @@ public class UI_DialogueWindow : UI_BaseWindow
         {
             // Queue에 출력할 데이터들을 담음
         }
-        else
-            Debug.LogWarning("dialogueParam is Null");
     }
 
     #region Input

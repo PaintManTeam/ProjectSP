@@ -19,6 +19,8 @@ public abstract class BaseObject : InitBase
         return true;
     }
 
+    public virtual void SetInfo(int templateID) { }
+
     protected virtual void Flip(bool flag)
     {
         if (SpriteRender == null)

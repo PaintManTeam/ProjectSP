@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class UI_GameScene : UI_BaseScene
 {
-    [SerializeField] public UI_DialogueWindow dialogueWindow;
-
     public override bool Init()
     {
         if (base.Init() == false)

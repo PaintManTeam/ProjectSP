@@ -32,7 +32,7 @@ public class GameScene : BaseScene
         map = Managers.Object.SpawnMap(tempStageData.MapName);
 
         // 캐릭터 생성
-        player = Managers.Object.SpawnCreature<Player>(map.PlayerSpawnPoint.position);
+        player = Managers.Object.SpawnObject<Player>(map.PlayerSpawnPoint.position);
 
 
 

@@ -134,8 +134,10 @@ public class Creature : BaseObject
         return true;
     }
 
-    public virtual void SetInfo(int templateID)
+    public override void SetInfo(int templateID)
     {
+        base.SetInfo(templateID);
+
         CreatureState = ECreatureState.Idle;
     }
 

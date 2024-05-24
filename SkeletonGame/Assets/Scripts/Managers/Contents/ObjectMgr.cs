@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using NUnit;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,55 +10,36 @@ using static Define;
 
 public class ObjectMgr
 {
-    private GameObject _creatureRoot;
-    public GameObject CreatureRoot
+    private GameObject _spawnObjectRoot;
+    public GameObject SpawnObjectRoot
     {
         get
         {
-            if (_creatureRoot == null) _creatureRoot = GameObject.Find("@Object_CreatureRoot");
-            if (_creatureRoot == null) _creatureRoot = new GameObject { name = "@Object_CreatureRoot" };
-            return _creatureRoot;
+            if (_spawnObjectRoot == null) _spawnObjectRoot = GameObject.Find("@SpawnObjectRoot");
+            if (_spawnObjectRoot == null) _spawnObjectRoot = new GameObject { name = "@SpawnObjectRoot" };
+            return _spawnObjectRoot;
         }
     }
 
-    private GameObject _npcRoot;
-    public GameObject NpcRoot
-    {
-        get
-        {
-            if (_npcRoot == null) _npcRoot = GameObject.Find("@Object_NpcRoot");
-            if (_npcRoot == null) _npcRoot = new GameObject { name = "@Object_NpcRoot" };
-            return _npcRoot;
-        }
-    }
-
-    public T SpawnCreature<T>(Vector3 position, int templateID = 1) where T : Creature
+    public T SpawnObject<T>(Vector3 position, int templateID = 1) where T : BaseObject
     {
         string prefabName = typeof(T).Name;
-        string path = $"{PrefabPath.OBJECT_CREATURE_PATH}/{prefabName}";
+        string path = null;
 
-        GameObject go = Managers.Resource.Instantiate(path, CreatureRoot.transform);
-        go.transform.position = position;
-
-        Creature obj = go.GetComponent<Creature>();
-
-        if (obj.ObjectType == EObjectType.Creature)
+        if(typeof(Creature).IsAssignableFrom(typeof(T)))
+            path = $"{PrefabPath.OBJECT_CREATURE_PATH}/{prefabName}";
+        else
         {
-            Creature creature = go.GetComponent<Creature>();
-            switch (creature.CreatureType)
-            {
-                case ECreatureType.Player:
-                    creature.transform.parent = CreatureRoot.transform;
-                    break;
-                case ECreatureType.Npc:
-                    creature.transform.parent = NpcRoot.transform;
-                    break;
-            }
-
-            creature.SetInfo(templateID);
+            Debug.LogError($"{typeof(T)} 처리 로직 필요 ");
+            return null;
         }
 
-        return obj as T;
+        BaseObject spawnObject = Managers.Resource.Instantiate(path, SpawnObjectRoot.transform).GetComponent<BaseObject>();
+        spawnObject.transform.position = position;
+
+        spawnObject.SetInfo(templateID);
+
+        return spawnObject as T;
     }
 
     public BaseMap SpawnMap(string mapName, int templateId = 1)

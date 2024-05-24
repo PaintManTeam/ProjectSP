@@ -76,6 +76,35 @@ public class Player : Creature
     {
         this.interactionTarget = interactionTarget;
     }
+
+    Transform teleportTarget = null;
+    public void InteractTarget()
+    {
+        if (interactionTarget == null)
+        {
+            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
+            return;
+        }
+        
+        switch (interactionTarget.InteractionType)
+        {
+            case EInteractionType.Dialogue:
+                // 
+                break;
+            case EInteractionType.Portal:
+
+                break;
+        }
+    }
+
+    public void OnTeleportTarget(Transform teleportTarget)
+    {
+        if (teleportTarget == null)
+            Debug.LogWarning("teleportTarget is Null!");
+
+        this.teleportTarget = teleportTarget;
+        CreatureState = ECreatureState.EnterPortal;
+    }
     #endregion
 
     #region Input
@@ -216,6 +245,9 @@ public class Player : Creature
         if (base.EnterPortalStateCondition() == false)
             return false;
 
+        if(teleportTarget == null)
+            return false;
+
         return true;
     }
 
@@ -266,7 +298,12 @@ public class Player : Creature
                 case ECreatureState.Interaction:
                     UpdateInteraction();
                     break;
-                
+                case ECreatureState.EnterPortal:
+                    UpdateEnterPortal();
+                    break;
+                case ECreatureState.ComeOutPortal:
+                    UpdateComeOutPortal();
+                    break;
                 case ECreatureState.Dead:
                     IsPlayerInputControll = false;
                     break;
@@ -327,6 +364,8 @@ public class Player : Creature
         // 사다리 끝에 도달했는지 확인
 
         // 위아래 이동
+
+        // 좌우이동은 제한
     }
 
     private void UpdateInteraction()
@@ -336,8 +375,7 @@ public class Player : Creature
         // 애니메이션 종료 확인
         if(IsEndCurrentState(ECreatureState.Interaction))
         {
-            if (interactionTarget != null)
-                interactionTarget.Interact();
+            InteractTarget();
 
             CreatureState = ECreatureState.Move;
             CreatureState = ECreatureState.Idle;
@@ -346,12 +384,18 @@ public class Player : Creature
 
     private void UpdateEnterPortal()
     {
+        // 애니메이션 모션이 끝나면 페이드 아웃
 
+        // -> 페이드 아웃 후 캐릭터 이동
+
+        // 페이드 인
+
+        // 페이드 인 후 나오는 애니메이션 재생 ( Idle 모션이 되는지 확인 )
     }
 
     private void UpdateComeOutPortal()
     {
-
+        // 애니메이션 모션이 끝나면 Input 다시 연결
     }
 
     private void MovementCheck()
@@ -424,7 +468,8 @@ public class Player : Creature
     {
         base.EnterPortalStateOperate();
 
-
+        // 포탈에 타면 플레이어 조작 제한
+        IsPlayerInputControll = false;
     }
 
     protected override void DeadStateOperate()

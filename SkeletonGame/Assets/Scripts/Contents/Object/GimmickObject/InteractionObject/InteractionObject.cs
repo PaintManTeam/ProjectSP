@@ -9,7 +9,7 @@ public interface IInteraction
     public EInteractionType InteractionType { get; }
     public Vector3 WorldPosition { get; }
 
-    public bool Interact();
+    public bool Interact(InteractionParam param = null);
 }
 
 public class InteractionObject : GimmickObject, IInteraction
@@ -63,7 +63,7 @@ public class InteractionObject : GimmickObject, IInteraction
             Managers.Resource.Destroy(notifyObject.gameObject);
     }
 
-    public virtual bool Interact()
+    public virtual bool Interact(InteractionParam param = null)
     {
         if (GimmickState != EGimmickObjectState.Ready)
             return false;

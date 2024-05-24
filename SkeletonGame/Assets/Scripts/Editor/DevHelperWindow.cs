@@ -192,7 +192,7 @@ public class DevHelperWindow : EditorWindow
 
 	private void SpawnPlayer()
 	{
-		currentPlayer = Managers.Object.SpawnCreature<Player>(playerSpawnPos, playerId);
+		currentPlayer = Managers.Object.SpawnObject<Player>(playerSpawnPos, playerId);
 	}
 
 	#endregion

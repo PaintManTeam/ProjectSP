@@ -79,6 +79,21 @@ public static class Define
 
     }
 
+    public enum EStageSectionType
+    {
+        Cinematic, // 시네마틱 연출
+        GimmickPuzzle, // 기믹 퍼즐
+    }
+
+    public enum ECinematicType
+    {
+        MoveCamera,
+        ZoomOutInCamera,
+        FadeOutInScreen,
+        PlayerAction,
+
+    }
+
     public enum EGimmickType
     {
         Interaction, // 상호 작용을 하면 기믹 발동
@@ -87,8 +102,9 @@ public static class Define
 
     public enum EInteractionType
     {
-        Dialogue,
-        
+        None,
+        Dialogue, // 대화
+        Portal, // 특정 위치로 순간이동
     }
 
     public enum EGimmickObjectState

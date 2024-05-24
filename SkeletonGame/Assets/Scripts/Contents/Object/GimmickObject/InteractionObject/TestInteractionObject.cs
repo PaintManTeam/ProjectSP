@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TestInteractionObject : InteractionObject
 {
-    public override bool Interact()
+    public override bool Interact(InteractionParam param)
     {
-        if (base.Interact() == false)
+        if (base.Interact(param) == false)
             return false;
 
         Managers.Resource.Destroy(gameObject);
