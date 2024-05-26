@@ -8,7 +8,32 @@ public class PlayerInteractionRange : InitBase
 {
     CircleCollider2D circleCollider;
     List<IInteraction> interactionRangeList;
-    Action<IInteraction> OnDetectTargetChanged;
+    Action<IInteraction> onDetectTargetChanged;
+
+    private IInteraction _interactionTarget = null;
+    public IInteraction InteractionTarget
+    {
+        get { return _interactionTarget; }
+        private set
+        {
+            if(value == null)
+            {
+                _interactionTarget = null;
+                notifyObject.gameObject.SetActive(false);
+                return;
+            }
+
+            if (ReferenceEquals(_interactionTarget, value))
+                return;
+            
+            _interactionTarget = value;
+            onDetectTargetChanged?.Invoke(_interactionTarget);
+
+            notifyObject?.SetTarget(_interactionTarget);
+        }
+    }
+
+    private NotifyInteractionObject notifyObject = null;
 
     public override bool Init()
     {
@@ -18,12 +43,15 @@ public class PlayerInteractionRange : InitBase
         circleCollider = GetComponent<CircleCollider2D>();
         interactionRangeList = new List<IInteraction>();
 
+        notifyObject = Managers.Resource.Instantiate<NotifyInteractionObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<NotifyInteractionObject>();
+        notifyObject.gameObject.SetActive(false);
+
         return true;
     }
 
     public void SetInfo(Action<IInteraction> onDetectionTargetChanged, float colliderCenter, float radius)
     {
-        this.OnDetectTargetChanged = onDetectionTargetChanged;
+        this.onDetectTargetChanged = onDetectionTargetChanged;
         transform.localPosition = new Vector2(0, colliderCenter);
         circleCollider.radius = radius;
     }
@@ -32,12 +60,12 @@ public class PlayerInteractionRange : InitBase
     {
         if (collision.tag == ETag.Interaction.ToString())
         {
-            IInteraction interactionTarget = collision.GetComponent<InteractionObject>();
+            IInteraction interactionTarget = collision.GetComponent<IInteraction>();
             
             if(interactionTarget != null && !interactionRangeList.Contains(interactionTarget))
             {
                 interactionRangeList.Add(interactionTarget);
-                OnDetectTargetChanged(FindClosestInRange());
+                ChangeTargetCheck();
             }
         }
     }
@@ -48,22 +76,44 @@ public class PlayerInteractionRange : InitBase
         {
             IInteraction interactionTarget = collision.GetComponent<IInteraction>();
 
-            if (interactionTarget != null && interactionRangeList.Contains(interactionTarget))
+            if (interactionRangeList.Contains(interactionTarget))
             {
                 interactionRangeList.Remove(interactionTarget);
-                OnDetectTargetChanged(FindClosestInRange());
+                ChangeTargetCheck();
             }
         }
+    }
+    
+    public void Interactioncomplete(IInteraction interaction)
+    {
+        if (interactionRangeList.Contains(interaction))
+            interactionRangeList.Remove(interaction);
+    }
+
+    private void ChangeTargetCheck()
+    {
+        coChangeTargetCheck ??= StartCoroutine(CoChangeTargetCheck());
+    }
+
+    Coroutine coChangeTargetCheck = null;
+    private IEnumerator CoChangeTargetCheck()
+    {
+        if (interactionRangeList.Count == 0)
+            InteractionTarget = null;
+        else if (interactionRangeList.Count == 1)
+            InteractionTarget = interactionRangeList[0];
+
+        while (interactionRangeList.Count > 1)
+        {
+            InteractionTarget = FindClosestInRange();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        coChangeTargetCheck = null;
     }
 
     private IInteraction FindClosestInRange()
     {
-        if (interactionRangeList.Count == 0)
-            return null;
-
-        if (interactionRangeList.Count == 1)
-            return interactionRangeList[0];
-
         InteractionObject target = null;
 
         float bestDistanceSqr = float.MaxValue;
@@ -74,7 +124,7 @@ public class PlayerInteractionRange : InitBase
             if (interactionObject.GimmickState != EGimmickObjectState.Ready)
                 continue;
 
-            Vector3 dir = interactionRangeList[0].WorldPosition - transform.position;
+            Vector3 dir = interactionObject.WorldPosition - transform.position;
             float distToTargetSqr = dir.sqrMagnitude;
 
             // 이미 더 좋은 후보를 찾았으면 스킵.
@@ -87,4 +137,6 @@ public class PlayerInteractionRange : InitBase
 
         return target;
     }
+
+
 }

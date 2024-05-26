@@ -361,7 +361,12 @@ public class Player : Creature
         // 애니메이션 종료 확인
         if (IsEndCurrentState(ECreatureState.Interaction))
         {
-            InteractTarget();
+            if(interactionTarget != null)
+            {
+                interactionTarget.Interact();
+                interactionRange.Interactioncomplete(interactionTarget);
+                interactionTarget = null;
+            }
 
             CreatureState = ECreatureState.Move;
             CreatureState = ECreatureState.Idle;
@@ -373,6 +378,13 @@ public class Player : Creature
         base.InteractionStateOperate();
 
         SetRigidVelocityZero();
+
+        if (interactionTarget != null)
+        {
+            float dirX = transform.position.x - interactionTarget.WorldPosition.x;
+
+            LookLeft = dirX > 0;
+        }
     }
 
     IInteraction interactionTarget = null;
@@ -384,13 +396,13 @@ public class Player : Creature
     public void InteractTarget()
     {
         if (interactionTarget == null)
-        {
-            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
             return;
-        }
 
         switch (interactionTarget.InteractionType)
         {
+            case EInteractionType.EndMotion:
+                CreatureState = ECreatureState.Interaction;
+                break;
             case EInteractionType.Dialogue:
                 InteractDialogue();
                 break;

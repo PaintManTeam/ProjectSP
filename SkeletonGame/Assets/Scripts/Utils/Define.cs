@@ -103,6 +103,7 @@ public static class Define
     public enum EInteractionType
     {
         None,
+        EndMotion, // 모션이 끝나면 상호작용
         Dialogue, // 대화
         Portal, // 특정 위치로 순간이동
     }

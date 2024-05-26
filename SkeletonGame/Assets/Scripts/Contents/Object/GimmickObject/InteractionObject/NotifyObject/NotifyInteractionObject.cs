@@ -14,14 +14,21 @@ public class NotifyInteractionObject : InitBase
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         textMeshRenderer = Util.FindChild(gameObject, "Text").GetComponent<MeshRenderer>();
-        textMeshRenderer.sortingOrder = spriteRenderer.sortingOrder;
 
         return true;
     }
 
-    public void SetInfo(int sortingOrder)
+    public void SetTarget(IInteraction target)
     {
-        textMeshRenderer.sortingOrder = sortingOrder;
-        spriteRenderer.sortingOrder = sortingOrder;
+        transform.position = target.WorldPosition;
+        gameObject.SetActive(true);
+
+        if (target is BaseObject baseObject)
+        {
+            int sortingOrder = baseObject.SpriteRender.sortingOrder + 1;
+
+            textMeshRenderer.sortingOrder = sortingOrder;
+            spriteRenderer.sortingOrder = sortingOrder;
+        }
     }
 }
