@@ -30,7 +30,7 @@ public class PortalObject : InteractionObject
         if (base.Interact(param) == false)
             return false;
 
-        if(param is PortalParam portalParam)
+        if(param is InteractionPortalParam portalParam)
         {
             portalParam.onTeleportTarget?.Invoke(teleportTarget);
         }

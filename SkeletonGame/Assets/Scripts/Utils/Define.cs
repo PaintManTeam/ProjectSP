@@ -55,14 +55,14 @@ public static class Define
     public enum ECreatureState
     {
         None,
-        Idle, // loop
-        Move, // loop
+        Idle,
+        Move,
         Jump,
         FallDown,
-        Climb, // loop
-        Interaction, // loop
-        EnterPortal,
-        ComeOutPortal,
+        Climb,
+        Interaction,
+        EnterPortal, // Move 모션
+        ComeOutPortal, // Move 모션
         
         Dead
     }
@@ -103,7 +103,7 @@ public static class Define
     public enum EInteractionType
     {
         None,
-        EndMotion, // 모션이 끝나면 상호작용
+        EndMotion, // 상호 작용 모션이 끝나면 상호작용
         Dialogue, // 대화
         Portal, // 특정 위치로 순간이동
     }

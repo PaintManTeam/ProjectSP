@@ -13,6 +13,9 @@ public interface IInteraction
 
 public class InteractionObject : GimmickObject, IInteraction
 {
+    // 임시 테스트
+    [SerializeField] InteractionComponentBase[] testArray;
+
     public EInteractionType InteractionType { get; protected set; }
     public Vector3 WorldPosition { get { return this.transform.position; } }
 

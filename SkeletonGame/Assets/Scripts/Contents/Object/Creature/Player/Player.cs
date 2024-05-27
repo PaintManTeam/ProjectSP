@@ -412,9 +412,29 @@ public class Player : Creature
         }
     }
 
+    public void InteractPortal()
+    {
+        if (interactionTarget == null)
+        {
+            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
+            return;
+        }
+
+        InteractionPortalParam param = new InteractionPortalParam(OnTeleportTarget);
+        interactionTarget.Interact(param);
+    }
+
     public void InteractDialogue()
     {
-        Debug.Log("InteractDialogue 미구현");
+        IsPlayerInputControll = false;
+
+        InteractionDialogueParam param = new InteractionDialogueParam(OnEndDialogue);
+        interactionTarget.Interact(param);
+    }
+
+    public void OnEndDialogue()
+    {
+        IsPlayerInputControll = true;
     }
     #endregion
 
@@ -484,17 +504,6 @@ public class Player : Creature
     }
 
     BaseObject teleportTarget = null;
-    public void InteractPortal()
-    {
-        if (interactionTarget == null)
-        {
-            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
-            return;
-        }
-
-        PortalParam param = new PortalParam(OnTeleportTarget);
-        interactionTarget.Interact(param);
-    }
     public void OnTeleportTarget(BaseObject teleportTarget)
     {
         if (teleportTarget == null)

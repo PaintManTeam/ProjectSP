@@ -11,14 +11,7 @@
       "DataId": 1,
       "Name": "TestNpc",
       "Dialogue": [
-        "a"
-      ]
-    },
-    {
-      "DataId": 2,
-      "Name": "Skeleton",
-      "Dialogue": [
-        "d"
+        "대사 내용이 없습니다.\\n왜 없냐고요? 그냥 없습니다.\\n그냥 없어요."
       ]
     }
   ]

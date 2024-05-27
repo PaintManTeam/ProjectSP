@@ -1,3 +1,5 @@
+using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,12 +23,13 @@ public class UI_DialoguePopup : UI_BasePopup
     - 완료 반환을 위해 다이얼로그 윈도우 규칙을 정해야 함 (다이얼로그 매니저?)
     */
 
+    Action onEndDialogue = null;
+    Queue<DialogueData> dataQueue;
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
-
-        ConnectInputActions(true);
 
         return true;
     }
@@ -35,10 +38,41 @@ public class UI_DialoguePopup : UI_BasePopup
     {
         base.SetInfo(param);
 
-        if (param is DialogueParam dialogueParam)
+        if (param is UIDialogueParam dialogueParam)
         {
             // Queue에 출력할 데이터들을 담음
+
+            onEndDialogue = dialogueParam.onEndDialogue;
+            dataQueue = dialogueParam.dataQueue;
         }
+    }
+
+    public override void OpenPopupUI()
+    {
+        SetDialogueInfo();
+
+        base.OpenPopupUI();
+
+        StartDialogue();
+    }
+
+    private void SetDialogueInfo()
+    {
+        // 다이얼로그 활성화 전 초기 세팅
+    }
+
+    private void StartDialogue()
+    {
+        ConnectInputActions(true);
+
+        // 다이얼로그 코루틴 실행
+    }
+
+    private void EndDialogue()
+    {
+        ConnectInputActions(false);
+        ClosePopupUI();
+        onEndDialogue?.Invoke();
     }
 
     #region Input

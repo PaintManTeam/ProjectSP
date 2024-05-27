@@ -1,3 +1,4 @@
+using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,9 +6,16 @@ using UnityEngine;
 
 public class UIParam { }
 
-public class DialogueParam : UIParam
+public class UIDialogueParam : UIParam
 {
-    // 다이얼로그 매니저가 UI매니저한테 요청할 정보가 되야 할 듯 ?
+    public Action onEndDialogue;
+    public Queue<DialogueData> dataQueue;
+
+    public UIDialogueParam(Action onEndDialogue, Queue<DialogueData> dataQueue)
+    {
+        this.onEndDialogue = onEndDialogue;
+        this.dataQueue = dataQueue;
+    }
 }
 
 public class UILoadingParam : UIParam

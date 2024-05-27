@@ -1,7 +1,3 @@
 ﻿DataId,Name,Dialogue
 0,캐릭터 이름,대사
-1,TestNpc,안녕 반가워 ㅁㅇㄻㄴㅇㄻㄴㅇㄻㄴㅇㄹ \n
-2,TestNpc,"나는 누구누구야, "
-3,TestNpc,넌 이름이뭐니
-4,,
-5,Skeleton,대사3
+1,TestNpc,대사 내용이 없습니다.\n왜 없냐고요? 그냥 없습니다.\n그냥 없어요.

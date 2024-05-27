@@ -14,11 +14,11 @@ public class Managers : MonoBehaviour
     private static Managers Instance { get { Init(); return s_instance; } }
 
     #region InGame Contents
-    private DialogueMgr _dialogue = new DialogueMgr();
+    private InteractionMgr _interaction = new InteractionMgr();
     private GameMgr _game = new GameMgr();
     private ObjectMgr _object = new ObjectMgr();
 
-    public static DialogueMgr Dialogue { get { return Instance?._dialogue; } }
+    public static InteractionMgr Interaction { get { return Instance?._interaction; } }
     public static GameMgr Game { get { return Instance?._game; } }
     public static ObjectMgr Object { get { return Instance?._object; } }
     #endregion
