@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameMgr
 {
+    StageRoot currStage;
+
     public void Init()
     {
 
@@ -19,7 +21,5 @@ public class GameMgr
 
     }
 
-    #region Stage
 
-    #endregion
 }

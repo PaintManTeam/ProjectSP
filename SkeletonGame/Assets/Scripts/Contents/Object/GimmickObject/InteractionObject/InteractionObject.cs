@@ -4,18 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
-public interface IInteraction
-{
-    public EInteractionType InteractionType { get; }
-    public Vector3 WorldPosition { get; }
-    public bool Interact(InteractionParam param = null);
-}
-
 public class InteractionObject : GimmickObject, IInteraction
 {
-    // 임시 테스트
-    [SerializeField] InteractionComponentBase[] testArray;
-
     public EInteractionType InteractionType { get; protected set; }
     public Vector3 WorldPosition { get { return this.transform.position; } }
 

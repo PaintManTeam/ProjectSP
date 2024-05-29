@@ -373,15 +373,6 @@ public class Player : Creature
     protected override void InteractionStateOperate()
     {
         base.InteractionStateOperate();
-
-        SetRigidVelocityZero();
-
-        if (interactionTarget != null)
-        {
-            float dirX = transform.position.x - interactionTarget.WorldPosition.x;
-
-            LookLeft = dirX > 0;
-        }
     }
 
     IInteraction interactionTarget = null;
@@ -397,6 +388,10 @@ public class Player : Creature
 
         if (interactionTarget == null)
             return;
+
+        SetRigidVelocityZero();
+        float dirX = transform.position.x - interactionTarget.WorldPosition.x;
+        LookLeft = dirX > 0;
 
         switch (interactionTarget.InteractionType)
         {
