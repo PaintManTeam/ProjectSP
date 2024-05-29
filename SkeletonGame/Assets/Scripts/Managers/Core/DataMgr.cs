@@ -14,7 +14,6 @@ public class DataMgr
 {
     public Dictionary<int, Data.DialogueData> DialogueDict { get; private set; } = new Dictionary<int, Data.DialogueData>();
     
-
     public void Init()
     {
         DialogueDict = LoadJson<Data.DialogueDataLoader, int, Data.DialogueData>("DialogueData").MakeDict();
@@ -22,7 +21,7 @@ public class DataMgr
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
     {
-        TextAsset textAsset = Managers.Resource.Load<TextAsset>($"Data/{path}");
+        TextAsset textAsset = Managers.Resource.Load<TextAsset>($"Data/JsonData/{path}");
         return JsonUtility.FromJson<Loader>(textAsset.text);
     }
 }

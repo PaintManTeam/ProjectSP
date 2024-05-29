@@ -11,7 +11,7 @@ public class Player : Creature
     protected PlayerInteractionRange interactionRange;
 
     // 플레이어를 조작할 수 있는 경우
-    private bool _isPlayerInputControll = false;
+    [SerializeField] private bool _isPlayerInputControll = false;
     public bool IsPlayerInputControll
     {
         get { return _isPlayerInputControll; }
@@ -27,9 +27,11 @@ public class Player : Creature
             {
                 coPlayerStateController = StartCoroutine(CoPlayerStateController());
             }
-            else if (!_isPlayerInputControll && coPlayerStateController != null)
+            else if(_isPlayerInputControll == false && CreatureState != ECreatureState.Dead)
             {
-                StopCoroutine(coPlayerStateController);
+                // 강제로 모션 변환
+                PlayAnimation(ECreatureState.Idle);
+                IdleStateOperate();
             }
         }
     }
@@ -120,8 +122,6 @@ public class Player : Creature
     Coroutine coPlayerStateController = null;
     protected IEnumerator CoPlayerStateController()
     {
-        yield return null;
-
         while (IsPlayerInputControll)
         {
             switch (CreatureState)
@@ -149,9 +149,6 @@ public class Player : Creature
                     break;
                 case ECreatureState.ComeOutPortal:
                     UpdateComeOutPortal();
-                    break;
-                case ECreatureState.Dead:
-                    IsPlayerInputControll = false;
                     break;
             }
 
@@ -185,7 +182,7 @@ public class Player : Creature
     {
         base.IdleStateOperate();
 
-
+        SetRigidVelocityZero();
     }
     #endregion
 
@@ -395,6 +392,9 @@ public class Player : Creature
 
     public void InteractTarget()
     {
+        if (creatureFoot.IsLandingGround == false)
+            return;
+
         if (interactionTarget == null)
             return;
 
@@ -412,23 +412,18 @@ public class Player : Creature
         }
     }
 
-    public void InteractPortal()
+    private void InteractDialogue()
     {
-        if (interactionTarget == null)
-        {
-            Debug.LogWarning("상호작용 대상을 참조하지 않고 있습니다.");
-            return;
-        }
-
-        InteractionPortalParam param = new InteractionPortalParam(OnTeleportTarget);
-        interactionTarget.Interact(param);
-    }
-
-    public void InteractDialogue()
-    {
+        CreatureState = ECreatureState.Idle;
         IsPlayerInputControll = false;
 
         InteractionDialogueParam param = new InteractionDialogueParam(OnEndDialogue);
+        interactionTarget.Interact(param);
+    }
+
+    private void InteractPortal()
+    {
+        InteractionPortalParam param = new InteractionPortalParam(OnTeleportTarget);
         interactionTarget.Interact(param);
     }
 

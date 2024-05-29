@@ -1,3 +1,5 @@
+using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +24,19 @@ public class InteractionMgr
     
     // 데이터매니저에게 필요한 데이터를 추출해 큐에 담아 UI를 띄움
     // 이 때, 다이얼로그가 끝남을 알리는 콜백함수 연결
+
+    public void ActiveDialogue(int startIndex, int endIndex, Action onEndDialogue)
+    {
+        Queue<DialogueData> dataQueue = new Queue<DialogueData>();
+
+        for(int i = startIndex; i <= endIndex; i++)
+        {
+            dataQueue.Enqueue(Managers.Data.DialogueDict[i]);
+        }
+
+        UIDialogueParam param = new UIDialogueParam(onEndDialogue, dataQueue);
+        Managers.UI.OpenPopupUI<UI_DialoguePopup>(param);
+    }
 
     #endregion
 

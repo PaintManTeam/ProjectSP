@@ -12,7 +12,7 @@ namespace Data
     {
         public int DataId;
         public string Name;
-        public List<string> Dialogue;
+        public string Dialogue;
     }
 
     [Serializable]

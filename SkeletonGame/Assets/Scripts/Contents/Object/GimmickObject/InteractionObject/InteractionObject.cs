@@ -41,6 +41,8 @@ public class InteractionObject : GimmickObject, IInteraction
         if (GimmickState != EGimmickObjectState.Ready)
             return false;
 
+        
+
         return true;
     }
 }

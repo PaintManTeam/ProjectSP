@@ -2,6 +2,8 @@ using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,8 +42,6 @@ public class UI_DialoguePopup : UI_BasePopup
 
         if (param is UIDialogueParam dialogueParam)
         {
-            // Queue에 출력할 데이터들을 담음
-
             onEndDialogue = dialogueParam.onEndDialogue;
             dataQueue = dialogueParam.dataQueue;
         }
@@ -58,14 +58,15 @@ public class UI_DialoguePopup : UI_BasePopup
 
     private void SetDialogueInfo()
     {
-        // 다이얼로그 활성화 전 초기 세팅
+        // 다이얼로그 활성화 전 기본 값 세팅
+        dialogueText.text = "";
     }
 
     private void StartDialogue()
     {
         ConnectInputActions(true);
 
-        // 다이얼로그 코루틴 실행
+        coDialogueSequenceExecuter = StartCoroutine(CoDialogueSequenceExecuter(0.1f));
     }
 
     private void EndDialogue()
@@ -75,23 +76,78 @@ public class UI_DialoguePopup : UI_BasePopup
         onEndDialogue?.Invoke();
     }
 
+    Coroutine coDialogueSequenceExecuter = null;
+    private IEnumerator CoDialogueSequenceExecuter(float typingDelayTime)
+    {
+        while(dataQueue.Count > 0)
+        {
+            dialogueText.text = "";
+            DialogueData data = dataQueue.Dequeue();
+
+            if (coDialogueTyping != null)
+            {
+                StopCoroutine(coDialogueTyping);
+                coDialogueTyping = null;
+            }
+
+            // 타이핑 기능
+            coDialogueTyping = StartCoroutine(CoDialogueTyping(data.Dialogue, 0.1f)); // 시간 조절
+
+            // 타이핑이 끝날 때까지 대기
+            yield return new WaitUntil(() => coDialogueTyping == null);
+            dialogueText.text = data.Dialogue;
+
+            // 스킵 키가 눌릴 때까지 대기
+            yield return new WaitUntil(() => isSkip);
+            isSkip = false;
+        }
+        
+        EndDialogue();
+        coDialogueSequenceExecuter = null;
+    }
+
+    Coroutine coDialogueTyping = null;
+    private IEnumerator CoDialogueTyping(string dialogue, float typingDelayTime)
+    {
+        int index = 0;
+
+        while(index < dialogue.Length)
+        {
+            dialogueText.text += dialogue[index];
+            yield return new WaitForSeconds(typingDelayTime);
+            index++;
+        }
+
+        dialogueText.text = dialogue;
+        coDialogueTyping = null;
+    }
+
     #region Input
     private void ConnectInputActions(bool isConnect)
     {
-        Managers.Input.OnSpaceKeyEntered -= OnNextDialogueKey;
+        Managers.Input.OnSpaceKeyEntered -= OnSkipKey;
 
         if(isConnect)
         {
-            Managers.Input.OnSpaceKeyEntered += OnNextDialogueKey;
+            Managers.Input.OnSpaceKeyEntered += OnSkipKey;
         }
     }
-    public void OnNextDialogueKey()
-    {
-        Debug.Log($"{this.gameObject.activeSelf} : 다음 다이얼로그 키 입력받음");
-    }
+
+    private bool isSkip = false;
     public void OnSkipKey()
     {
-        // 아직 미구현
+        if(coDialogueTyping != null)
+        {
+            StopCoroutine(coDialogueTyping);
+            coDialogueTyping = null;
+            return;
+        }
+
+        if(coDialogueSequenceExecuter != null)
+        {
+            isSkip = true;
+            return;
+        }
     }
     #endregion
 }

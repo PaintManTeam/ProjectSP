@@ -3,16 +3,27 @@
     {
       "DataId": 0,
       "Name": "캐릭터 이름",
-      "Dialogue": [
-        "대사"
-      ]
+      "Dialogue": "대사"
     },
     {
       "DataId": 1,
       "Name": "TestNpc",
-      "Dialogue": [
-        "대사 내용이 없습니다.\\n왜 없냐고요? 그냥 없습니다.\\n그냥 없어요."
-      ]
+      "Dialogue": "대사 내용이 없습니다."
+    },
+    {
+      "DataId": 2,
+      "Name": "TestNpc",
+      "Dialogue": "왜 없냐고요?"
+    },
+    {
+      "DataId": 3,
+      "Name": "TestNpc",
+      "Dialogue": "그냥 없습니다."
+    },
+    {
+      "DataId": 4,
+      "Name": "TestNpc",
+      "Dialogue": "그냥 없어요."
     }
   ]
 }

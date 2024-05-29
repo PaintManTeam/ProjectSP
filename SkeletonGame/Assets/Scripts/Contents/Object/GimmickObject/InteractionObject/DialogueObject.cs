@@ -32,7 +32,7 @@ public class DialogueObject : InteractionObject
 
         if(param is InteractionDialogueParam dialogueParam)
         {
-            // 다이얼로그 띄우고 끝나면 콜백 받아
+            Managers.Interaction.ActiveDialogue(startIndex, endIndex, dialogueParam.onEndDialogue);
         }
 
         return true;
