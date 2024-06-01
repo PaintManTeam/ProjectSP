@@ -11,15 +11,15 @@ public class GameMgr
 
     }
 
-    public void StartGame(int stageNum)
-    {
-
-    }
-
     public void Clear()
     {
 
     }
 
+    public void StartGame(int stageNum)
+    {
+        // 스테이지 데이터를 받아옴
 
+
+    }
 }

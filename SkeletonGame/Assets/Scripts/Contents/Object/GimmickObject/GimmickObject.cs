@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEditor;
 using static Define;
 
 public interface IGimmick
@@ -42,6 +43,36 @@ public class GimmickObject : BaseObject, IGimmick
         GimmickState = EGimmickObjectState.Ready; // 임시
         
     }
+
+#if UNITY_EDITOR
+
+    #region AddComponent
+    [SerializeField] int testNum1;
+    public void CustomAddComponent()
+    {
+        Debug.Log("Add");
+
+
+    }
+    #endregion
+
+    [SerializeField] int testNum2;
+    public void SaveComponentData()
+    {
+        Debug.Log("Save");
+
+
+    }
+
+    [SerializeField] int testNum3;
+    public void LoadComponentData()
+    {
+        Debug.Log("Load");
+
+
+    }
+
+#endif
 
     public override Vector2 GetTopPosition()
     {
