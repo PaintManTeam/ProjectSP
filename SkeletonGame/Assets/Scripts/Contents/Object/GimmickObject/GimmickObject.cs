@@ -46,17 +46,37 @@ public class GimmickObject : BaseObject, IGimmick
 
 #if UNITY_EDITOR
 
-    #region AddComponent
-    [SerializeField] int testNum1;
-    public void CustomAddComponent()
+    public GimmickComponentBase gimmickComponent = null;
+
+    public void ClearCustomComponentAll()
     {
-        Debug.Log("Add");
+        gimmickComponent = gameObject.GetComponent<GimmickComponentBase>();
+        gimmickComponent?.RemoveComponentOperate();
+    }
 
+    #region AddComponent
+    public void CustomAddComponent(EGimmickType gimmickType)
+    {
+        gameObject.GetComponent<GimmickComponentBase>();
 
+        if(gimmickComponent != null)
+            Destroy(gimmickComponent);
+
+        switch (gimmickType)
+        {
+            case EGimmickType.Interaction:
+                gimmickComponent = Util.GetOrAddComponent<GimmickInteractionComponent>(gameObject);
+                break;
+            case EGimmickType.Collision:
+                gimmickComponent = Util.GetOrAddComponent<GimmickCollisionComponent>(gameObject);
+                break;
+            default:
+                Debug.LogError($"새로운 타입 세팅 필요 : {gimmickType}");
+                break;
+        }
     }
     #endregion
 
-    [SerializeField] int testNum2;
     public void SaveComponentData()
     {
         Debug.Log("Save");
@@ -64,7 +84,6 @@ public class GimmickObject : BaseObject, IGimmick
 
     }
 
-    [SerializeField] int testNum3;
     public void LoadComponentData()
     {
         Debug.Log("Load");

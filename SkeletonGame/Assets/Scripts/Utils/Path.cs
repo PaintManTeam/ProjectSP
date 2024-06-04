@@ -18,6 +18,7 @@ public static class PrefabPath
     public const string UI_POPUP_PATH = "UI/Popup";
     public const string UI_WINDOW_PATH = "UI/Window";
 
+    public const string STAGE_PATH = "Stage";
     public const string OBJECT_PATH = "Object";
     public const string OBJECT_CREATURE_PATH = "Object/Creature";
     public const string OBJECT_GIMMICK_PATH = "Object/GimmickObject";

@@ -81,6 +81,7 @@ public static class Define
 
     public enum EStageSectionType
     {
+        None,
         Cinematic, // 시네마틱 연출
         GimmickPuzzle, // 기믹 퍼즐
     }
@@ -96,8 +97,9 @@ public static class Define
 
     public enum EGimmickType
     {
+        None,
         Interaction, // 상호 작용을 하면 기믹 발동
-        Trigger, // 닿을 경우 기믹 발동
+        Collision, // 닿을 경우 기믹 발동
     }
 
     public enum EInteractionType
