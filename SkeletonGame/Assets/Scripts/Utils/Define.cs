@@ -82,8 +82,8 @@ public static class Define
     public enum EStageSectionType
     {
         None,
-        Cinematic, // 시네마틱 연출
-        GimmickPuzzle, // 기믹 퍼즐
+        CinematicSection, // 시네마틱 연출
+        GimmickSection, // 기믹 퍼즐
     }
 
     public enum ECinematicType

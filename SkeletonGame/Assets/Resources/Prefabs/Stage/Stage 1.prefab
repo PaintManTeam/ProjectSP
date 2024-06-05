@@ -222,10 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c578049a4d633e24eb5864d1adc46fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InstanceIDList: 
   map: {fileID: 847800319957208050}
   StageSectionList:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

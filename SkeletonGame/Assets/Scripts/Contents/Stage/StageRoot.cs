@@ -1,3 +1,4 @@
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,13 @@ using static Define;
 
 public class StageRoot : InitBase
 {
+    [SerializeField] // 확인용
+    List<int> InstanceIDList = new List<int>();
+
     [SerializeField] BaseMap map;
     [SerializeField] List<StageSectionBase> StageSectionList = new List<StageSectionBase>();
+
+    
 
     public override bool Init()
     {
@@ -22,11 +28,18 @@ public class StageRoot : InitBase
 
     public void GenerateStageMap()
     {
-        string path = $"{PrefabPath.STAGE_PATH}/Map";
-        GameObject original = Resources.Load<GameObject>($"Prefabs/{path}");
-        GameObject go = Instantiate(original, transform);
-        go.name = "Map";
-        go.transform.SetAsFirstSibling();
+        map = transform.Find("Map")?.GetComponent<BaseMap>();
+
+        if (map == null)
+        {
+            string path = $"{PrefabPath.STAGE_PATH}/Map";
+            GameObject original = Resources.Load<GameObject>($"Prefabs/{path}");
+            GameObject go = Instantiate(original, transform);
+            go.name = "Map";
+            go.transform.SetAsFirstSibling();
+        }
+        else
+            Debug.Log("이미 맵이 존재합니다.");
     }
 
     public bool UpdateStageInfo()
@@ -35,7 +48,7 @@ public class StageRoot : InitBase
 
         if (map == null)
         {
-            Debug.LogError("맵을 먼저 생성해주세요.");
+            Debug.LogWarning("맵을 먼저 생성해주세요.");
             return false;
         }
 
@@ -51,9 +64,14 @@ public class StageRoot : InitBase
                 StageSectionList.Add(stageSection);
         }
 
-        foreach(StageSectionBase child in StageSectionList)
+        for (int i = 0; i < StageSectionList.Count; i++)
         {
-            // 이름 정리?
+            string[] strs = StageSectionList[i].ToString().Split(' ');
+            StageSectionList[i].name = strs[0] + $" {i + 1}";
+            StageSectionList[i].transform.parent = transform;
+            StageSectionList[i].transform.SetSiblingIndex(i + 1);
+            
+            Debug.Log($"{i}번째 : {StageSectionList[i].GetInstanceID()}");
         }
 
         return true;
@@ -63,7 +81,7 @@ public class StageRoot : InitBase
     {
         if(stageSectionType == EStageSectionType.None)
         {
-            Debug.LogError("스테이지 섹션을 설정해주세요.");
+            Debug.LogWarning("스테이지 섹션을 설정해주세요.");
             return;
         }
 
@@ -77,10 +95,10 @@ public class StageRoot : InitBase
 
         switch (stageSectionType)
         {
-            case EStageSectionType.GimmickPuzzle:
+            case EStageSectionType.GimmickSection:
                 go.AddComponent<GimmickSection>();
                 break;
-            case EStageSectionType.Cinematic:
+            case EStageSectionType.CinematicSection:
                 go.AddComponent<CinematicSection>();
                 break;
             default:
