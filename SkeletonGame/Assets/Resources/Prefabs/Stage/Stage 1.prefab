@@ -222,12 +222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c578049a4d633e24eb5864d1adc46fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InstanceIDList: 
+  SectionInstanceIDList: 5002ffff0a02ffff
   map: {fileID: 847800319957208050}
-  StageSectionList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &6351044223243877231
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,10 +752,6 @@ CompositeCollider2D:
         Y: -50000000
       - X: 90000000
         Y: -50000000
-  - m_Collider: {fileID: 2291274359233775157}
-    m_ColliderPaths: []
-  - m_Collider: {fileID: 2291274359233775157}
-    m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: 8.99997, y: -5}

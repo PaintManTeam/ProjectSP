@@ -13,6 +13,11 @@ public class GimmickSectionGenerator : Editor
 
         GimmickSection gimmickSection = (GimmickSection)target;
 
+        GUILayout.Label("기믹 오브젝트 생성 메뉴", EditorStyles.boldLabel);
 
+        if (GUILayout.Button("기믹 오브젝트 생성"))
+        {
+            Debug.Log("기믹 오브젝트 생성");
+        }
     }
 }
