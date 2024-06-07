@@ -110,6 +110,21 @@ public static class Define
         Portal, // 특정 위치로 순간이동
     }
 
+    public enum EGimmickCollisionObjectType
+    {
+        None,
+        TestCollsion,
+    }
+
+    public enum EGimmickInteractionObjectType
+    {
+        None,
+
+        EndMotion,
+        Dialogue,
+        Portal,
+    }
+
     public enum EGimmickObjectState
     {
         StandBy, // 소환만 된 상태

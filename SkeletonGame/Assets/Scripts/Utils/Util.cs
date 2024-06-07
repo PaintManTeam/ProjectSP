@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class Util
 {
-    public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
+    public static T GetOrAddComponent<T>(GameObject go) where T : Component
     {
         T component = go.GetComponent<T>();
         if (component == null)
@@ -57,4 +58,14 @@ public static class Util
     {
         return (T)Enum.Parse(typeof(T), value, true);
     }
+
+#if UNITY_EDITOR
+    public static GameObject InstantiateObject(Transform transform)
+    {
+        GameObject tempObject = new GameObject();
+        GameObject go = GameObject.Instantiate(tempObject, transform);
+        GameObject.DestroyImmediate(tempObject);
+        return go;
+    }
+#endif
 }

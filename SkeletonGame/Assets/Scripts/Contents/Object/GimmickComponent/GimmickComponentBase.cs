@@ -5,23 +5,37 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using static Define;
 
-public abstract class GimmickComponentBase : InitBase
+public interface IGimmickComponent
 {
+    public EGimmickObjectState GimmickState { get; }
+    public EGimmickType GimmickType { get; }
+}
+
+public abstract class GimmickComponentBase : InitBase, IGimmickComponent
+{
+    public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
 
     public Rigidbody2D Rigidbody { get; protected set; }
+
+    private void Start()
+    {
+        SetInfo(0); // 임시
+    }
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        Rigidbody = GetComponent<Rigidbody2D>();
+
         return true;
     }
 
     public virtual void SetInfo(int templateId)
     {
-        Debug.Log(templateId);
+        GimmickState = EGimmickObjectState.Ready; // 임시
     }
 
 #if UNITY_EDITOR

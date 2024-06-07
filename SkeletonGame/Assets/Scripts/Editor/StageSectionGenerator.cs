@@ -9,11 +9,10 @@ using static Define;
 public class StageSectionGenerator : Editor
 {
     EStageSectionType stageSectionType;
-    EStageSectionType insertStageSectionType;
 
-    bool isSaveUnlockedStatus;
-    bool isLoadUnlockedStatus;
-    bool isRemoveUnlockedStatus;
+    bool isSaveUnlocked;
+    bool isLoadUnlocked;
+    bool isRemoveUnlocked;
 
     int insertIndex;
     int removeIndex;
@@ -26,36 +25,36 @@ public class StageSectionGenerator : Editor
 
         // 맵 관련
         GUILayout.Space(10);
-        GUILayout.Label("맵 관련 메뉴", EditorStyles.boldLabel);
+        GUILayout.Label("- 배경 맵 -", EditorStyles.boldLabel);
         GUILayout.Space(5);
         if (GUILayout.Button("테스트 맵 생성"))
             stageRoot.GenerateStageMap();
 
         GUILayout.Space(15);
-        GUILayout.Label("스테이지 관련 메뉴", EditorStyles.boldLabel);
+        GUILayout.Label("- 스테이지 -", EditorStyles.boldLabel);
         
         // 갱신
         GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 색션 갱신"))
+        if (GUILayout.Button("스테이지 데이터 갱신"))
             stageRoot.UpdateStageInfo();
 
         // 데이터 저장
         GUILayout.Space(5);
-        isSaveUnlockedStatus = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlockedStatus);
+        isSaveUnlocked = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlocked);
         GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 색션 저장") && isSaveUnlockedStatus)
-            stageRoot.SaveStageSectionDatas();
+        if (GUILayout.Button("스테이지 데이터 저장") && isSaveUnlocked)
+            stageRoot.SaveStageData();
         
         // 데이터 불러오기
         GUILayout.Space(5);
-        isLoadUnlockedStatus = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlockedStatus);
+        isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
         GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 색션 불러오기") && isLoadUnlockedStatus)
-            stageRoot.LoadStageSectionDatas();
+        if (GUILayout.Button("스테이지 데이터 불러오기") && isLoadUnlocked)
+            stageRoot.LoadStageData();
         
-        // 추가
+        // 섹션 추가
         GUILayout.Space(15);
-        GUILayout.Label("스테이지 추가", EditorStyles.label);
+        GUILayout.Label("스테이지 섹션 추가", EditorStyles.boldLabel);
         GUILayout.Space(5);
         stageSectionType = (EStageSectionType)EditorGUILayout.EnumPopup("스테이지 섹션 타입", stageSectionType);
         insertIndex = EditorGUILayout.IntField("위치 (0이면 맨끝)", insertIndex);
@@ -63,47 +62,16 @@ public class StageSectionGenerator : Editor
         if (GUILayout.Button("스테이지 색션 추가"))
             stageRoot.AddStageSection(stageSectionType, insertIndex);
 
-        // 삭제
+        // 섹션 삭제
         GUILayout.Space(15);
-        GUILayout.Label("스테이지 삭제", EditorStyles.label);
+        GUILayout.Label("스테이지 섹션 삭제", EditorStyles.boldLabel);
         GUILayout.Space(5);
-        isRemoveUnlockedStatus = EditorGUILayout.Toggle("삭제 잠금 해제", isRemoveUnlockedStatus);
+        isRemoveUnlocked = EditorGUILayout.Toggle("삭제 잠금 해제", isRemoveUnlocked);
         removeIndex = EditorGUILayout.IntField("삭제대상 (0이면 맨끝)", removeIndex);
         GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 섹션 삭제") && isRemoveUnlockedStatus)
+        if (GUILayout.Button("스테이지 섹션 삭제") && isRemoveUnlocked)
             stageRoot.RemoveStageSection(removeIndex);
 
         GUILayout.Space(20);
-    }
-}
-namespace UnityEditor
-{
-    [CustomPropertyDrawer(typeof(ReadOnlyAttribute), true)]
-    public class ReadOnlyAttributeDrawer : PropertyDrawer
-    {
-        // Necessary since some properties tend to collapse smaller than their content
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return EditorGUI.GetPropertyHeight(property, label, true);
-        }
-
-        // Draw a disabled property field
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            GUI.enabled = !Application.isPlaying && ((ReadOnlyAttribute)attribute).runtimeOnly;
-            EditorGUI.PropertyField(position, property, label, true);
-            GUI.enabled = true;
-        }
-    }
-}
-
-[AttributeUsage(AttributeTargets.Field)]
-public class ReadOnlyAttribute : PropertyAttribute
-{
-    public readonly bool runtimeOnly;
-
-    public ReadOnlyAttribute(bool runtimeOnly = false)
-    {
-        this.runtimeOnly = runtimeOnly;
     }
 }

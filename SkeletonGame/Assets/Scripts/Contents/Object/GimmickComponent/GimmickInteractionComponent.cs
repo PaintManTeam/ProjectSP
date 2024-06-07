@@ -13,15 +13,21 @@ public interface IInteraction
 public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
 {
     public BoxCollider2D Collider { get; protected set; }
-
     public EInteractionType InteractionType { get; protected set; }
     public Vector3 WorldPosition { get { return this.gameObject.transform.position; } }
 
-    
-
-    public bool Interact(InteractionParam param = null)
+    public override bool Init()
     {
+        if (base.Init() == false)
+            return false;
 
+        return true;
+    }
+
+    public virtual bool Interact(InteractionParam param = null)
+    {
+        if (GimmickState != EGimmickObjectState.Ready)
+            return false;
 
         return true;
     }

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
+using UnityEditor;
+using System.ComponentModel;
 
 public class StageRoot : InitBase
 {
@@ -16,12 +18,12 @@ public class StageRoot : InitBase
 
 #if UNITY_EDITOR
 
-    [Header ("에디터 세팅 옵션")]
-    [SerializeField] // 확인용
-    List<int> SectionInstanceIDList = new List<int>();
-
+    [Header("에디터 세팅 옵션")]
+    [SerializeField, ReadOnly] List<int> SectionInstanceIDList = new List<int>();
     [SerializeField] BaseMap map;
-    [SerializeField] Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
+    
+    // Key : InstanceID
+    Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
 
     public void GenerateStageMap()
     {
@@ -39,18 +41,14 @@ public class StageRoot : InitBase
             Debug.Log("이미 맵이 존재합니다.");
     }
 
-    public void SaveStageSectionDatas()
+    public void SaveStageData()
     {
-        Debug.Log("저장 미구현");
-
-        // 배치된 모든 섹션에 대하여 Save를 각각 진행 or 토탈로 받아와서 진행
+        Debug.Log("스테이지 데이터 저장 미구현");
     }
 
-    public void LoadStageSectionDatas()
+    public void LoadStageData()
     {
-        Debug.Log("불러오기 미구현");
-
-        // 배치된 모든 섹션에 대하여 Load를 각각 진행 or 토탈로 받아와서 진행
+        Debug.Log("스테이지 데이터 불러오기 미구현");
     }
 
     public void UpdateStageInfo()
@@ -79,8 +77,8 @@ public class StageRoot : InitBase
         if (StageSectionDict.Count == 0)
             return;
 
-        // 섹션 순서대로 정렬
-        List<(int, int)> tempList = new List<(int, int)>(); // (섹션 순서, 인스턴스ID)
+        // 번호 순서대로 정렬
+        List<(int, int)> tempList = new List<(int, int)>(); // (번호, 인스턴스ID)
         foreach (StageSectionBase stageSection in StageSectionDict.Values)
         {
             string[] strs = stageSection.gameObject.name.ToString().Split(' ');
@@ -91,9 +89,7 @@ public class StageRoot : InitBase
 
         // SectionInstanceIDList 세팅
         for (int i = 0; i < tempList.Count; i++)
-        {
             SectionInstanceIDList.Add(tempList[i].Item2);
-        }
 
         // 오브젝트 정렬
         for(int i = 0; i < SectionInstanceIDList.Count; i++)
@@ -101,7 +97,7 @@ public class StageRoot : InitBase
             StageSectionBase stageSectionBase = StageSectionDict[SectionInstanceIDList[i]];
 
             // 오브젝트 번호 세팅
-            string[] strs = stageSectionBase.gameObject.name.ToString().Split(' ');
+            string[] strs = stageSectionBase?.gameObject.name.ToString().Split(' ');
             string objectName = "";
             for(int j = 0; j < strs.Length - 1; j++)
                 objectName += $"{strs[j]} ";
@@ -112,14 +108,14 @@ public class StageRoot : InitBase
             stageSectionBase.transform.parent = transform;
             stageSectionBase.transform.SetSiblingIndex(i + 1);
         }
-
-        Debug.Log("스테이지 섹션 갱신 완료");
     }
 
     public void AddStageSection(EStageSectionType stageSectionType, int insertIndex)
     {
-        StageSectionBase addSection = GenerateStageSection(stageSectionType);
+        UpdateStageInfo();
 
+        StageSectionBase addSection = GenerateStageSection(stageSectionType);
+        
         if (addSection == null)
             return;
 
@@ -165,9 +161,7 @@ public class StageRoot : InitBase
             return null;
         }
 
-        GameObject tempObject = new GameObject();
-        GameObject go = Instantiate(tempObject, transform);
-        DestroyImmediate(tempObject);
+        GameObject go = Util.InstantiateObject(transform);
 
         switch (stageSectionType)
         {
@@ -188,11 +182,11 @@ public class StageRoot : InitBase
 
         return go.GetComponent<StageSectionBase>();
     }
-
+     
     public void RemoveStageSection(int removeIndex)
     {
         UpdateStageInfo();
-
+                                                                                                 
         if (SectionInstanceIDList.Count < removeIndex || SectionInstanceIDList.Count == 0)
         {
             Debug.LogWarning("삭제할 대상이 없습니다.");
