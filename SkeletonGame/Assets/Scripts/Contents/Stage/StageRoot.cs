@@ -22,7 +22,9 @@ public class StageRoot : InitBase
     [SerializeField, ReadOnly] List<int> SectionInstanceIDList = new List<int>();
     [SerializeField] BaseMap map;
     
-    // Key : InstanceID
+    /// <summary>
+    /// Key : Object InstacneID
+    /// </summary>
     Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
 
     public void GenerateStageMap()

@@ -54,6 +54,8 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         DestroyImmediate(this);
     }
 
+    public virtual void SetSpriteRenderer(Sprite sprtie) { }
+
     protected void SetRigidbody()
     {
         Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);

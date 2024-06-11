@@ -1,3 +1,4 @@
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,10 +7,9 @@ using static Define;
 
 public class GimmickSection : StageSectionBase
 {
-    [SerializeField, ReadOnly] List<int> GimmickInstanceIDList = new List<int>();
-    [SerializeField, ReadOnly] List<IGimmickComponent> GimmickComponentList = new List<IGimmickComponent>();
-
-    // Key : InstanceID
+    /// <summary>
+    /// Key : ObjectNum (오브젝트 이름 끝 번호)
+    /// </summary>
     Dictionary<int, GimmickComponentBase> GimmickComponentDict = new Dictionary<int, GimmickComponentBase>();
 
     public override bool Init()
@@ -40,74 +40,76 @@ public class GimmickSection : StageSectionBase
     }
 
     /// <summary>
-    /// 1번부터 비어있는 오브젝트 번호를 반환함
+    /// 에러가 있을 경우 true
     /// </summary>
-    public int UpdateSectionInfo()
+    private bool CheckForErrors()
     {
-
-        Transform[] myChildren = this.GetComponents<Transform>();
-        int maxIndex = -1;
-        foreach(Transform child in myChildren)
+        // 중복된 번호가 존재
+        if (GetNextObjectNum() == -1)
         {
-            GimmickComponentBase gimmickComponent = child.gameObject.GetComponent<GimmickComponentBase>();
-            if (gimmickComponent != null)
-                GimmickComponentDict.Add(gimmickComponent.GetInstanceID(), gimmickComponent);
-            
+            // 로그는 메서드 내에서 남김
+            return true;
         }
 
-        if (GimmickComponentDict.Count == 0 || maxIndex == -1)
-            return -1;
-
-        
-
-        return 1;
+        return false;
     }
 
     private int GetNextObjectNum()
     {
-        // 초기화
-        GimmickComponentDict.Clear();
-        GimmickInstanceIDList.Clear();
-
-        // GimmickComponentDict 갱신 (마지막 번호, 비어있는 번호 체크)
-        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
-        bool[] boolArray = new bool[myChildren.Length + 1];
-        int maxNum = 1;
-
-        foreach (Transform child in myChildren)
-        {
-            GimmickComponentBase gimmickComponent = child.gameObject.GetComponent<GimmickComponentBase>();
-            if (gimmickComponent != null)
-            {
-                GimmickComponentDict.Add(gimmickComponent.GetInstanceID(), gimmickComponent);
-
-                string[] strs = gimmickComponent.gameObject.name.Split(' ');
-                int objectNum = int.Parse(strs[strs.Length - 1]);
-                maxNum = Mathf.Max(maxNum, objectNum);
-                boolArray[objectNum] = true;
-            }
-        }
-
-        maxNum++; // NextNum
+        UpdateGimmickComponentDict();
 
         if (GimmickComponentDict.Count == 0)
-        {
-            Debug.Log("1");
             return 1;
+
+        int maxNum = 0;
+        foreach (int objectNum in GimmickComponentDict.Keys)
+            maxNum = Mathf.Max(objectNum, maxNum);
+
+        bool[] boolArray = new bool[maxNum + 1];
+        foreach (var objectNum in GimmickComponentDict.Keys)
+        {
+            if (boolArray[objectNum])
+            {
+                Debug.LogWarning($"아이디 중복 : {objectNum}");
+                return -1;
+            }
+
+            boolArray[objectNum] = true;
         }
+        maxNum++; // NextNum
 
         // 비어있는 번호 체크
         for (int i = 1; i < boolArray.Length; i++)
             if (boolArray[i] == false)
                 return i;
 
-        Debug.Log("2");
-
         return maxNum;
     }
 
-    public GimmickInteractionComponent GenerateGimmickInteractionObject(EGimmickInteractionObjectType gimmickObjectType)
+    private void UpdateGimmickComponentDict()
     {
+        GimmickComponentDict.Clear();
+
+        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
+        foreach(Transform child in myChildren)
+        {
+            GimmickComponentBase gimmickComponent = child.gameObject.GetComponent<GimmickComponentBase>();
+            if(gimmickComponent != null)
+            {
+                string[] strs = gimmickComponent.gameObject.name.Split(' ');
+                int objectNum = int.Parse(strs[strs.Length - 1]);
+
+                GimmickComponentDict.Add(objectNum, gimmickComponent);
+            }
+        }
+    }
+
+    public GimmickInteractionComponent GenerateGimmickInteractionObject(
+        EGimmickInteractionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
+    {
+        if (CheckForErrors())
+            return null;
+
         if (gimmickObjectType == EGimmickInteractionObjectType.None)
         {
             Debug.LogWarning("생성할 상호작용 타입을 설정해주세요.");
@@ -133,15 +135,27 @@ public class GimmickSection : StageSectionBase
                 return null;
         }
 
-        go.name = gimmickObjectType.ToString() + $" 0";
-        int objectNum = GetNextObjectNum();
-        go.name = gimmickObjectType.ToString() + $" {objectNum}";
+        GimmickInteractionComponent gimmickInteractionComponent = go.GetComponent<GimmickInteractionComponent>();
 
-        return go.GetComponent<GimmickInteractionComponent>();
+        if(objectSprite != null)
+            gimmickInteractionComponent?.SetSpriteRenderer(objectSprite);
+
+        if (string.IsNullOrEmpty(objectName))
+            objectName = gimmickObjectType.ToString();
+
+        go.name = objectName + $" 0";
+        int objectNum = GetNextObjectNum();
+        go.name = objectName + $" {objectNum}";
+
+        return gimmickInteractionComponent;
     }
 
-    public GimmickCollisionComponent AddGimmickCollisionObject(EGimmickCollisionObjectType gimmickObjectType)
+    public GimmickCollisionComponent GenerateGimmickCollisionObject(
+        EGimmickCollisionObjectType gimmickObjectType, string objectName)
     {
+        if (CheckForErrors())
+            return null;
+
         if(gimmickObjectType == EGimmickCollisionObjectType.None)
         {
             Debug.LogWarning("생성할 충돌 타입을 설정해주세요.");
@@ -161,11 +175,33 @@ public class GimmickSection : StageSectionBase
                 return null;
         }
 
+        if (string.IsNullOrEmpty(objectName))
+            objectName = gimmickObjectType.ToString();
+
+        go.name = objectName + $" 0";
         int objectNum = GetNextObjectNum();
-        go.name = gimmickObjectType.ToString() + $" {objectNum}";
+        go.name = objectName + $" {objectNum}";
 
         return go.GetComponent<GimmickCollisionComponent>();
     }
 
+    public void RemoveGimmickObject(int removeIndex)
+    {
+        if (CheckForErrors())
+            return;
+
+        UpdateGimmickComponentDict();
+        
+        // 삭제할 대상이 있는지 서치
+        if(GimmickComponentDict.ContainsKey(removeIndex))
+        {
+            DestroyImmediate(GimmickComponentDict[removeIndex].gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("삭제 대상인 오브젝트가 없습니다.");
+            return;
+        }
+    }
 #endif
 }
