@@ -151,7 +151,7 @@ public class GimmickSection : StageSectionBase
     }
 
     public GimmickCollisionComponent GenerateGimmickCollisionObject(
-        EGimmickCollisionObjectType gimmickObjectType, string objectName)
+        EGimmickCollisionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
         if (CheckForErrors())
             return null;
@@ -175,6 +175,11 @@ public class GimmickSection : StageSectionBase
                 return null;
         }
 
+        GimmickCollisionComponent gimmickCollisionComponent = go.GetComponent<GimmickCollisionComponent>();
+
+        if (objectSprite != null)
+            gimmickCollisionComponent?.SetSpriteRenderer(objectSprite);
+
         if (string.IsNullOrEmpty(objectName))
             objectName = gimmickObjectType.ToString();
 
@@ -182,7 +187,7 @@ public class GimmickSection : StageSectionBase
         int objectNum = GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
-        return go.GetComponent<GimmickCollisionComponent>();
+        return gimmickCollisionComponent;
     }
 
     public void RemoveGimmickObject(int removeIndex)

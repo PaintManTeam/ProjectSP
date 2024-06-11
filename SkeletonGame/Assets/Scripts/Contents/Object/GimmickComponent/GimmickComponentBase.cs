@@ -16,6 +16,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
 
+    public SpriteRenderer Sprite { get; protected set; }
     public Rigidbody2D Rigidbody { get; protected set; }
 
     private void Start()
@@ -29,6 +30,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
             return false;
 
         Rigidbody = GetComponent<Rigidbody2D>();
+        Sprite = GetComponent<SpriteRenderer>();
 
         return true;
     }
@@ -54,7 +56,12 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         DestroyImmediate(this);
     }
 
-    public virtual void SetSpriteRenderer(Sprite sprtie) { }
+    public void SetSpriteRenderer(Sprite sprite)
+    {
+        Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
+
+        Sprite.sprite = sprite;
+    }
 
     protected void SetRigidbody()
     {

@@ -20,6 +20,7 @@ public class GimmickSectionGenerator : Editor
     // 삭제 기능
     int removeIndex = 0;
 
+    // 키 잠금
     bool isLoadUnlocked = false;
     bool isSaveUnlocked = false;
     bool isRemoveUnlocked = false;
@@ -70,7 +71,7 @@ public class GimmickSectionGenerator : Editor
         collisionObjectSprite = (Sprite)EditorGUILayout.ObjectField("오브젝트 기본 이미지", collisionObjectSprite, typeof(Sprite), true);
         GUILayout.Space(5);
         if (GUILayout.Button("충돌 타입 생성"))
-            gimmickSection.GenerateGimmickCollisionObject(collisionGimmickType, collisionObjectName);
+            gimmickSection.GenerateGimmickCollisionObject(collisionGimmickType, collisionObjectName, collisionObjectSprite);
 
         // 삭제
         GUILayout.Space(15);
