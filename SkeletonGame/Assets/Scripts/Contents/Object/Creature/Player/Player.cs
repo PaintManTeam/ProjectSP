@@ -471,7 +471,7 @@ public class Player : Creature
     {
         base.EnterPortalStateOperate();
 
-        if (interactionTarget is PortalObject portalObejct)
+        if (interactionTarget is TPortalObject portalObejct)
         {
             SetRigidVelocityZero();
             this.transform.position = portalObejct.GetBottomPosition();

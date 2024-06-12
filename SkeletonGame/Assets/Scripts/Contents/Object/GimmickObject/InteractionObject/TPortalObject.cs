@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class PortalObject : InteractionObject
+public class TPortalObject : InteractionObject
 {
     // 임시 ( 나중엔, 배치된 프리팹 그룹 내에 설정된 고유 ID 값을 가질 예정 )
     [SerializeField] BaseObject teleportTarget;

@@ -51,7 +51,7 @@ public class GimmickObject : BaseObject, IGimmick
     public void ClearCustomComponentAll()
     {
         gimmickComponent = gameObject.GetComponent<GimmickComponentBase>();
-        gimmickComponent?.RemoveComponentOperate();
+        gimmickComponent?.ResetComponentOperate();
     }
 
     #region AddComponent

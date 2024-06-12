@@ -43,27 +43,21 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 #if UNITY_EDITOR
     protected virtual void Reset()
     {
-        AddComponentOperate();
+        ResetComponentOperate();
     }
 
-    public virtual void AddComponentOperate()
+    public virtual void ResetComponentOperate()
     {
-
+        SetRigidbody();
     }
 
-    public virtual void RemoveComponentOperate()
-    {
-        DestroyImmediate(this);
-    }
-
-    public void SetSpriteRenderer(Sprite sprite)
+    public virtual void SetSpriteRenderer(Sprite sprite)
     {
         Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
-
         Sprite.sprite = sprite;
     }
 
-    protected void SetRigidbody()
+    protected virtual void SetRigidbody()
     {
         Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
 

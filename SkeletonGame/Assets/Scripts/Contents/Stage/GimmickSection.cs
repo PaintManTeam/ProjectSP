@@ -40,7 +40,7 @@ public class GimmickSection : StageSectionBase
     }
 
     /// <summary>
-    /// 에러가 있을 경우 true
+    /// 에러가 있을 경우 true ( + 오브젝트 정보 갱신 )
     /// </summary>
     private bool CheckForErrors()
     {
@@ -104,16 +104,16 @@ public class GimmickSection : StageSectionBase
         }
     }
 
-    public GimmickInteractionComponent GenerateGimmickInteractionObject(
+    public void GenerateGimmickInteractionObject(
         EGimmickInteractionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
         if (CheckForErrors())
-            return null;
+            return;
 
         if (gimmickObjectType == EGimmickInteractionObjectType.None)
         {
             Debug.LogWarning("생성할 상호작용 타입을 설정해주세요.");
-            return null;
+            return;
         }
 
         GameObject go = Util.InstantiateObject(transform);
@@ -132,13 +132,13 @@ public class GimmickSection : StageSectionBase
                 break;
             default:
                 Debug.LogError($"새로운 타입 추가 필요 : {gimmickObjectType}");
-                return null;
+                return;
         }
 
-        GimmickInteractionComponent gimmickInteractionComponent = go.GetComponent<GimmickInteractionComponent>();
+        GimmickComponentBase gimmickComponent = go.GetComponent<GimmickComponentBase>();
 
-        if(objectSprite != null)
-            gimmickInteractionComponent?.SetSpriteRenderer(objectSprite);
+        if (objectSprite != null)
+            gimmickComponent?.SetSpriteRenderer(objectSprite);
 
         if (string.IsNullOrEmpty(objectName))
             objectName = gimmickObjectType.ToString();
@@ -147,19 +147,19 @@ public class GimmickSection : StageSectionBase
         int objectNum = GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
-        return gimmickInteractionComponent;
+        return;
     }
 
-    public GimmickCollisionComponent GenerateGimmickCollisionObject(
+    public void GenerateGimmickCollisionObject(
         EGimmickCollisionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
         if (CheckForErrors())
-            return null;
+            return;
 
         if(gimmickObjectType == EGimmickCollisionObjectType.None)
         {
             Debug.LogWarning("생성할 충돌 타입을 설정해주세요.");
-            return null;
+            return;
         }
 
         GameObject go = Util.InstantiateObject(transform);
@@ -172,13 +172,13 @@ public class GimmickSection : StageSectionBase
                 break;
             default:
                 Debug.LogError($"새로운 타입 추가 필요 : {gimmickObjectType}");
-                return null;
+                return;
         }
 
-        GimmickCollisionComponent gimmickCollisionComponent = go.GetComponent<GimmickCollisionComponent>();
+        GimmickComponentBase gimmickComponent = go.GetComponent<GimmickComponentBase>();
 
         if (objectSprite != null)
-            gimmickCollisionComponent?.SetSpriteRenderer(objectSprite);
+            gimmickComponent?.SetSpriteRenderer(objectSprite);
 
         if (string.IsNullOrEmpty(objectName))
             objectName = gimmickObjectType.ToString();
@@ -187,7 +187,7 @@ public class GimmickSection : StageSectionBase
         int objectNum = GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
-        return gimmickCollisionComponent;
+        return;
     }
 
     public void RemoveGimmickObject(int removeIndex)

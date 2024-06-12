@@ -33,26 +33,16 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
     }
 
 #if UNITY_EDITOR
-    public override void AddComponentOperate()
+    public override void ResetComponentOperate()
     {
-        base.AddComponentOperate();
+        base.ResetComponentOperate();
 
         SetCollider();
-        SetRigidbody();
-    }
-
-    public override void RemoveComponentOperate()
-    {
-        DestroyImmediate(Rigidbody);
-        DestroyImmediate(Collider);
-
-        base.RemoveComponentOperate();
     }
 
     private void SetCollider()
     {
         Collider = Util.GetOrAddComponent<BoxCollider2D>(gameObject);
-
         Collider.isTrigger = true;
     }
 #endif
