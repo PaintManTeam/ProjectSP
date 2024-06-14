@@ -22,9 +22,9 @@ public class GimmickSection : StageSectionBase
         return true;
     }
 
-    protected virtual void Reset()
+    protected override void Reset()
     {
-        
+        base.Reset();
     }
 
 #if UNITY_EDITOR

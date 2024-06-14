@@ -10,6 +10,7 @@ public class BaseMap : InitBase
     [SerializeField]
     SpriteRenderer boundMapSprite;
 
+    // 지울 예정
     public Transform PlayerSpawnPoint { get; protected set; }
 
     public Vector2 MinBound { get; private set; }

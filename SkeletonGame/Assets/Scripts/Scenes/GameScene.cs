@@ -34,7 +34,8 @@ public class GameScene : BaseScene
         // 캐릭터 생성
         player = Managers.Object.SpawnObject<Player>(map.PlayerSpawnPoint.position);
 
-
+        // 위에 싹 다 날려야되고, 시네마틱이 이어지는 등의 이슈(?)가 존재하므로,
+        // 캐릭터는 한번만 소환됨
 
         return true;
     }

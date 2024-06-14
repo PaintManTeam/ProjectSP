@@ -5,9 +5,19 @@ using UnityEngine;
 using static Define;
 using UnityEditor;
 using System.ComponentModel;
+using JetBrains.Annotations;
+using System;
 
 public class StageRoot : InitBase
 {
+    [Header("에디터 세팅 옵션")]
+    // Key : Stage Section Object ID
+    Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
+    
+    [SerializeField, ReadOnly] StageSectionBase currStageSection = null;
+    
+    public BaseMap map { get; protected set; }
+    
     public override bool Init()
     {
         if (base.Init() == false)
@@ -16,16 +26,52 @@ public class StageRoot : InitBase
         return true;
     }
 
-#if UNITY_EDITOR
+    public void StartStage(Player player, int stageSectionId = 1)
+    {
+        StartSection(player, stageSectionId);
+    }
 
-    [Header("에디터 세팅 옵션")]
-    [SerializeField, ReadOnly] List<int> SectionInstanceIDList = new List<int>();
-    [SerializeField] BaseMap map;
-    
-    /// <summary>
-    /// Key : Object InstacneID
-    /// </summary>
-    Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
+    public void StartSection(Player player, int stageSectionId = 1)
+    {
+        // 섹션 정보 갱신 ( ID 최대 값 받아옴 )
+        SetStageSectionDict();
+
+        // 섹션 확인
+        while (StageSectionDict.ContainsKey(stageSectionId) == false)
+        {
+            // 스테이지 클리어 처리 필요 !!
+            return;
+        }
+
+        // 시작되는 섹션 받아오고 세팅
+        currStageSection = StageSectionDict[stageSectionId];
+        player.transform.position = currStageSection.PlayerStartPoint.position;
+        
+    }
+
+    private void SetStageSectionDict()
+    {
+        StageSectionDict.Clear();
+
+        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
+        foreach(Transform child in myChildren)
+        {
+            StageSectionBase stageSection = child.gameObject.GetComponent<StageSectionBase>();
+
+            if(stageSection != null)
+            {
+                string[] strs = stageSection.gameObject.name.Split(' ');
+                int objectNameId = int.Parse(strs[strs.Length - 1]);
+                
+                if (StageSectionDict.ContainsKey(objectNameId) == false)
+                    StageSectionDict.Add(objectNameId, stageSection);
+                else
+                    Debug.LogWarning($"중복된 번호 : {objectNameId}");
+            }
+        }
+    }
+
+#if UNITY_EDITOR
 
     public void GenerateStageMap()
     {
@@ -63,52 +109,64 @@ public class StageRoot : InitBase
             return;
         }
 
-        // 초기화
-        StageSectionDict.Clear();
-        SectionInstanceIDList.Clear();
-
-        // StageSectionDict 갱신
-        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
-        foreach (Transform child in myChildren)
-        {
-            StageSectionBase stageSection = child.gameObject.GetComponent<StageSectionBase>();
-            if (stageSection != null)
-                StageSectionDict.Add(stageSection.GetInstanceID(), stageSection);
-        }
+        // 스테이지 정보 갱신
+        SetStageSectionDict();
 
         if (StageSectionDict.Count == 0)
             return;
 
-        // 번호 순서대로 정렬
-        List<(int, int)> tempList = new List<(int, int)>(); // (번호, 인스턴스ID)
-        foreach (StageSectionBase stageSection in StageSectionDict.Values)
-        {
-            string[] strs = stageSection.gameObject.name.ToString().Split(' ');
-            int num = int.Parse(strs[strs.Length - 1]);
-            tempList.Add((num, stageSection.GetInstanceID())); 
-        }
-        tempList.Sort((x, y) => x.Item1 > y.Item1 ? 1 : -1);
+        // 딕셔너리 키 정렬
+        int maxObjectId = 1;
+        foreach (int num in StageSectionDict.Keys)
+            maxObjectId = Mathf.Max(maxObjectId, num);
 
-        // SectionInstanceIDList 세팅
-        for (int i = 0; i < tempList.Count; i++)
-            SectionInstanceIDList.Add(tempList[i].Item2);
+        // 딕셔너리 번호 순서대로 정렬
+        if (maxObjectId > StageSectionDict.Count)
+            SortingDictValue(StageSectionDict);
 
         // 오브젝트 정렬
-        for(int i = 0; i < SectionInstanceIDList.Count; i++)
+        for(int i = 1; i <= StageSectionDict.Count; i++)
         {
-            StageSectionBase stageSectionBase = StageSectionDict[SectionInstanceIDList[i]];
+            StageSectionBase stageSectionBase = StageSectionDict[i];
 
-            // 오브젝트 번호 세팅
-            string[] strs = stageSectionBase?.gameObject.name.ToString().Split(' ');
-            string objectName = "";
-            for(int j = 0; j < strs.Length - 1; j++)
-                objectName += $"{strs[j]} ";
-            objectName += $"{i + 1}";
-            stageSectionBase.name = objectName;
+            if(stageSectionBase != null)
+            {
+                // 오브젝트 ID 세팅
+                string[] strs = stageSectionBase?.gameObject.name.ToString().Split(' ');
+                string objectName = "";
+                for (int j = 0; j < strs.Length - 1; j++)
+                    objectName += $"{strs[j]} ";
+                objectName += $"{i}";
+                stageSectionBase.name = objectName;
 
-            // 오브젝트 위치 세팅
-            stageSectionBase.transform.parent = transform;
-            stageSectionBase.transform.SetSiblingIndex(i + 1);
+                // 오브젝트 위치 세팅
+                stageSectionBase.transform.parent = transform;
+                stageSectionBase.transform.SetSiblingIndex(i);
+            }
+            else
+            {
+                Debug.LogError($"딕셔너리 세팅 에러 : {i}번째 없음 Dict.Count : {StageSectionDict.Count}");
+            }
+        }
+    }
+
+    private void SortingDictValue<T>(Dictionary<int, T> dict)
+    {
+        // Dict<Key, Value> -> List[index](Key, Value)
+        List<(int, T)> list = new List<(int, T)>();
+        foreach(KeyValuePair<int, T> kvp in dict)
+            list.Add((kvp.Key, kvp.Value));
+
+        // 정렬
+        list.Sort((x, y) => x.Item1 > y.Item1 ? 1 : -1);
+        
+        // Reset Dict
+        dict.Clear();
+        for(int i = 0; i < list.Count; i++)
+        {
+            int key = i + 1;
+            T data = list[i].Item2;
+            dict.Add(key, data);
         }
     }
 
@@ -116,52 +174,57 @@ public class StageRoot : InitBase
     {
         UpdateStageInfo();
 
-        StageSectionBase addSection = GenerateStageSection(stageSectionType);
-        
-        if (addSection == null)
-            return;
-
-        if(insertIndex <= 0)
-        {
-            // 맨 끝에 추가
-            addSection.gameObject.name += $" {SectionInstanceIDList.Count + 1}";
-        }
-        else
-        {
-            // 삽입
-            addSection.gameObject.name += $" {insertIndex}";
-
-            for (int i = insertIndex; i < SectionInstanceIDList.Count; i++)
-            {
-                StageSectionBase stageSectionBase = StageSectionDict[SectionInstanceIDList[i]];
-
-                string[] strs = stageSectionBase.gameObject.name.Split(' ');
-                string objectName = "";
-                for (int j = 0; j < strs.Length - 1; j++)
-                    objectName += strs[j];
-                objectName += $" {strs[strs.Length - 1] + 1}";
-                stageSectionBase.gameObject.name = objectName;
-            }
-        }
-
-        UpdateStageInfo();
-    }
-
-    private StageSectionBase GenerateStageSection(EStageSectionType stageSectionType, int insertIndex = -1)
-    {
         // 맵이 생성됐는지 확인
         map = transform.Find("Map")?.GetComponent<BaseMap>();
         if (map == null)
         {
             Debug.LogWarning("맵이 없습니다. 맵을 먼저 생성해주세요.");
-            return null;
+            return;
         }
 
         if (stageSectionType == EStageSectionType.None)
         {
             Debug.LogWarning("스테이지 섹션을 설정해주세요.");
-            return null;
+            return;
         }
+
+        if (insertIndex <= 0)
+            insertIndex = StageSectionDict.Count + 1;
+
+        // 사이에 삽입되는 경우
+        if (StageSectionDict.ContainsKey(insertIndex))
+        {
+            // 끝부터 삽입위치까지 ID + 1
+            for(int currId = StageSectionDict.Count; currId >= insertIndex; currId--)
+            {
+                // 다음 위치에 추가
+                int nextId = currId + 1;
+                StageSectionDict.Add(nextId, StageSectionDict[currId]);
+
+                // 오브젝트 ID 변경
+                GameObject go = StageSectionDict[currId].gameObject;
+                string[] strs = go.name.ToString().Split(' ');
+                string objectName = "";
+                for (int j = 0; j < strs.Length - 1; j++)
+                    objectName += $"{strs[j]} ";
+                objectName += $"{nextId}";
+                go.name = objectName;
+
+                // 삭제
+                StageSectionDict.Remove(currId);
+            }
+        }
+
+        StageSectionBase addSection = GenerateStageSection(stageSectionType, insertIndex);
+
+        StageSectionDict.Add(insertIndex, addSection);
+        UpdateStageInfo();
+    }
+
+    private StageSectionBase GenerateStageSection(EStageSectionType stageSectionType, int insertIndex = 0)
+    {
+        if (insertIndex <= 0)
+            insertIndex = StageSectionDict.Count + 1;
 
         GameObject go = Util.InstantiateObject(transform);
 
@@ -178,7 +241,7 @@ public class StageRoot : InitBase
                 return null;
         }
 
-        go.name = stageSectionType.ToString();
+        go.name = stageSectionType.ToString() + $" {insertIndex}";
 
         Debug.Log("스테이지 섹션 생성 완료");
 
@@ -188,21 +251,17 @@ public class StageRoot : InitBase
     public void RemoveStageSection(int removeIndex)
     {
         UpdateStageInfo();
-                                                                                                 
-        if (SectionInstanceIDList.Count < removeIndex || SectionInstanceIDList.Count == 0)
+
+        if (removeIndex <= 0)
+            removeIndex = StageSectionDict.Count;
+
+        if (StageSectionDict.ContainsKey(removeIndex) == false)
         {
             Debug.LogWarning("삭제할 대상이 없습니다.");
             return;
         }
 
-        if (removeIndex <= 0)
-        {
-            DestroyImmediate(StageSectionDict[SectionInstanceIDList[SectionInstanceIDList.Count - 1]].gameObject);
-        }
-        else
-        {
-            DestroyImmediate(StageSectionDict[SectionInstanceIDList[removeIndex - 1]].gameObject);
-        }
+        DestroyImmediate(StageSectionDict[removeIndex].gameObject);
 
         UpdateStageInfo();
     }
