@@ -6,7 +6,7 @@ public class DialogueComponent : GimmickInteractionComponent
 {
     // 임시
     [SerializeField] int startIndex = 1;
-    [SerializeField] int endIndex = 2;
+    [SerializeField] int endIndex = 3;
 
     public override bool Init()
     {

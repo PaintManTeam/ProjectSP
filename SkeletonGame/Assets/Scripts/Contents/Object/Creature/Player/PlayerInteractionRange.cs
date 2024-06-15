@@ -114,24 +114,24 @@ public class PlayerInteractionRange : InitBase
 
     private IInteraction FindClosestInRange()
     {
-        InteractionObject target = null;
+        IInteraction target = null;
 
         float bestDistanceSqr = float.MaxValue;
 
-        foreach(InteractionObject interactionObject in interactionRangeList)
+        foreach(IInteraction interactionTarget in interactionRangeList)
         {
             // 상호작용 가능 상태인지 확인
-            if (interactionObject.GimmickState != EGimmickObjectState.Ready)
+            if (interactionTarget.IsInteractable() == false)
                 continue;
 
-            Vector3 dir = interactionObject.WorldPosition - transform.position;
+            Vector3 dir = interactionTarget.WorldPosition - transform.position;
             float distToTargetSqr = dir.sqrMagnitude;
 
             // 이미 더 좋은 후보를 찾았으면 스킵.
             if (distToTargetSqr > bestDistanceSqr)
                 continue;
 
-            target = interactionObject;
+            target = interactionTarget;
             bestDistanceSqr = distToTargetSqr;
         }
 

@@ -343,9 +343,7 @@ public class Player : Creature
         if (interactionTarget == null)
             return false;
 
-        IGimmick gimmick = interactionTarget as IGimmick;
-
-        if (gimmick != null && gimmick.GimmickState != EGimmickObjectState.Ready)
+        if (interactionTarget.IsInteractable() == false)
             return false;
 
         return true;

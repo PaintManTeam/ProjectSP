@@ -51,8 +51,19 @@ public class PortalObject : BaseObject, IInteraction
 
     }
 
+    public bool IsInteractable()
+    {
+        if (this.gameObject.activeSelf == false)
+            return false;
+
+        return true;
+    }
+
     public bool Interact(InteractionParam param = null)
     {
+        if (IsInteractable() == false)
+            return false;
+
         if (param is InteractionPortalParam portalParam)
         {
             portalParam.onTeleportTarget?.Invoke(linkedPortalObject);
