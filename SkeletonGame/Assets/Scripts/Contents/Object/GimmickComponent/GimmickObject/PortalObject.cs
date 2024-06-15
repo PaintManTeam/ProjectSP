@@ -5,29 +5,62 @@ using UnityEngine;
 using UnityEngine.U2D;
 using static Define;
 
-public class PortalObject : InitBase, IInteraction
+/*
+메모
+- 오브젝트 : 상호작용 감지, 상호작용 오브젝트 띄우기 등
+- 컴포넌트 : 상호작용 가능 여부 판단, 오브젝트 활성화 여부 등
+*/
+
+public class PortalObject : BaseObject, IInteraction
 {
     [SerializeField, ReadOnly] PortalObject linkedPortalObject;
-    
+    [SerializeField, ReadOnly] int portalId = 0;
+
     public BoxCollider2D Collider { get; protected set; }
     public EInteractionType InteractionType { get; protected set; }
     public Vector3 WorldPosition { get { return this.gameObject.transform.position; } }
     public SpriteRenderer Sprite { get; protected set; }
+
+    public override Vector2 GetTopPosition()
+    {
+        return transform.position + Vector3.up * Collider.size.y / 2;
+    }
+
+    public override Vector2 GetBottomPosition()
+    {
+        return transform.position + Vector3.down * Collider.size.y / 2;
+    }
 
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
+        this.tag = ETag.Interaction.ToString();
+        InteractionType = EInteractionType.Portal;
+        Collider = GetComponent<BoxCollider2D>();
+        Sprite = GetComponent<SpriteRenderer>();
+
         return true;
+    }
+
+    public override void SetInfo(int portalId)
+    {
+        this.portalId = portalId;
+
+
     }
 
     public bool Interact(InteractionParam param = null)
     {
-        // 포탈 컴포넌트에게 위탁하여 처리?
+        if (param is InteractionPortalParam portalParam)
+        {
+            portalParam.onTeleportTarget?.Invoke(linkedPortalObject);
+        }
 
         return true;
     }
+
 
 #if UNITY_EDITOR
     private void Reset()

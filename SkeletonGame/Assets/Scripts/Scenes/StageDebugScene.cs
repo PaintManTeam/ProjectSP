@@ -37,7 +37,7 @@ public class StageDebugScene : BaseScene
         currStage = go.GetComponent<StageRoot>();
 
         // 캐릭터 소환
-        player = Managers.Object.SpawnObject<Player>(currStage.map.PlayerSpawnPoint.position);
+        player = Managers.Object.SpawnObject<Player>(Vector3.zero);
 
         currStage.StartStage(player, stageSectionId);
     }

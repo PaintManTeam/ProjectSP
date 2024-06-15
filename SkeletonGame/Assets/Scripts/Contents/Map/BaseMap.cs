@@ -18,6 +18,11 @@ public class BaseMap : InitBase
 
     private List<LayerMap> layers = new List<LayerMap>();
 
+    private void OnEnable()
+    {
+        SetInfo(0); // 나중에 처리 해줘야 함 (임시)
+    }
+
     public override bool Init()
     {
         if (base.Init() == false)

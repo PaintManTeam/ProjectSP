@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class StageSectionBase : InitBase
 {
-    public Transform PlayerStartPoint { get; protected set; }
+    [SerializeField, ReadOnly] public Transform PlayerStartPoint;
 
     protected virtual void Reset()
     {
@@ -22,7 +22,6 @@ public abstract class StageSectionBase : InitBase
     {
         if (base.Init() == false)
             return false;
-
 
 
         return true;

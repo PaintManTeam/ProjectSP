@@ -33,7 +33,7 @@ public class PlayerInteractionRange : InitBase
         }
     }
 
-    private NotifyInteractionObject notifyObject = null;
+    [SerializeField] private NotifyInteractionObject notifyObject = null;
 
     public override bool Init()
     {

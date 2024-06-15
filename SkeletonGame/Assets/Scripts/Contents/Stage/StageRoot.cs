@@ -46,7 +46,6 @@ public class StageRoot : InitBase
         // 시작되는 섹션 받아오고 세팅
         currStageSection = StageSectionDict[stageSectionId];
         player.transform.position = currStageSection.PlayerStartPoint.position;
-        
     }
 
     private void SetStageSectionDict()

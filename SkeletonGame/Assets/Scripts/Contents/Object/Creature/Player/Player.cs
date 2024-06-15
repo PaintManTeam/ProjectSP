@@ -389,10 +389,12 @@ public class Player : Creature
         if (interactionTarget == null)
             return;
 
+        // 상호작용 방향 세팅
         SetRigidVelocityZero();
         float dirX = transform.position.x - interactionTarget.WorldPosition.x;
         LookLeft = dirX > 0;
 
+        // 상호작용 물체에 따른 동작
         switch (interactionTarget.InteractionType)
         {
             case EInteractionType.EndMotion:
@@ -471,9 +473,11 @@ public class Player : Creature
     {
         base.EnterPortalStateOperate();
 
-        if (interactionTarget is TPortalObject portalObejct)
+        if (interactionTarget is PortalObject portalObejct)
         {
             SetRigidVelocityZero();
+
+            // 순간이동(임시)
             this.transform.position = portalObejct.GetBottomPosition();
         }
 

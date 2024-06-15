@@ -121,9 +121,9 @@ public class GimmickSection : StageSectionBase
         switch (gimmickObjectType)
         {
             case EGimmickInteractionObjectType.EndMotion:
-                // 테스트용 임시?
-                go.AddComponent<GimmickComponentBase>();
-                break;
+                Debug.LogWarning("EndMotion 미구현");
+                DestroyImmediate(go);
+                return;
             case EGimmickInteractionObjectType.Dialogue:
                 go.AddComponent<DialogueComponent>();
                 break;

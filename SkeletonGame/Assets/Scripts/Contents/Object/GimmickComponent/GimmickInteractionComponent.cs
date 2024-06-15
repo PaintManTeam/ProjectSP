@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
+/// <summary>
+/// 오브젝트의 태그를 Interaction으로 세팅 필요
+/// </summary>
 public interface IInteraction
 {
     public EInteractionType InteractionType { get; }
