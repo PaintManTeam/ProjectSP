@@ -49,6 +49,7 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
             return false;
 
         // 상호작용 이벤트 발생을 알림
+        GimmickState = EGimmickObjectState.Complete;
         onInteractionEvent?.Invoke(GimmickObjectId);
 
         return true;

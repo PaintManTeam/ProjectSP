@@ -36,7 +36,10 @@ public class GimmickSectionGenerator : Editor
 
         GUILayout.Space(5);
         if (GUILayout.Button("기믹 섹션 갱신"))
+        {
             gimmickSection.UpdateGimmickComponentDict();
+            Debug.Log("기믹 섹션 갱신 완료");
+        }
 
         // 데이터 저장
         GUILayout.Space(5);

@@ -31,13 +31,10 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     }
 
     [Header("오브젝트 활성화 조건")]
-    [SerializeField, ReadOnly] List<GimmickComponentBase> activeObjectConditionList = new List<GimmickComponentBase>();
+    [SerializeField, ReadOnly] List<GimmickComponentBase> activeObjectConditionList;
 
     [Header("기믹 준비 조건")]
-    [SerializeField, ReadOnly] List<GimmickComponentBase> gimmickReadyConditionList = new List<GimmickComponentBase>();
-
-    [Header("오브젝트가 비활성화 되면 ")]
-    // 일단 대기 구현해야 함 (고민 좀 갈겨보자)
+    [SerializeField, ReadOnly] List<GimmickComponentBase> gimmickReadyConditionList;
 
     public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
@@ -55,19 +52,64 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
         GimmickType = EGimmickType.Interaction;
 
-        // 오브젝트 활성화 관련
-        this.gameObject.SetActive(activeObjectConditionList.Count == 0);
-        // -> 오브젝트 활성화가 되지 않았다면, 섹션단위에서 뭔가 처리해주어야 함
-        //  -> 상호작용 이벤트가 발생했을 때, 갱신하는 방식이 제일 낫지 않나 싶음
-
-        // 오브젝트 레디 조건 관련
-        GimmickState = (gimmickReadyConditionList.Count == 0) ?
-            EGimmickObjectState.Ready : EGimmickObjectState.StandBy;
+        UpdateGimmickState();
         
         return true;
+    } 
+
+    private void UpdateGimmickState()
+    {
+        // 오브젝트 활성화
+        this.gameObject.SetActive(activeObjectConditionList.Count == 0);
+
+        // 오브젝트 레디 조건
+        GimmickState = (gimmickReadyConditionList.Count == 0) ?
+            EGimmickObjectState.Ready : EGimmickObjectState.StandBy;
+    }
+
+    public void CheckListOfConditionToRemove()
+    {
+        if (GimmickState != EGimmickObjectState.StandBy)
+            return;
+
+        CheckListOfActiveCondition();
+        CheckListOfReadyCondition();
+
+        UpdateGimmickState();
+    }
+
+    private void CheckListOfActiveCondition()
+    {
+        if (activeObjectConditionList.Count == 0)
+            return;
+
+        foreach(GimmickComponentBase condition in activeObjectConditionList)
+        {
+            if(condition.GimmickState == EGimmickObjectState.Complete)
+            {
+                activeObjectConditionList.Remove(condition);
+                break;
+            }
+        }
+    }
+
+    private void CheckListOfReadyCondition()
+    {
+        if (gimmickReadyConditionList.Count == 0)
+            return;
+
+        foreach(GimmickComponentBase condition in gimmickReadyConditionList)
+        {
+            if(condition.GimmickState == EGimmickObjectState.Complete)
+            {
+                gimmickReadyConditionList.Remove(condition);
+                break;
+            }
+        }
     }
 
 #if UNITY_EDITOR
+    
     protected virtual void Reset()
     {
         ResetComponentOperate();
@@ -76,6 +118,12 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     public virtual void ResetComponentOperate()
     {
         SetRigidbody();
+
+        if(activeObjectConditionList.Count == 0)
+            activeObjectConditionList = new();
+
+        if(gimmickReadyConditionList.Count == 0)
+            gimmickReadyConditionList = new();
     }
 
     public virtual void SetSpriteRenderer(Sprite sprite)

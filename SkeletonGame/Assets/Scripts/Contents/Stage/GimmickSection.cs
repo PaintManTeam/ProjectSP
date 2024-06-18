@@ -23,12 +23,16 @@ public class GimmickSection : StageSectionBase
 
         UpdateGimmickComponentDict();
 
-        foreach(GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        foreach(GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
         {
-            if(gimmickComponentBase is GimmickInteractionComponent gimmickInteractionComponent)
+            if(gimmickComponent is GimmickInteractionComponent gimmickInteractionComponent)
             {
                 gimmickInteractionComponent.SetInfo(OnInteractionEvent);
             }
+
+            EditGimmickComponentInfo editGimmickComponentInfo = gimmickComponent.gameObject.GetComponent<EditGimmickComponentInfo>();
+            if (editGimmickComponentInfo != null)
+                Destroy(editGimmickComponentInfo);
         }
 
         return true;
@@ -36,11 +40,10 @@ public class GimmickSection : StageSectionBase
 
     public void OnInteractionEvent(int gimmickObjectId)
     {
-        // 상호작용을 감지함
-        // 1. 상호작용 오브젝트들 업데이트
-        // 2. 상호작용 오브젝트
-        
-        
+        foreach (GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
+        {
+            gimmickComponent.CheckListOfConditionToRemove();
+        }
     }
 
     public void UpdateGimmickComponentDict()
@@ -237,6 +240,12 @@ public class GimmickSection : StageSectionBase
 
     private bool IsCheckContainsKey(int requestObjectId, int receiveObjectId)
     {
+        if (requestObjectId == receiveObjectId)
+        {
+            Debug.LogWarning("자기 자신은 등록/삭제 할 수 없습니다.");
+            return false;
+        }
+
         UpdateGimmickComponentDict();
 
         if (GimmickComponentDict.ContainsKey(requestObjectId) == false)
