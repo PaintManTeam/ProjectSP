@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// 서로 연결된 상호작용 컴포넌트를 상속받은 PortalObject를 관리
 public class PortalComponent : GimmickComponentBase
 {
-    // 포탈 컴포넌트는 두 개의 포탈 오브젝트를 관리하므로, 상호작용 컴포넌트가 아닌 베이스를 상속받음
-
+    [Header ("포탈 컴포넌트 정보")]
     [SerializeField, ReadOnly] PortalObject portalObject1;
     [SerializeField, ReadOnly] PortalObject portalObject2;
 

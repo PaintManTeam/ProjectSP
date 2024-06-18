@@ -395,14 +395,14 @@ public class Player : Creature
         // 상호작용 물체에 따른 동작
         switch (interactionTarget.InteractionType)
         {
-            case EInteractionType.EndMotion:
-                CreatureState = ECreatureState.Interaction;
-                break;
             case EInteractionType.Dialogue:
                 InteractDialogue();
                 break;
             case EInteractionType.Portal:
                 InteractPortal();
+                break;
+            default: // 따로 처리되지 않은 상호작용 물체는 모션이 끝나야 상호작용됨
+                CreatureState = ECreatureState.Interaction;
                 break;
         }
     }

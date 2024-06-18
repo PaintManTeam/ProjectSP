@@ -121,15 +121,16 @@ public static class Define
     {
         None,
 
-        EndMotion,
         Dialogue,
         Portal,
+        Destroy,
+
     }
 
     public enum EGimmickObjectState
     {
-        StandBy, // 소환만 된 상태
-        Ready, // 기믹 수행이 가능한 상태
+        StandBy, // 소환만 된 상태 (비활성화)
+        Ready, // 기믹 수행이 가능한 상태 (활성화)
         Complete, // 기믹 완료 상태
     }
 

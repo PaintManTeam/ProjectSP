@@ -11,6 +11,10 @@ public class GimmickSection : StageSectionBase
     /// Key : ObjectNum (오브젝트 이름 끝 번호)
     /// </summary>
     Dictionary<int, GimmickComponentBase> GimmickComponentDict = new Dictionary<int, GimmickComponentBase>();
+    protected override void Reset()
+    {
+        base.Reset();
+    }
 
     public override bool Init()
     {
@@ -22,10 +26,8 @@ public class GimmickSection : StageSectionBase
         return true;
     }
 
-    protected override void Reset()
-    {
-        base.Reset();
-    }
+    // 일정 주기마다 오브젝트들의 상태를 판단하여 활성화, 오브젝트 상태변경 등을 판단해서 뿌림?
+    
 
 #if UNITY_EDITOR
 
@@ -120,15 +122,14 @@ public class GimmickSection : StageSectionBase
 
         switch (gimmickObjectType)
         {
-            case EGimmickInteractionObjectType.EndMotion:
-                Debug.LogWarning("EndMotion 미구현");
-                DestroyImmediate(go);
-                return;
             case EGimmickInteractionObjectType.Dialogue:
                 go.AddComponent<DialogueComponent>();
                 break;
             case EGimmickInteractionObjectType.Portal:
                 go.AddComponent<PortalComponent>();
+                break;
+            case EGimmickInteractionObjectType.Destroy:
+                go.AddComponent<DestroyInteractionComponent>();
                 break;
             default:
                 Debug.LogError($"새로운 타입 추가 필요 : {gimmickObjectType}");

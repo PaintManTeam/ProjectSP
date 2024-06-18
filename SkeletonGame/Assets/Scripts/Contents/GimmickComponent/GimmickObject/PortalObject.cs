@@ -5,12 +5,6 @@ using UnityEngine;
 using UnityEngine.U2D;
 using static Define;
 
-/*
-메모
-- 오브젝트 : 상호작용 감지, 상호작용 오브젝트 띄우기 등
-- 컴포넌트 : 상호작용 가능 여부 판단, 오브젝트 활성화 여부 등
-*/
-
 public class PortalObject : BaseObject, IInteraction
 {
     [SerializeField, ReadOnly] PortalObject linkedPortalObject;
