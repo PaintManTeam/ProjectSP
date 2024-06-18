@@ -34,6 +34,10 @@ public class GimmickSectionGenerator : Editor
         GUILayout.Space(10);
         GUILayout.Label("- 기믹 오브젝트 -", EditorStyles.boldLabel);
 
+        GUILayout.Space(5);
+        if (GUILayout.Button("기믹 섹션 갱신"))
+            gimmickSection.UpdateGimmickComponentDict();
+
         // 데이터 저장
         GUILayout.Space(5);
         isSaveUnlocked = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlocked);

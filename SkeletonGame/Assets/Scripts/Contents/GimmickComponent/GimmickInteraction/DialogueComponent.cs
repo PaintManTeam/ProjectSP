@@ -18,13 +18,6 @@ public class DialogueComponent : GimmickInteractionComponent
         return true;
     }
 
-    public override void SetInfo(int templateID)
-    {
-        base.SetInfo(templateID);
-
-
-    }
-
     public override bool Interact(InteractionParam param = null)
     {
         if (base.Interact(param) == false)

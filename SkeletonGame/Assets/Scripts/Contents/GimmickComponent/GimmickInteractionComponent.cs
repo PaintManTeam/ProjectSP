@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
     public EInteractionType InteractionType { get; protected set; }
     public Vector3 WorldPosition { get { return this.gameObject.transform.position; } }
 
+    Action<int> onInteractionEvent = null;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -25,6 +28,11 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
         Collider = GetComponent<BoxCollider2D>();
 
         return true;
+    }
+
+    public virtual void SetInfo(Action<int> onInteractionEvent)
+    {
+        this.onInteractionEvent = onInteractionEvent;
     }
 
     public bool IsInteractable()
@@ -37,7 +45,13 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
 
     public virtual bool Interact(InteractionParam param = null)
     {
-        return IsInteractable();
+        if (IsInteractable() == false)
+            return false;
+
+        // 상호작용 이벤트 발생을 알림
+        onInteractionEvent?.Invoke(GimmickObjectId);
+
+        return true;
     }
 
 #if UNITY_EDITOR

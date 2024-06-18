@@ -21,13 +21,53 @@ public class GimmickSection : StageSectionBase
         if (base.Init() == false)
             return false;
 
-        
+        UpdateGimmickComponentDict();
+
+        foreach(GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        {
+            if(gimmickComponentBase is GimmickInteractionComponent gimmickInteractionComponent)
+            {
+                gimmickInteractionComponent.SetInfo(OnInteractionEvent);
+            }
+        }
 
         return true;
     }
 
-    // 일정 주기마다 오브젝트들의 상태를 판단하여 활성화, 오브젝트 상태변경 등을 판단해서 뿌림?
-    
+    public void OnInteractionEvent(int gimmickObjectId)
+    {
+        // 상호작용을 감지함
+        // 1. 상호작용 오브젝트들 업데이트
+        // 2. 상호작용 오브젝트
+        
+        
+    }
+
+    public void UpdateGimmickComponentDict()
+    {
+        GimmickComponentDict.Clear();
+
+        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
+        foreach (Transform child in myChildren)
+        {
+            GimmickComponentBase gimmickComponent = child.gameObject.GetComponent<GimmickComponentBase>();
+            if (gimmickComponent != null)
+            {
+                string[] strs = gimmickComponent.gameObject.name.Split(' ');
+                int objectNum = int.Parse(strs[strs.Length - 1]);
+
+                GimmickComponentDict.Add(objectNum, gimmickComponent);
+            }
+#if UNITY_EDITOR
+            EditGimmickComponentInfo editGimmickComponentInfo = child.gameObject.GetComponent<EditGimmickComponentInfo>();
+            if(editGimmickComponentInfo != null)
+            {
+                editGimmickComponentInfo.SetInfo(AddActiveObjectCondition, RemoveActiveObjectCondition,
+                    AddGimmickReadyConditionList, RemoveGimmickReadyConditionList);
+            }
+#endif
+        }
+    }
 
 #if UNITY_EDITOR
 
@@ -88,24 +128,6 @@ public class GimmickSection : StageSectionBase
         return maxNum;
     }
 
-    private void UpdateGimmickComponentDict()
-    {
-        GimmickComponentDict.Clear();
-
-        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
-        foreach(Transform child in myChildren)
-        {
-            GimmickComponentBase gimmickComponent = child.gameObject.GetComponent<GimmickComponentBase>();
-            if(gimmickComponent != null)
-            {
-                string[] strs = gimmickComponent.gameObject.name.Split(' ');
-                int objectNum = int.Parse(strs[strs.Length - 1]);
-
-                GimmickComponentDict.Add(objectNum, gimmickComponent);
-            }
-        }
-    }
-
     public void GenerateGimmickInteractionObject(
         EGimmickInteractionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
@@ -119,6 +141,7 @@ public class GimmickSection : StageSectionBase
         }
 
         GameObject go = Util.InstantiateObject(transform);
+        go.AddComponent<EditGimmickComponentInfo>();
 
         switch (gimmickObjectType)
         {
@@ -148,6 +171,7 @@ public class GimmickSection : StageSectionBase
         int objectNum = GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
+        UpdateGimmickComponentDict();
         return;
     }
 
@@ -188,6 +212,7 @@ public class GimmickSection : StageSectionBase
         int objectNum = GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
+        UpdateGimmickComponentDict();
         return;
     }
 
@@ -208,6 +233,60 @@ public class GimmickSection : StageSectionBase
             Debug.LogWarning("삭제 대상인 오브젝트가 없습니다.");
             return;
         }
+    }
+
+    private bool IsCheckContainsKey(int requestObjectId, int receiveObjectId)
+    {
+        UpdateGimmickComponentDict();
+
+        if (GimmickComponentDict.ContainsKey(requestObjectId) == false)
+        {
+            Debug.LogWarning($"{requestObjectId}번 키가 없습니다.");
+            return false;
+        }
+        if (GimmickComponentDict.ContainsKey(receiveObjectId) == false)
+        {
+            Debug.LogWarning($"{receiveObjectId}번 키가 없습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void AddActiveObjectCondition(int requestObjectId, int receiveObjectId)
+    {
+        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+            return;
+
+        GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
+        GimmickComponentDict[requestObjectId].AddActiveObjectCondition(receiveGimmickComponent);
+    }
+
+    public void RemoveActiveObjectCondition(int requestObjectId, int receiveObjectId)
+    {
+        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+            return;
+
+        GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
+        GimmickComponentDict[requestObjectId].RemoveActiveObjectCondition(receiveGimmickComponent);
+    }
+
+    public void AddGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
+    {
+        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+            return;
+
+        GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
+        GimmickComponentDict[requestObjectId].AddGimmickReadyConditionList(receiveGimmickComponent);
+    }
+
+    public void RemoveGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
+    {
+        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+            return;
+
+        GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
+        GimmickComponentDict[requestObjectId].RemoveGimmickReadyConditionList(receiveGimmickComponent);
     }
 #endif
 }
