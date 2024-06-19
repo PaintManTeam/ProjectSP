@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameMgr
 {
-    StageRoot currStage;
+    public StageRoot CurrStage { get; private set; }
 
     public void Init()
     {
@@ -16,10 +16,5 @@ public class GameMgr
 
     }
 
-    public void StartGame(int stageNum)
-    {
-        // 스테이지 데이터를 받아옴
-
-
-    }
 }
+  

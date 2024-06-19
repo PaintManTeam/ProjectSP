@@ -27,7 +27,7 @@ public class EditGimmickComponentInfo : MonoBehaviour
         if (onAddActiveObjectCondition != null)
             onAddActiveObjectCondition.Invoke(requestObjectId, receiveObjectId);
         else
-            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션을 갱신해주세요.");
+            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션의 데이터를 로드 해주세요.");
     }
 
     public void RemoveActiveObjectCondition(int requestObjectId, int receiveObjectId)
@@ -35,7 +35,7 @@ public class EditGimmickComponentInfo : MonoBehaviour
         if (onRemoveActiveObjectCondition != null)
             onRemoveActiveObjectCondition.Invoke(requestObjectId, receiveObjectId);
         else
-            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션을 갱신해주세요.");
+            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션의 데이터를 로드 해주세요.");
     }
 
     public void AddGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
@@ -43,7 +43,7 @@ public class EditGimmickComponentInfo : MonoBehaviour
         if (onAddGimmickReadyCondition != null)
             onAddGimmickReadyCondition.Invoke(requestObjectId, receiveObjectId);
         else
-            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션을 갱신해주세요.");
+            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션의 데이터를 로드 해주세요.");
     }
 
     public void RemoveGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
@@ -51,7 +51,7 @@ public class EditGimmickComponentInfo : MonoBehaviour
         if (onRemoveGimmickReadyCondition != null)
             onRemoveGimmickReadyCondition.Invoke(requestObjectId, receiveObjectId);
         else
-            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션을 갱신해주세요.");
+            Debug.LogWarning("조작하려는 오브젝트가 속한 섹션의 데이터를 로드 해주세요.");
     }
 
 #endif

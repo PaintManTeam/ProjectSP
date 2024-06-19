@@ -37,7 +37,7 @@ public class GimmickSection : StageSectionBase
             if (editGimmickComponentInfo != null)
                 Destroy(editGimmickComponentInfo);
         }
-
+        
         return true;
     }
 
@@ -75,13 +75,61 @@ public class GimmickSection : StageSectionBase
         }
     }
 
+#if UNITY_EDITOR
+
+    public void SaveSectionData()
+    {
+        UpdateGimmickComponentDict();
+
+        string[] strs = transform.parent.name.Split(' ');
+        int stageId = int.Parse(strs[strs.Length - 1]);
+
+        // 경로 미 존재 시 생성
+        string path = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
+        if(!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path + "/GimmickSection");
+            Directory.CreateDirectory(path + "/CinematicSection");
+        }
+
+        // 기믹 섹션 데이터 세이브
+        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        {
+            string savePath = path + $"/GimmickSection/GimmickComponentData {gimmickComponentBase.GimmickObjectId}.json";
+            List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
+            List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
+
+            Debug.Log(savePath);
+
+            // 기존 저장된 데이터가 있는지 확인해 삭제
+            if (File.Exists(savePath))
+                File.Delete(savePath);
+
+            // 저장할 데이터가 없는 경우 
+            if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
+                continue;
+
+            GimmickComponentInfoData gimmickComponentInfoData = new GimmickComponentInfoData(
+            stageId, StageSectionId, intActiveObjectConditionList, intGimmickReadyConditionList);
+            
+            string jsonData = JsonUtility.ToJson( gimmickComponentInfoData );
+            File.WriteAllText(savePath, jsonData);
+        }
+
+        // 시네마틱 섹션 데이터 세이브
+        Debug.Log("시네마틱 섹션 데이터 세이브 미구현");
+
+        Debug.Log("섹션 데이터 세이브 요청 완료");
+    }
+
     public void LoadSectionData()
     {
         UpdateGimmickComponentDict();
 
         string[] strs = transform.parent.name.Split(' ');
         int stageId = int.Parse(strs[strs.Length - 1]);
-        
+
         string path = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
 
         // 기믹 섹션 데이터 로드
@@ -114,49 +162,6 @@ public class GimmickSection : StageSectionBase
         Debug.Log("시네마틱 섹션 데이터 로드 미구현");
 
         Debug.Log("섹션 데이터 로드 완료");
-    }
-
-#if UNITY_EDITOR
-
-    public void SaveSectionData()
-    {
-        UpdateGimmickComponentDict();
-
-        string[] strs = transform.parent.name.Split(' ');
-        int stageId = int.Parse(strs[strs.Length - 1]);
-
-        // 경로 미 존재 시 생성
-        string path = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
-        if(!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-            Directory.CreateDirectory(path + "/GimmickSection");
-            Directory.CreateDirectory(path + "/CinematicSection");
-        }
-
-        string gimmickPath = path + "/GimmickSection";
-        
-        // 기믹 섹션 데이터 세이브
-        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
-        {
-            List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
-            List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
-
-            // 저장할 데이터가 없는 경우
-            if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
-                continue;
-
-            GimmickComponentInfoData gimmickComponentInfoData = new GimmickComponentInfoData(
-            stageId, StageSectionId, intActiveObjectConditionList, intGimmickReadyConditionList);
-            
-            string jsonData = JsonUtility.ToJson( gimmickComponentInfoData );
-            File.WriteAllText(gimmickPath + $"/GimmickComponentData {gimmickComponentBase.GimmickObjectId}.json", jsonData);
-        }
-
-        // 시네마틱 섹션 데이터 세이브
-        Debug.Log("시네마틱 섹션 데이터 세이브 미구현");
-
-        Debug.Log("섹션 데이터 세이브 요청 완료");
     }
 
     /// <summary>

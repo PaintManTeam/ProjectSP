@@ -68,8 +68,8 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     private void UpdateGimmickState()
     {
-        // 데이터 로드
-
+        // 데이터 로드 
+        // -> 데이터매니저를 통할까?
 
         // 오브젝트 활성화
         this.gameObject.SetActive(activeObjectConditionList.Count == 0);
@@ -120,11 +120,37 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         }
     }
 
+#if UNITY_EDITOR
+
+    protected virtual void Reset()
+    {
+        ResetComponentOperate();
+    }
+
+    public virtual void ResetComponentOperate()
+    {
+        SetRigidbody();
+    }
+
+    public virtual void SetSpriteRenderer(Sprite sprite)
+    {
+        Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
+        Sprite.sprite = sprite;
+    }
+
+    protected virtual void SetRigidbody()
+    {
+        Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
+
+        Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        Rigidbody.freezeRotation = false;
+    }
+
     public List<int> GetIntActiveObjectConditionList()
     {
         List<int> intActiveObjectConditionList = new();
 
-        foreach(GimmickComponentBase gimmickComponentBase in activeObjectConditionList)
+        foreach (GimmickComponentBase gimmickComponentBase in activeObjectConditionList)
         {
             intActiveObjectConditionList.Add(gimmickComponentBase.gimmickObjectId);
         }
@@ -186,32 +212,6 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         }
 
         gimmickReadyConditionList.Remove(removeTarget);
-    }
-
-#if UNITY_EDITOR
-
-    protected virtual void Reset()
-    {
-        ResetComponentOperate();
-    }
-
-    public virtual void ResetComponentOperate()
-    {
-        SetRigidbody();
-    }
-
-    public virtual void SetSpriteRenderer(Sprite sprite)
-    {
-        Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
-        Sprite.sprite = sprite;
-    }
-
-    protected virtual void SetRigidbody()
-    {
-        Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
-
-        Rigidbody.bodyType = RigidbodyType2D.Kinematic;
-        Rigidbody.freezeRotation = false;
     }
 #endif
 }

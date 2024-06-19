@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb236b9d7c212746af93b7f3fe72b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObjectId: 2
+  gimmickObjectId: 0
   activeObjectConditionList: []
   gimmickReadyConditionList: []
 --- !u!50 &8680773389203349423
