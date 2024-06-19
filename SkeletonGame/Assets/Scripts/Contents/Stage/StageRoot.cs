@@ -8,6 +8,9 @@ using System.ComponentModel;
 using JetBrains.Annotations;
 using System;
 
+/// <summary>
+/// 유일성 보장 시켜야 함
+/// </summary>
 public class StageRoot : InitBase
 {
     [Header("에디터 세팅 옵션")]
@@ -15,7 +18,13 @@ public class StageRoot : InitBase
     Dictionary<int, StageSectionBase> StageSectionDict = new Dictionary<int, StageSectionBase>();
     
     [SerializeField, ReadOnly] StageSectionBase currStageSection = null;
-    
+    [SerializeField, ReadOnly] int stageId;
+    public int StageId
+    {
+        get { return stageId; }
+        protected set { stageId = value; }
+    }
+
     public BaseMap map { get; protected set; }
     
     public override bool Init()

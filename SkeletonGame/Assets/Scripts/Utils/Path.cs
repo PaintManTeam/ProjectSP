@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// "Resource/" 이후 경로
+/// 
 /// </summary>
-public static class LoadPath
+public static class DataPath
 {
-
+    public const string STAGEDATA_PATH = "/Resources/Data/JsonData/StageData";
 }
 
 /// <summary>
-/// "Resource/Prefabs/" 이후 경로
+/// "Assets/Resource/" 이후 경로
+/// </summary>
+public static class LoadPath
+{
+    
+}
+
+/// <summary>
+/// "Assets/Resource/Prefabs/" 이후 경로
 /// </summary>
 public static class PrefabPath
 {

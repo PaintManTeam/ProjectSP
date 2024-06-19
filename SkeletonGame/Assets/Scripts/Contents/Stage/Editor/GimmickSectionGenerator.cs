@@ -34,24 +34,17 @@ public class GimmickSectionGenerator : Editor
         GUILayout.Space(10);
         GUILayout.Label("- 기믹 오브젝트 -", EditorStyles.boldLabel);
 
-        GUILayout.Space(5);
-        if (GUILayout.Button("기믹 섹션 갱신"))
-        {
-            gimmickSection.UpdateGimmickComponentDict();
-            Debug.Log("기믹 섹션 갱신 완료");
-        }
-
         // 데이터 저장
         GUILayout.Space(5);
         isSaveUnlocked = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlocked);
         GUILayout.Space(5);
-        if (GUILayout.Button("기믹 섹션 데이터 저장"))
+        if (GUILayout.Button("기믹 섹션 데이터 저장") && isSaveUnlocked)
             gimmickSection.SaveSectionData();
 
         // 데이터 불러오기
         GUILayout.Space(5);
         isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
-        if (GUILayout.Button("기믹 섹션 데이터 불러오기"))
+        if (GUILayout.Button("기믹 섹션 데이터 불러오기") && isLoadUnlocked)
             gimmickSection.LoadSectionData();
 
         // 상호작용 타입 추가
@@ -71,7 +64,7 @@ public class GimmickSectionGenerator : Editor
         GUILayout.Space(15);
         GUILayout.Label("충돌 타입 생성", EditorStyles.boldLabel);
         GUILayout.Space(5);
-        collisionObjectName = EditorGUILayout.TextField("생성 시 이름 설정", collisionObjectName);
+        collisionObjectName = EditorGUILayout.TextField("생성 시 이름 설정", collisionObjectName); 
         GUILayout.Space(5);
         collisionGimmickType = (EGimmickCollisionObjectType)EditorGUILayout.EnumPopup("충돌 타입 설정", collisionGimmickType);
         GUILayout.Space(5);

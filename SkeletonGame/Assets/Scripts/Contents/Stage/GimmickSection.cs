@@ -1,7 +1,10 @@
+using Data;
 using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using static Define;
 
@@ -72,16 +75,88 @@ public class GimmickSection : StageSectionBase
         }
     }
 
+    public void LoadSectionData()
+    {
+        UpdateGimmickComponentDict();
+
+        string[] strs = transform.parent.name.Split(' ');
+        int stageId = int.Parse(strs[strs.Length - 1]);
+        
+        string path = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
+
+        // 기믹 섹션 데이터 로드
+        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        {
+            string loadPath = path + $"/GimmickSection/GimmickComponentData {gimmickComponentBase.GimmickObjectId}.json";
+
+            // 불러올 데이터가 없는 경우
+            if (File.Exists(loadPath) == false)
+                continue;
+
+            string jsonData = File.ReadAllText(loadPath);
+
+            GimmickComponentInfoData gimmickComponentInfoData = JsonUtility.FromJson<GimmickComponentInfoData>(jsonData);
+
+            List<GimmickComponentBase> activeObjectConditionList = new();
+            foreach (int id in gimmickComponentInfoData.activeObjectConditionList)
+                activeObjectConditionList.Add(GimmickComponentDict[id]);
+
+            List<GimmickComponentBase> gimmickReadyConditionList = new();
+            foreach (int id in gimmickComponentInfoData.gimmickReadyConditionList)
+                gimmickReadyConditionList.Add(GimmickComponentDict[id]);
+
+            gimmickComponentBase.SetGimmickComponentData(
+                activeObjectConditionList: activeObjectConditionList,
+                gimmickReadyConditionList: gimmickReadyConditionList);
+        }
+
+        // 시네마틱 섹션 데이터 로드
+        Debug.Log("시네마틱 섹션 데이터 로드 미구현");
+
+        Debug.Log("섹션 데이터 로드 완료");
+    }
+
 #if UNITY_EDITOR
 
     public void SaveSectionData()
     {
-        Debug.Log("섹션 데이터 저장 미구현");
-    }
+        UpdateGimmickComponentDict();
 
-    public void LoadSectionData()
-    {
-        Debug.Log("섹션 데이터 불러오기 미구현");
+        string[] strs = transform.parent.name.Split(' ');
+        int stageId = int.Parse(strs[strs.Length - 1]);
+
+        // 경로 미 존재 시 생성
+        string path = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
+        if(!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path + "/GimmickSection");
+            Directory.CreateDirectory(path + "/CinematicSection");
+        }
+
+        string gimmickPath = path + "/GimmickSection";
+        
+        // 기믹 섹션 데이터 세이브
+        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        {
+            List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
+            List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
+
+            // 저장할 데이터가 없는 경우
+            if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
+                continue;
+
+            GimmickComponentInfoData gimmickComponentInfoData = new GimmickComponentInfoData(
+            stageId, StageSectionId, intActiveObjectConditionList, intGimmickReadyConditionList);
+            
+            string jsonData = JsonUtility.ToJson( gimmickComponentInfoData );
+            File.WriteAllText(gimmickPath + $"/GimmickComponentData {gimmickComponentBase.GimmickObjectId}.json", jsonData);
+        }
+
+        // 시네마틱 섹션 데이터 세이브
+        Debug.Log("시네마틱 섹션 데이터 세이브 미구현");
+
+        Debug.Log("섹션 데이터 세이브 요청 완료");
     }
 
     /// <summary>

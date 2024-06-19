@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb236b9d7c212746af93b7f3fe72b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObjectId: 0
+  gimmickObjectId: 2
   activeObjectConditionList: []
   gimmickReadyConditionList: []
 --- !u!50 &8680773389203349423
@@ -300,6 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerStartPoint: {fileID: 9018641126814900808}
+  stageSectionId: 1
 --- !u!1 &2700946883791324981
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currStageSection: {fileID: 0}
+  stageId: 0
 --- !u!1 &6351044223243877231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,7 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb236b9d7c212746af93b7f3fe72b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObjectId: 0
+  gimmickObjectId: 1
   activeObjectConditionList: []
   gimmickReadyConditionList: []
 --- !u!50 &2608841283028466904

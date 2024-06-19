@@ -1,6 +1,9 @@
+using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using Unity.Mathematics;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,7 +25,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
             if (gimmickObjectId <= 0)
             {
                 string[] strs = gameObject.name.Split(' ');
-                GimmickObjectId = int.Parse(strs[strs.Length - 1]);
+                gimmickObjectId = int.Parse(strs[strs.Length - 1]);
             }
 
             return gimmickObjectId;
@@ -31,10 +34,10 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     }
 
     [Header("오브젝트 활성화 조건")]
-    [SerializeField, ReadOnly] List<GimmickComponentBase> activeObjectConditionList;
+    [SerializeField, ReadOnly] private List<GimmickComponentBase> activeObjectConditionList;
 
     [Header("기믹 준비 조건")]
-    [SerializeField, ReadOnly] List<GimmickComponentBase> gimmickReadyConditionList;
+    [SerializeField, ReadOnly] private List<GimmickComponentBase> gimmickReadyConditionList;
 
     public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
@@ -55,10 +58,19 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         UpdateGimmickState();
         
         return true;
-    } 
+    }
+
+    public void SetGimmickComponentData(List<GimmickComponentBase> activeObjectConditionList, List<GimmickComponentBase> gimmickReadyConditionList)
+    {
+        this.activeObjectConditionList = activeObjectConditionList;
+        this.gimmickReadyConditionList = gimmickReadyConditionList;
+    }
 
     private void UpdateGimmickState()
     {
+        // 데이터 로드
+
+
         // 오브젝트 활성화
         this.gameObject.SetActive(activeObjectConditionList.Count == 0);
 
@@ -108,41 +120,33 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         }
     }
 
-#if UNITY_EDITOR
-    
-    protected virtual void Reset()
+    public List<int> GetIntActiveObjectConditionList()
     {
-        ResetComponentOperate();
+        List<int> intActiveObjectConditionList = new();
+
+        foreach(GimmickComponentBase gimmickComponentBase in activeObjectConditionList)
+        {
+            intActiveObjectConditionList.Add(gimmickComponentBase.gimmickObjectId);
+        }
+
+        return intActiveObjectConditionList;
     }
 
-    public virtual void ResetComponentOperate()
+    public List<int> GetIntGimmickReadyConditionList()
     {
-        SetRigidbody();
+        List<int> intGimmickReadyConditionList = new();
 
-        if(activeObjectConditionList.Count == 0)
-            activeObjectConditionList = new();
+        foreach (GimmickComponentBase gimmickComponentBase in gimmickReadyConditionList)
+        {
+            intGimmickReadyConditionList.Add(gimmickComponentBase.gimmickObjectId);
+        }
 
-        if(gimmickReadyConditionList.Count == 0)
-            gimmickReadyConditionList = new();
-    }
-
-    public virtual void SetSpriteRenderer(Sprite sprite)
-    {
-        Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
-        Sprite.sprite = sprite;
-    }
-
-    protected virtual void SetRigidbody()
-    {
-        Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
-
-        Rigidbody.bodyType = RigidbodyType2D.Kinematic;
-        Rigidbody.freezeRotation = false;
+        return intGimmickReadyConditionList;
     }
 
     public void AddActiveObjectCondition(GimmickComponentBase addTarget)
     {
-        if(activeObjectConditionList.Contains(addTarget))
+        if (activeObjectConditionList.Contains(addTarget))
         {
             Debug.LogWarning($"이미 추가됨 : {addTarget.GimmickObjectId}번");
             return;
@@ -161,7 +165,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
         activeObjectConditionList.Remove(removeTarget);
     }
-    
+
     public void AddGimmickReadyConditionList(GimmickComponentBase addTarget)
     {
         if (gimmickReadyConditionList.Contains(addTarget))
@@ -170,7 +174,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
             return;
         }
 
-        activeObjectConditionList.Add(addTarget);
+        gimmickReadyConditionList.Add(addTarget);
     }
 
     public void RemoveGimmickReadyConditionList(GimmickComponentBase removeTarget)
@@ -182,6 +186,32 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         }
 
         gimmickReadyConditionList.Remove(removeTarget);
+    }
+
+#if UNITY_EDITOR
+
+    protected virtual void Reset()
+    {
+        ResetComponentOperate();
+    }
+
+    public virtual void ResetComponentOperate()
+    {
+        SetRigidbody();
+    }
+
+    public virtual void SetSpriteRenderer(Sprite sprite)
+    {
+        Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
+        Sprite.sprite = sprite;
+    }
+
+    protected virtual void SetRigidbody()
+    {
+        Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
+
+        Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        Rigidbody.freezeRotation = false;
     }
 #endif
 }

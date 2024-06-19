@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Data
 {
-    #region DialogueData
+    // 다이얼로그 데이터는 따로 분리해서 관리할 예정
+    #region DialogueDatas
     [Serializable]
     public class DialogueData
     {
@@ -30,74 +31,23 @@ namespace Data
     }
     #endregion
 
-    // 데이터 구조 고민 좀 천천히 해봐야 될 것 같음 
-    
-    #region StageData
-    [SerializeField]
-    public class StageData
+    // 에디터에서 자동으로 세팅 및 저장 되는 데이터
+    #region GimmickComponentInfoData
+    [Serializable]
+    public class GimmickComponentInfoData
     {
-        public int DataId;
-        public List<int> SectionType;
-        public List<int> DataKeyId;
-    }
+        public int stageId;
+        public int sectionId;
+        public int gimmickObjectId;
+        public List<int> activeObjectConditionList; // 오브젝트 Id
+        public List<int> gimmickReadyConditionList; // 오브젝트 Id
 
-    [SerializeField]
-    public class StageDataLoader : ILoader<int, StageData>
-    {
-        public List<StageData> stageDatas = new List<StageData>();
-
-        public Dictionary<int , StageData> MakeDict()
+        public GimmickComponentInfoData(int stageId, int sectionId, List<int> activeObjectConditionList, List<int> gimmickReadyConditionList)
         {
-            Dictionary<int, StageData> dict = new Dictionary<int, StageData>();
-            foreach(StageData stageData in stageDatas)
-                dict.Add(stageData.DataId, stageData);
-            return dict;
-        }
-    }
-    #endregion
-
-    #region GimmickPuzzleData
-    [SerializeField]
-    public class GimmickPuzzleData
-    {
-        public int DataId;
-
-    }
-
-    [SerializeField]
-    public class GimmickPuzzleDataLoader : ILoader<int, GimmickPuzzleData>
-    {
-        public List<GimmickPuzzleData> gimmickPuzzleDatas = new List<GimmickPuzzleData>();
-
-        public Dictionary<int, GimmickPuzzleData> MakeDict()
-        {
-            Dictionary<int, GimmickPuzzleData> dict = new Dictionary<int, GimmickPuzzleData>();
-            foreach(GimmickPuzzleData gimmickPuzzleData in gimmickPuzzleDatas)
-                dict.Add(gimmickPuzzleData.DataId, gimmickPuzzleData);
-            return dict;
-        }
-    }
-    #endregion
-
-    #region CinematicData
-    [SerializeField]
-    public class CinematicData
-    {
-        public int DataId;
-
-    }
-
-    [SerializeField]
-    public class CinematicDataLoader : ILoader<int, CinematicData>
-    {
-        public List<CinematicData> cinematicDatas = new List<CinematicData>();
-
-        public Dictionary<int, CinematicData> MakeDict()
-        {
-            Dictionary<int, CinematicData> dict = new Dictionary<int, CinematicData>();
-            foreach(CinematicData cinematicData in cinematicDatas)
-                dict.Add(cinematicData.DataId, cinematicData);
-            return dict;
+            this.stageId = stageId;
+            this.sectionId = sectionId;
+            this.activeObjectConditionList = activeObjectConditionList;
+            this.gimmickReadyConditionList = gimmickReadyConditionList;
         }
     }
     #endregion
