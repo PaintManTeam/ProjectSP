@@ -93,8 +93,11 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     private void UpdateGimmickState()
     {
-        // 데이터 로드 
-        // -> 데이터매니저를 통할까?
+        
+
+        // 데이터 로드 해야 할 것
+
+
 
         // 오브젝트 활성화
         this.gameObject.SetActive(ActiveObjectConditionList.Count == 0);
