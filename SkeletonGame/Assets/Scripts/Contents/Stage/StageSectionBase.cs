@@ -43,5 +43,10 @@ public abstract class StageSectionBase : InitBase
         return true;
     }
 
+#if UNITY_EDITOR
 
+    public abstract void SaveSectionData();
+    public abstract void LoadSectionData();
+
+#endif
 }

@@ -26,7 +26,7 @@ public class UI_DialoguePopup : UI_BasePopup
     */
 
     Action onEndDialogue = null;
-    Queue<DialogueData> dataQueue;
+    Queue<JDialogueData> dataQueue;
 
     public override bool Init()
     {
@@ -82,7 +82,7 @@ public class UI_DialoguePopup : UI_BasePopup
         while(dataQueue.Count > 0)
         {
             dialogueText.text = "";
-            DialogueData data = dataQueue.Dequeue();
+            JDialogueData data = dataQueue.Dequeue();
 
             if (coDialogueTyping != null)
             {

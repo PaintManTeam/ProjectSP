@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// "Assets/Resource/Data/Json/" 이후 경로 
 /// </summary>
 public static class DataPath
 {
@@ -15,7 +15,7 @@ public static class DataPath
 /// </summary>
 public static class LoadPath
 {
-    
+
 }
 
 /// <summary>

@@ -35,9 +35,34 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     [Header("오브젝트 활성화 조건")]
     [SerializeField, ReadOnly] private List<GimmickComponentBase> activeObjectConditionList;
+    public List<GimmickComponentBase> ActiveObjectConditionList
+    {
+        get
+        {
+            activeObjectConditionList ??= new();
+            return activeObjectConditionList;
+        }
+        protected set
+        {
+            activeObjectConditionList = value;
+        }
+    }
 
     [Header("기믹 준비 조건")]
     [SerializeField, ReadOnly] private List<GimmickComponentBase> gimmickReadyConditionList;
+    public List<GimmickComponentBase> GimmickReadyConditionList
+    {
+        get
+        {
+            gimmickReadyConditionList ??= new();
+            return gimmickReadyConditionList;
+        }
+        protected set
+        {
+            gimmickReadyConditionList = value;
+        }
+    }
+
 
     public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
@@ -62,8 +87,8 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     public void SetGimmickComponentData(List<GimmickComponentBase> activeObjectConditionList, List<GimmickComponentBase> gimmickReadyConditionList)
     {
-        this.activeObjectConditionList = activeObjectConditionList;
-        this.gimmickReadyConditionList = gimmickReadyConditionList;
+        this.ActiveObjectConditionList = activeObjectConditionList;
+        this.GimmickReadyConditionList = gimmickReadyConditionList;
     }
 
     private void UpdateGimmickState()
@@ -72,10 +97,10 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         // -> 데이터매니저를 통할까?
 
         // 오브젝트 활성화
-        this.gameObject.SetActive(activeObjectConditionList.Count == 0);
+        this.gameObject.SetActive(ActiveObjectConditionList.Count == 0);
 
         // 오브젝트 레디 조건
-        GimmickState = (gimmickReadyConditionList.Count == 0) ?
+        GimmickState = (GimmickReadyConditionList.Count == 0) ?
             EGimmickObjectState.Ready : EGimmickObjectState.StandBy;
     }
 
@@ -92,14 +117,14 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     private void CheckListOfActiveCondition()
     {
-        if (activeObjectConditionList.Count == 0)
+        if (ActiveObjectConditionList.Count == 0)
             return;
 
-        foreach(GimmickComponentBase condition in activeObjectConditionList)
+        foreach(GimmickComponentBase condition in ActiveObjectConditionList)
         {
             if(condition.GimmickState == EGimmickObjectState.Complete)
             {
-                activeObjectConditionList.Remove(condition);
+                ActiveObjectConditionList.Remove(condition);
                 break;
             }
         }
@@ -107,14 +132,14 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     private void CheckListOfReadyCondition()
     {
-        if (gimmickReadyConditionList.Count == 0)
+        if (GimmickReadyConditionList.Count == 0)
             return;
 
-        foreach(GimmickComponentBase condition in gimmickReadyConditionList)
+        foreach(GimmickComponentBase condition in GimmickReadyConditionList)
         {
             if(condition.GimmickState == EGimmickObjectState.Complete)
             {
-                gimmickReadyConditionList.Remove(condition);
+                GimmickReadyConditionList.Remove(condition);
                 break;
             }
         }
@@ -150,7 +175,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     {
         List<int> intActiveObjectConditionList = new();
 
-        foreach (GimmickComponentBase gimmickComponentBase in activeObjectConditionList)
+        foreach (GimmickComponentBase gimmickComponentBase in ActiveObjectConditionList)
         {
             intActiveObjectConditionList.Add(gimmickComponentBase.gimmickObjectId);
         }
@@ -162,7 +187,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     {
         List<int> intGimmickReadyConditionList = new();
 
-        foreach (GimmickComponentBase gimmickComponentBase in gimmickReadyConditionList)
+        foreach (GimmickComponentBase gimmickComponentBase in GimmickReadyConditionList)
         {
             intGimmickReadyConditionList.Add(gimmickComponentBase.gimmickObjectId);
         }
@@ -172,46 +197,46 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     public void AddActiveObjectCondition(GimmickComponentBase addTarget)
     {
-        if (activeObjectConditionList.Contains(addTarget))
+        if (ActiveObjectConditionList.Contains(addTarget))
         {
             Debug.LogWarning($"이미 추가됨 : {addTarget.GimmickObjectId}번");
             return;
         }
 
-        activeObjectConditionList.Add(addTarget);
+        ActiveObjectConditionList.Add(addTarget);
     }
 
     public void RemoveActiveObjectCondition(GimmickComponentBase removeTarget)
     {
-        if (!activeObjectConditionList.Contains(removeTarget))
+        if (!ActiveObjectConditionList.Contains(removeTarget))
         {
             Debug.LogWarning($"삭제 불가 (없음) : {removeTarget.GimmickObjectId}번");
             return;
         }
 
-        activeObjectConditionList.Remove(removeTarget);
+        ActiveObjectConditionList.Remove(removeTarget);
     }
 
     public void AddGimmickReadyConditionList(GimmickComponentBase addTarget)
     {
-        if (gimmickReadyConditionList.Contains(addTarget))
+        if (GimmickReadyConditionList.Contains(addTarget))
         {
             Debug.LogWarning($"이미 추가됨 : {addTarget.GimmickObjectId}번");
             return;
         }
 
-        gimmickReadyConditionList.Add(addTarget);
+        GimmickReadyConditionList.Add(addTarget);
     }
 
     public void RemoveGimmickReadyConditionList(GimmickComponentBase removeTarget)
     {
-        if (!gimmickReadyConditionList.Contains(removeTarget))
+        if (!GimmickReadyConditionList.Contains(removeTarget))
         {
             Debug.LogWarning($"삭제 불가 (없음) : {removeTarget.GimmickObjectId}번");
             return;
         }
 
-        gimmickReadyConditionList.Remove(removeTarget);
+        GimmickReadyConditionList.Remove(removeTarget);
     }
 #endif
 }

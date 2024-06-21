@@ -81,6 +81,8 @@ public class StageRoot : InitBase
 
 #if UNITY_EDITOR
 
+    // 잘못된 저장 값이나, 세팅 값이 있는지 검사하는 메서드 추가해야 함
+
     public void GenerateStageMap()
     {
         // 맵이 있는 지 확인, 없다면 생성
@@ -99,12 +101,12 @@ public class StageRoot : InitBase
 
     public void SaveStageData()
     {
-        Debug.Log("스테이지 데이터 저장 미구현");
+        // 모든 섹션에 접근해서 세이브를 호출한다.
     }
 
     public void LoadStageData()
     {
-        Debug.Log("스테이지 데이터 불러오기 미구현");
+        // 모든 섹션에 접근해서 로드를 호출한다.
     }
 
     public void UpdateStageInfo()

@@ -16,7 +16,7 @@ public class DataTransformer : EditorWindow
     [MenuItem("Tools/ParseExcel %#K")]
     public static void ParseExcelDataToJson()
     {
-        ParseExcelDataToJson<DialogueDataLoader, DialogueData>("Dialogue");
+        ParseExcelDataToJson<JDialogueDataLoader, JDialogueData>("Dialogue");
 
         Debug.Log("DataTransformer Completed");
     }

@@ -27,7 +27,7 @@ public class InteractionMgr
 
     public void ActiveDialogue(int startIndex, int endIndex, Action onEndDialogue)
     {
-        Queue<DialogueData> dataQueue = new Queue<DialogueData>();
+        Queue<JDialogueData> dataQueue = new Queue<JDialogueData>();
 
         for(int i = startIndex; i <= endIndex; i++)
         {

@@ -9,9 +9,9 @@ public class UIParam { }
 public class UIDialogueParam : UIParam
 {
     public Action onEndDialogue;
-    public Queue<DialogueData> dataQueue;
+    public Queue<JDialogueData> dataQueue;
 
-    public UIDialogueParam(Action onEndDialogue, Queue<DialogueData> dataQueue)
+    public UIDialogueParam(Action onEndDialogue, Queue<JDialogueData> dataQueue)
     {
         this.onEndDialogue = onEndDialogue;
         this.dataQueue = dataQueue;

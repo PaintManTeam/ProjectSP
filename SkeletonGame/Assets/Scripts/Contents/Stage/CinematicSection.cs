@@ -18,4 +18,18 @@ public class CinematicSection : StageSectionBase
     {
         base.Reset();
     }
+
+#if UNITY_EDITOR
+
+    public override void SaveSectionData()
+    {
+
+    }
+
+    public override void LoadSectionData()
+    {
+
+    }
+
+#endif
 }

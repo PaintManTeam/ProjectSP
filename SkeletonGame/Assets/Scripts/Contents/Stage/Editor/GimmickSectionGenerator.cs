@@ -39,13 +39,21 @@ public class GimmickSectionGenerator : Editor
         isSaveUnlocked = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlocked);
         GUILayout.Space(5);
         if (GUILayout.Button("기믹 섹션 데이터 저장") && isSaveUnlocked)
+        {
             gimmickSection.SaveSectionData();
+            isSaveUnlocked = false;
+            Debug.LogWarning("기믹 섹션 데이터 저장 요청 완료\n(시간이 걸릴 수 있습니다.!!)\n바로 종료하지 마세요.!");
+        }
 
         // 데이터 불러오기
         GUILayout.Space(5);
         isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
         if (GUILayout.Button("기믹 섹션 데이터 불러오기") && isLoadUnlocked)
+        {
             gimmickSection.LoadSectionData();
+            isLoadUnlocked = false;
+            Debug.Log("기믹 섹션 데이터 불러오기 완료");
+        }
 
         // 상호작용 타입 추가
         GUILayout.Space(15);
