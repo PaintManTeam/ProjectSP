@@ -10,7 +10,6 @@ public class StageSectionGenerator : Editor
 {
     EStageSectionType stageSectionType;
 
-    bool isSaveUnlocked;
     bool isLoadUnlocked;
     bool isRemoveUnlocked;
 
@@ -33,24 +32,13 @@ public class StageSectionGenerator : Editor
         GUILayout.Space(15);
         GUILayout.Label("- 스테이지 -", EditorStyles.boldLabel);
         
-        // 데이터 저장
-        GUILayout.Space(5);
-        isSaveUnlocked = EditorGUILayout.Toggle("저장 잠금 해제", isSaveUnlocked);
-        GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 데이터 저장") && isSaveUnlocked)
-        {
-            stageRoot.SaveStageData();
-            isSaveUnlocked = false;
-            Debug.LogWarning("스테이지 데이터 저장 요청 완료 !\n에디터를 바로 종료하지 마세요!\n세이브엔 시간이 소요됩니다.");
-        }
-
         // 데이터 불러오기
         GUILayout.Space(5);
         isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
         GUILayout.Space(5);
-        if (GUILayout.Button("스테이지 데이터 불러오기") && isLoadUnlocked)
+        if (GUILayout.Button("스테이지 전체 데이터 불러오기") && isLoadUnlocked)
         {
-            stageRoot.LoadStageData();
+            stageRoot.LoadStageDataAll();
             isLoadUnlocked = false;
             Debug.Log("스테이지 데이터 불러오기 완료");
         }

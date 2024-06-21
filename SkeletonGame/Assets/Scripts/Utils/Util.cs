@@ -69,5 +69,17 @@ public static class Util
         GameObject.DestroyImmediate(tempObject);
         return go;
     }
+
+    public static void FileDelete(string path, string fileExtension = ".json")
+    {
+        if (fileExtension[0] != '.')
+            fileExtension = $".{fileExtension}";
+
+        if (File.Exists($"{path}{fileExtension}"))
+        {
+            File.Delete($"{path}{fileExtension}");
+            File.Delete($"{path}.meta");
+        }
+    }
 #endif
 }

@@ -99,14 +99,12 @@ public class StageRoot : InitBase
             Debug.Log("이미 맵이 존재합니다.");
     }
 
-    public void SaveStageData()
+    public void LoadStageDataAll()
     {
-        // 모든 섹션에 접근해서 세이브를 호출한다.
-    }
+        UpdateStageInfo();
 
-    public void LoadStageData()
-    {
-        // 모든 섹션에 접근해서 로드를 호출한다.
+        foreach (StageSectionBase stageSectionBase in StageSectionDict.Values)
+            stageSectionBase.LoadSectionData();
     }
 
     public void UpdateStageInfo()

@@ -83,30 +83,32 @@ public class GimmickSection : StageSectionBase
 
         string[] strs = transform.parent.name.Split(' ');
         int stageId = int.Parse(strs[strs.Length - 1]);
-
-        // 스테이지 경로 미존재 시 생성
         string stagePath = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}";
+        string sectionPath = stagePath + $"/{EStageSectionType.GimmickSection} {StageSectionId}";
+
+        // 경로 미존재 시 생성
         if(!Directory.Exists(stagePath))
             Directory.CreateDirectory(stagePath);
-
-        string sectionPath = stagePath + $"/{EStageSectionType.GimmickSection} {StageSectionId}";
         if (!Directory.Exists(sectionPath))
             Directory.CreateDirectory(sectionPath);
 
         // 섹션 데이터 세이브
+        int emptyCount = 0;
         foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
         {
-            string savePath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}.json";
+            string savePath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}";
             List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
             List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
 
             // 기존 저장된 데이터가 있는지 확인해 삭제
-            if (File.Exists(savePath))
-                File.Delete(savePath);
+            Util.FileDelete(savePath);
 
             // 저장할 데이터가 없는 경우 
             if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
+            {
+                emptyCount++;
                 continue;
+            }
 
             JGimmickComponentData gimmickComponentData = new JGimmickComponentData(
             gimmickComponentBase.GimmickObjectId, intActiveObjectConditionList, intGimmickReadyConditionList);
@@ -114,6 +116,15 @@ public class GimmickSection : StageSectionBase
             string jsonData = JsonUtility.ToJson(gimmickComponentData);
             File.WriteAllText(savePath, jsonData);
         }
+
+
+
+
+
+        // 빈 폴더 판단해서 삭제하자~
+
+
+
     }
 
     public override void LoadSectionData()
@@ -132,10 +143,7 @@ public class GimmickSection : StageSectionBase
 
             // 불러올 데이터가 없는 경우
             if (File.Exists(loadPath) == false)
-            {
-                Debug.Log($"{gimmickComponentBase.GimmickObjectId}번 저장 데이터 없음");
                 continue;
-            }
 
             string jsonData = File.ReadAllText(loadPath);
             JGimmickComponentData gimmickComponentData = JsonUtility.FromJson<JGimmickComponentData>(jsonData);
