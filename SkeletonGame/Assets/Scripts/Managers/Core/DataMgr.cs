@@ -13,7 +13,8 @@ public interface ILoader<Key, Value>
 public class DataMgr
 {
     public Dictionary<int, Data.DialogueData> DialogueDict { get; private set; } = new Dictionary<int, Data.DialogueData>();
-    
+        
+
     public void Init()
     {
         DialogueDict = LoadJson<Data.DialogueDataLoader, int, Data.DialogueData>("DialogueData").MakeDict();

@@ -100,8 +100,6 @@ public class GimmickSection : StageSectionBase
             List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
             List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
 
-            Debug.Log(savePath);
-
             // 기존 저장된 데이터가 있는지 확인해 삭제
             if (File.Exists(savePath))
                 File.Delete(savePath);
@@ -110,10 +108,10 @@ public class GimmickSection : StageSectionBase
             if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
                 continue;
 
-            GimmickComponentInfoData gimmickComponentInfoData = new GimmickComponentInfoData(
-            stageId, StageSectionId, intActiveObjectConditionList, intGimmickReadyConditionList);
+            GimmickComponentData gimmickComponentData = new GimmickComponentData(
+            gimmickComponentBase.GimmickObjectId, intActiveObjectConditionList, intGimmickReadyConditionList);
             
-            string jsonData = JsonUtility.ToJson( gimmickComponentInfoData );
+            string jsonData = JsonUtility.ToJson(gimmickComponentData);
             File.WriteAllText(savePath, jsonData);
         }
 
@@ -143,14 +141,14 @@ public class GimmickSection : StageSectionBase
 
             string jsonData = File.ReadAllText(loadPath);
 
-            GimmickComponentInfoData gimmickComponentInfoData = JsonUtility.FromJson<GimmickComponentInfoData>(jsonData);
+            GimmickComponentData gimmickComponentData = JsonUtility.FromJson<GimmickComponentData>(jsonData);
 
             List<GimmickComponentBase> activeObjectConditionList = new();
-            foreach (int id in gimmickComponentInfoData.activeObjectConditionList)
+            foreach (int id in gimmickComponentData.ActiveObjectConditionList)
                 activeObjectConditionList.Add(GimmickComponentDict[id]);
 
             List<GimmickComponentBase> gimmickReadyConditionList = new();
-            foreach (int id in gimmickComponentInfoData.gimmickReadyConditionList)
+            foreach (int id in gimmickComponentData.GimmickReadyConditionList)
                 gimmickReadyConditionList.Add(GimmickComponentDict[id]);
 
             gimmickComponentBase.SetGimmickComponentData(

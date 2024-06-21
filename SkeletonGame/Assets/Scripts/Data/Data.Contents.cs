@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,22 +33,86 @@ namespace Data
     #endregion
 
     // 에디터에서 자동으로 세팅 및 저장 되는 데이터
-    #region GimmickComponentInfoData
+    #region StageGroupData
     [Serializable]
-    public class GimmickComponentInfoData
+    public class StageGroupData
     {
-        public int stageId;
-        public int sectionId;
-        public int gimmickObjectId;
-        public List<int> activeObjectConditionList; // 오브젝트 Id
-        public List<int> gimmickReadyConditionList; // 오브젝트 Id
+        public int StageId;
+        public GimmickSectionData GimmickData;
+        public CinematicSectionData CinematicSection;
 
-        public GimmickComponentInfoData(int stageId, int sectionId, List<int> activeObjectConditionList, List<int> gimmickReadyConditionList)
+        public StageGroupData(int stageId, GimmickSectionData gimmickData, CinematicSectionData cinematicSection)
         {
-            this.stageId = stageId;
-            this.sectionId = sectionId;
-            this.activeObjectConditionList = activeObjectConditionList;
-            this.gimmickReadyConditionList = gimmickReadyConditionList;
+            StageId = stageId;
+            GimmickData = gimmickData;
+            CinematicSection = cinematicSection;
+        }
+    }
+
+    [Serializable]
+    public class StageGroupDataLoader : ILoader<int, StageGroupData>
+    {
+        public List<StageGroupData> stageGroups = new List<StageGroupData>();
+
+        public Dictionary<int, StageGroupData> MakeDict()
+        {
+            Dictionary<int, StageGroupData> dict = new Dictionary<int, StageGroupData>();
+            
+            // 이 부분을 잘 채워야 하는데?
+            
+            return dict;
+        }
+    }
+
+    [Serializable]
+    public class GimmickSectionData
+    {
+        public int SectionId;
+        public List<GimmickComponentData> GimmickComponentDatas;
+
+        public GimmickSectionData(int sectionId, List<GimmickComponentData> gimmickComponentDatas)
+        {
+            SectionId = sectionId;
+            GimmickComponentDatas = gimmickComponentDatas;
+        }
+    }
+
+    [Serializable]
+    public class GimmickComponentData
+    {
+        public int GimmickObjectId;
+        public List<int> ActiveObjectConditionList; // 오브젝트 Id
+        public List<int> GimmickReadyConditionList; // 오브젝트 Id
+
+        public GimmickComponentData(int gimmickObjectId, List<int> activeObjectConditionList, List<int> gimmickReadyConditionList)
+        {
+            GimmickObjectId = gimmickObjectId;
+            ActiveObjectConditionList = activeObjectConditionList;
+            GimmickReadyConditionList = gimmickReadyConditionList;
+        }
+    }
+
+    [Serializable]
+    public class CinematicSectionData
+    {
+        public int SectionId;
+        public List<CinematicComponentData> CinematicComponentDatas;
+
+        public CinematicSectionData(int sectionId, List<CinematicComponentData> cinematicComponentDatas)
+        {
+            SectionId = sectionId;
+            CinematicComponentDatas = cinematicComponentDatas;
+        }
+    }
+
+    [Serializable]
+    public class CinematicComponentData
+    {
+        public int CinematicObjectId;
+
+        public CinematicComponentData(int cinematicObjectId)
+        {
+            CinematicObjectId = cinematicObjectId;
         }
     }
     #endregion
