@@ -11,14 +11,15 @@ public abstract class StageSectionBase : InitBase
     {
         get
         {
-            if(stageSectionId <= 0)
+            if (stageSectionId <= 0)
             {
                 string[] strs = gameObject.name.Split(' ');
                 stageSectionId = int.Parse(strs[strs.Length - 1]);
             }
-            
+
             return stageSectionId;
         }
+
         private set { stageSectionId = value; }
     }
 
@@ -26,9 +27,9 @@ public abstract class StageSectionBase : InitBase
     {
         PlayerStartPoint = gameObject.transform.Find("PlayerStartPoint");
         
-        if(PlayerStartPoint == null)
+        if(PlayerStartPoint == null) 
         {
-            GameObject go = Util.InstantiateObject(transform);
+            GameObject go = Util.Editor_InstantiateObject(transform);
             go.name = "PlayerStartPoint";
             PlayerStartPoint = go.transform;
         }
@@ -45,8 +46,8 @@ public abstract class StageSectionBase : InitBase
 
 #if UNITY_EDITOR
 
-    public abstract void SaveSectionData();
-    public abstract void LoadSectionData();
+    public abstract void Editor_SaveSectionData();
+    public abstract void Editor_LoadSectionData();
 
 #endif
 }

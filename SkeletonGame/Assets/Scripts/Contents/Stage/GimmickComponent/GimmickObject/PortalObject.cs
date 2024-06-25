@@ -70,23 +70,23 @@ public class PortalObject : BaseObject, IInteraction
 #if UNITY_EDITOR
     private void Reset()
     {
-        SetComponents();
+        Editor_SetComponents();
     }
 
-    private void SetComponents()
+    private void Editor_SetComponents()
     {
         //Collider
         Collider = Util.GetOrAddComponent<BoxCollider2D>(gameObject);
         Collider.isTrigger = true;
     }
 
-    public void SetSpriteRenderer(Sprite sprite)
+    public void Editor_SetSpriteRenderer(Sprite sprite)
     {
         Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
         Sprite.sprite = sprite;
     }
 
-    public void SetLinkedPortalObject(PortalObject linkedPortalObject)
+    public void Editor_SetLinkedPortalObject(PortalObject linkedPortalObject)
     {
         this.linkedPortalObject = linkedPortalObject;
     }

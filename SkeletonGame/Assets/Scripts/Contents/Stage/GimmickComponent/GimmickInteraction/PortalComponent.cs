@@ -28,9 +28,9 @@ public class PortalComponent : GimmickComponentBase
 #if UNITY_EDITOR
 
     string portalObjectName = "PortalObject";
-    public override void ResetComponentOperate()
+    public override void Editor_ResetComponentOperate()
     {
-        base.ResetComponentOperate();
+        base.Editor_ResetComponentOperate();
 
         List<PortalObject> portalObjectList = new List<PortalObject>();
         Transform[] myChildren = this.GetComponentsInChildren<Transform>();
@@ -50,25 +50,25 @@ public class PortalComponent : GimmickComponentBase
 
         while (portalObjectList.Count != 2)
         {
-            portalObjectList.Add(GeneratePortalObject(portalObjectName));
+            portalObjectList.Add(Editor_GeneratePortalObject(portalObjectName));
         }
 
         portalObject1 = portalObjectList[0];
         portalObject2 = portalObjectList[1];
 
-        portalObject1.SetLinkedPortalObject(portalObject2);
-        portalObject2.SetLinkedPortalObject(portalObject1);
+        portalObject1.Editor_SetLinkedPortalObject(portalObject2);
+        portalObject2.Editor_SetLinkedPortalObject(portalObject1);
     }
 
-    public override void SetSpriteRenderer(Sprite sprite)
+    public override void Editor_SetSpriteRenderer(Sprite sprite)
     {
-        portalObject1?.SetSpriteRenderer(sprite);
-        portalObject2?.SetSpriteRenderer(sprite);
+        portalObject1?.Editor_SetSpriteRenderer(sprite);
+        portalObject2?.Editor_SetSpriteRenderer(sprite);
     }
 
-    private PortalObject GeneratePortalObject(string objectName)
+    private PortalObject Editor_GeneratePortalObject(string objectName)
     {
-        GameObject go = Util.InstantiateObject(transform);
+        GameObject go = Util.Editor_InstantiateObject(transform);
         go.AddComponent<PortalObject>().name = objectName;
         return go.GetComponentInParent<PortalObject>();
     }

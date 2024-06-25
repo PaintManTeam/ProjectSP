@@ -56,15 +56,15 @@ public class GimmickInteractionComponent : GimmickComponentBase, IInteraction
     }
 
 #if UNITY_EDITOR
-    public override void ResetComponentOperate()
+    public override void Editor_ResetComponentOperate()
     {
-        base.ResetComponentOperate();
+        base.Editor_ResetComponentOperate();
 
         this.tag = ETag.Interaction.ToString();
-        SetCollider();
+        Editor_SetCollider();
     }
 
-    private void SetCollider()
+    private void Editor_SetCollider()
     {
         Collider = Util.GetOrAddComponent<BoxCollider2D>(gameObject);
         Collider.isTrigger = true;

@@ -6,6 +6,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 using static Define;
 
 public class GimmickSection : StageSectionBase
@@ -24,7 +25,7 @@ public class GimmickSection : StageSectionBase
         if (base.Init() == false)
             return false;
 
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
 
         foreach(GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
         {
@@ -49,10 +50,11 @@ public class GimmickSection : StageSectionBase
         }
     }
 
-    public void UpdateGimmickComponentDict()
+    public void SetGimmickComponentDict()
     {
         GimmickComponentDict.Clear();
 
+        // 스테이지 & 섹션 데이터
         Transform[] myChildren = this.GetComponentsInChildren<Transform>();
         foreach (Transform child in myChildren)
         {
@@ -65,21 +67,32 @@ public class GimmickSection : StageSectionBase
                 GimmickComponentDict.Add(objectNum, gimmickComponent);
             }
 #if UNITY_EDITOR
-            EditGimmickComponentInfo editGimmickComponentInfo = child.gameObject.GetComponent<EditGimmickComponentInfo>();
-            if(editGimmickComponentInfo != null)
-            {
-                editGimmickComponentInfo.SetInfo(AddActiveObjectCondition, RemoveActiveObjectCondition,
-                    AddGimmickReadyConditionList, RemoveGimmickReadyConditionList);
-            }
+            Editor_SetSectionInfo();
 #endif
         }
     }
 
 #if UNITY_EDITOR
 
-    public override void SaveSectionData()
+    // 에디터에서 언제 세팅할건지..를 음;;?
+    public void Editor_SetSectionInfo()
     {
-        UpdateGimmickComponentDict();
+        // 기믹 컴포넌트 데이터
+        Transform[] myChildren = this.GetComponentsInChildren<Transform>();
+        foreach (Transform child in myChildren)
+        {
+            EditGimmickComponentInfo editGimmickComponentInfo = child.gameObject.GetComponent<EditGimmickComponentInfo>();
+            if (editGimmickComponentInfo != null)
+            {
+                editGimmickComponentInfo.SetInfo(Editor_AddActiveObjectCondition, Editor_RemoveActiveObjectCondition,
+                    Editor_AddGimmickReadyConditionList, Editor_RemoveGimmickReadyConditionList);
+            }
+        }
+    }
+
+    public override void Editor_SaveSectionData()
+    {
+        SetGimmickComponentDict();
 
         string[] strs = transform.parent.name.Split(' ');
         int stageId = int.Parse(strs[strs.Length - 1]);
@@ -97,11 +110,11 @@ public class GimmickSection : StageSectionBase
         foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
         {
             string savePath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}";
-            List<int> intActiveObjectConditionList = gimmickComponentBase.GetIntActiveObjectConditionList();
-            List<int> intGimmickReadyConditionList = gimmickComponentBase.GetIntGimmickReadyConditionList();
+            List<int> intActiveObjectConditionList = gimmickComponentBase.Editor_GetIntActiveObjectConditionList();
+            List<int> intGimmickReadyConditionList = gimmickComponentBase.Editor_GetIntGimmickReadyConditionList();
 
             // 기존 저장된 데이터가 있는지 확인해 삭제
-            Util.FileDelete(savePath);
+            Util.Editor_FileDelete(savePath);
 
             // 저장할 데이터가 없는 경우 
             if (intActiveObjectConditionList.Count == 0 && intActiveObjectConditionList.Count == 0)
@@ -127,9 +140,9 @@ public class GimmickSection : StageSectionBase
 
     }
 
-    public override void LoadSectionData()
+    public override void Editor_LoadSectionData()
     {
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
 
         string[] strs = transform.parent.name.Split(' ');
         int stageId = int.Parse(strs[strs.Length - 1]);
@@ -165,10 +178,10 @@ public class GimmickSection : StageSectionBase
     /// <summary>
     /// 에러가 있을 경우 true ( + 오브젝트 정보 갱신 )
     /// </summary>
-    private bool CheckForErrors()
+    private bool Editor_CheckForErrors()
     {
         // 중복된 번호가 존재
-        if (GetNextObjectNum() == -1)
+        if (Editor_GetNextObjectNum() == -1)
         {
             // 로그는 메서드 내에서 남김
             return true;
@@ -177,9 +190,9 @@ public class GimmickSection : StageSectionBase
         return false;
     }
 
-    private int GetNextObjectNum()
+    private int Editor_GetNextObjectNum()
     {
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
 
         if (GimmickComponentDict.Count == 0)
             return 1;
@@ -209,10 +222,10 @@ public class GimmickSection : StageSectionBase
         return maxNum;
     }
 
-    public void GenerateGimmickInteractionObject(
+    public void Editor_GenerateGimmickInteractionObject(
         EGimmickInteractionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
-        if (CheckForErrors())
+        if (Editor_CheckForErrors())
             return;
 
         if (gimmickObjectType == EGimmickInteractionObjectType.None)
@@ -221,7 +234,7 @@ public class GimmickSection : StageSectionBase
             return;
         }
 
-        GameObject go = Util.InstantiateObject(transform);
+        GameObject go = Util.Editor_InstantiateObject(transform);
         go.AddComponent<EditGimmickComponentInfo>();
 
         switch (gimmickObjectType)
@@ -243,23 +256,23 @@ public class GimmickSection : StageSectionBase
         GimmickComponentBase gimmickComponent = go.GetComponent<GimmickComponentBase>();
 
         if (objectSprite != null)
-            gimmickComponent?.SetSpriteRenderer(objectSprite);
+            gimmickComponent?.Editor_SetSpriteRenderer(objectSprite);
 
         if (string.IsNullOrEmpty(objectName))
             objectName = gimmickObjectType.ToString();
 
         go.name = objectName + $" 0";
-        int objectNum = GetNextObjectNum();
+        int objectNum = Editor_GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
         return;
     }
 
-    public void GenerateGimmickCollisionObject(
+    public void Editor_GenerateGimmickCollisionObject(
         EGimmickCollisionObjectType gimmickObjectType, string objectName, Sprite objectSprite)
     {
-        if (CheckForErrors())
+        if (Editor_CheckForErrors())
             return;
 
         if(gimmickObjectType == EGimmickCollisionObjectType.None)
@@ -268,7 +281,7 @@ public class GimmickSection : StageSectionBase
             return;
         }
 
-        GameObject go = Util.InstantiateObject(transform);
+        GameObject go = Util.Editor_InstantiateObject(transform);
 
         switch(gimmickObjectType)
         {
@@ -284,25 +297,25 @@ public class GimmickSection : StageSectionBase
         GimmickComponentBase gimmickComponent = go.GetComponent<GimmickComponentBase>();
 
         if (objectSprite != null)
-            gimmickComponent?.SetSpriteRenderer(objectSprite);
+            gimmickComponent?.Editor_SetSpriteRenderer(objectSprite);
 
         if (string.IsNullOrEmpty(objectName))
             objectName = gimmickObjectType.ToString();
 
         go.name = objectName + $" 0";
-        int objectNum = GetNextObjectNum();
+        int objectNum = Editor_GetNextObjectNum();
         go.name = objectName + $" {objectNum}";
 
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
         return;
     }
 
-    public void RemoveGimmickObject(int removeIndex)
+    public void Editor_RemoveGimmickObject(int removeIndex)
     {
-        if (CheckForErrors())
+        if (Editor_CheckForErrors())
             return;
 
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
         
         // 삭제할 대상이 있는지 서치
         if(GimmickComponentDict.ContainsKey(removeIndex))
@@ -316,7 +329,7 @@ public class GimmickSection : StageSectionBase
         }
     }
 
-    private bool IsCheckContainsKey(int requestObjectId, int receiveObjectId)
+    private bool Editor_IsCheckContainsKey(int requestObjectId, int receiveObjectId)
     {
         if (requestObjectId == receiveObjectId)
         {
@@ -324,7 +337,7 @@ public class GimmickSection : StageSectionBase
             return false;
         }
 
-        UpdateGimmickComponentDict();
+        SetGimmickComponentDict();
 
         if (GimmickComponentDict.ContainsKey(requestObjectId) == false)
         {
@@ -340,40 +353,40 @@ public class GimmickSection : StageSectionBase
         return true;
     }
 
-    public void AddActiveObjectCondition(int requestObjectId, int receiveObjectId)
+    public void Editor_AddActiveObjectCondition(int requestObjectId, int receiveObjectId)
     {
-        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+        if (Editor_IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
             return;
 
         GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
-        GimmickComponentDict[requestObjectId].AddActiveObjectCondition(receiveGimmickComponent);
+        GimmickComponentDict[requestObjectId].Editor_AddActiveObjectCondition(receiveGimmickComponent);
     }
 
-    public void RemoveActiveObjectCondition(int requestObjectId, int receiveObjectId)
+    public void Editor_RemoveActiveObjectCondition(int requestObjectId, int receiveObjectId)
     {
-        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+        if (Editor_IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
             return;
 
         GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
-        GimmickComponentDict[requestObjectId].RemoveActiveObjectCondition(receiveGimmickComponent);
+        GimmickComponentDict[requestObjectId].Editor_RemoveActiveObjectCondition(receiveGimmickComponent);
     }
 
-    public void AddGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
+    public void Editor_AddGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
     {
-        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+        if (Editor_IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
             return;
 
         GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
-        GimmickComponentDict[requestObjectId].AddGimmickReadyConditionList(receiveGimmickComponent);
+        GimmickComponentDict[requestObjectId].Editor_AddGimmickReadyConditionList(receiveGimmickComponent);
     }
 
-    public void RemoveGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
+    public void Editor_RemoveGimmickReadyConditionList(int requestObjectId, int receiveObjectId)
     {
-        if (IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
+        if (Editor_IsCheckContainsKey(requestObjectId, receiveObjectId) == false)
             return;
 
         GimmickComponentBase receiveGimmickComponent = GimmickComponentDict[receiveObjectId];
-        GimmickComponentDict[requestObjectId].RemoveGimmickReadyConditionList(receiveGimmickComponent);
+        GimmickComponentDict[requestObjectId].Editor_RemoveGimmickReadyConditionList(receiveGimmickComponent);
     }
 #endif
 }

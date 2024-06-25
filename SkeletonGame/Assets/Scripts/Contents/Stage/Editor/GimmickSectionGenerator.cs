@@ -40,7 +40,7 @@ public class GimmickSectionGenerator : Editor
         GUILayout.Space(5);
         if (GUILayout.Button("기믹 섹션 데이터 저장") && isSaveUnlocked)
         {
-            gimmickSection.SaveSectionData();
+            gimmickSection.Editor_SaveSectionData();
             isSaveUnlocked = false;
             Debug.LogWarning("기믹 섹션 데이터 저장 요청 완료\n시간이 걸릴 수 있습니다.!! 바로 종료하지 마세요.!");
         }
@@ -50,7 +50,7 @@ public class GimmickSectionGenerator : Editor
         isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
         if (GUILayout.Button("기믹 섹션 데이터 불러오기") && isLoadUnlocked)
         {
-            gimmickSection.LoadSectionData();
+            gimmickSection.Editor_LoadSectionData();
             isLoadUnlocked = false;
             Debug.Log("기믹 섹션 데이터 불러오기 완료");
         }
@@ -66,7 +66,7 @@ public class GimmickSectionGenerator : Editor
         interactionObjectSprite = (Sprite)EditorGUILayout.ObjectField("오브젝트 기본 이미지", interactionObjectSprite, typeof(Sprite), true);
         GUILayout.Space(5);
         if (GUILayout.Button("상호작용 타입 생성"))
-            gimmickSection.GenerateGimmickInteractionObject(interactionGimmickType, interactionObjectName, interactionObjectSprite);
+            gimmickSection.Editor_GenerateGimmickInteractionObject(interactionGimmickType, interactionObjectName, interactionObjectSprite);
 
         // 충돌 타입 추가
         GUILayout.Space(15);
@@ -79,7 +79,7 @@ public class GimmickSectionGenerator : Editor
         collisionObjectSprite = (Sprite)EditorGUILayout.ObjectField("오브젝트 기본 이미지", collisionObjectSprite, typeof(Sprite), true);
         GUILayout.Space(5);
         if (GUILayout.Button("충돌 타입 생성"))
-            gimmickSection.GenerateGimmickCollisionObject(collisionGimmickType, collisionObjectName, collisionObjectSprite);
+            gimmickSection.Editor_GenerateGimmickCollisionObject(collisionGimmickType, collisionObjectName, collisionObjectSprite);
 
         // 삭제
         GUILayout.Space(15);
@@ -89,7 +89,7 @@ public class GimmickSectionGenerator : Editor
         removeIndex = EditorGUILayout.IntField("삭제 대상 번호", removeIndex);
         GUILayout.Space(5);
         if (GUILayout.Button("스테이지 섹션 삭제") && isRemoveUnlocked)
-            gimmickSection.RemoveGimmickObject(removeIndex);
+            gimmickSection.Editor_RemoveGimmickObject(removeIndex);
 
         GUILayout.Space(20);
     }

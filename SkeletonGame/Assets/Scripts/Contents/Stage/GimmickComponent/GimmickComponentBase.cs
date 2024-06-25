@@ -152,21 +152,21 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     protected virtual void Reset()
     {
-        ResetComponentOperate();
+        Editor_ResetComponentOperate();
     }
 
-    public virtual void ResetComponentOperate()
+    public virtual void Editor_ResetComponentOperate()
     {
-        SetRigidbody();
+        Editor_SetRigidbody();
     }
 
-    public virtual void SetSpriteRenderer(Sprite sprite)
+    public virtual void Editor_SetSpriteRenderer(Sprite sprite)
     {
         Sprite = Util.GetOrAddComponent<SpriteRenderer>(gameObject);
         Sprite.sprite = sprite;
     }
 
-    protected virtual void SetRigidbody()
+    protected virtual void Editor_SetRigidbody()
     {
         Rigidbody = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
 
@@ -174,7 +174,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         Rigidbody.freezeRotation = false;
     }
 
-    public List<int> GetIntActiveObjectConditionList()
+    public List<int> Editor_GetIntActiveObjectConditionList()
     {
         List<int> intActiveObjectConditionList = new();
 
@@ -186,7 +186,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         return intActiveObjectConditionList;
     }
 
-    public List<int> GetIntGimmickReadyConditionList()
+    public List<int> Editor_GetIntGimmickReadyConditionList()
     {
         List<int> intGimmickReadyConditionList = new();
 
@@ -198,7 +198,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         return intGimmickReadyConditionList;
     }
 
-    public void AddActiveObjectCondition(GimmickComponentBase addTarget)
+    public void Editor_AddActiveObjectCondition(GimmickComponentBase addTarget)
     {
         if (ActiveObjectConditionList.Contains(addTarget))
         {
@@ -209,7 +209,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         ActiveObjectConditionList.Add(addTarget);
     }
 
-    public void RemoveActiveObjectCondition(GimmickComponentBase removeTarget)
+    public void Editor_RemoveActiveObjectCondition(GimmickComponentBase removeTarget)
     {
         if (!ActiveObjectConditionList.Contains(removeTarget))
         {
@@ -220,7 +220,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         ActiveObjectConditionList.Remove(removeTarget);
     }
 
-    public void AddGimmickReadyConditionList(GimmickComponentBase addTarget)
+    public void Editor_AddGimmickReadyConditionList(GimmickComponentBase addTarget)
     {
         if (GimmickReadyConditionList.Contains(addTarget))
         {
@@ -231,7 +231,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         GimmickReadyConditionList.Add(addTarget);
     }
 
-    public void RemoveGimmickReadyConditionList(GimmickComponentBase removeTarget)
+    public void Editor_RemoveGimmickReadyConditionList(GimmickComponentBase removeTarget)
     {
         if (!GimmickReadyConditionList.Contains(removeTarget))
         {

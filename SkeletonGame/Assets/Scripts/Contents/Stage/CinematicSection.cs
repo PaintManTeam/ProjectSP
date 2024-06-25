@@ -21,12 +21,12 @@ public class CinematicSection : StageSectionBase
 
 #if UNITY_EDITOR
 
-    public override void SaveSectionData()
+    public override void Editor_SaveSectionData()
     {
 
     }
 
-    public override void LoadSectionData()
+    public override void Editor_LoadSectionData()
     {
 
     }
