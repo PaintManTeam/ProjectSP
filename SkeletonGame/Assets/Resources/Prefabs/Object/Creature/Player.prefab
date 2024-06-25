@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1058f430f2572440804ce294afdd32d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  notifyObject: {fileID: 0}
 --- !u!50 &3058586938735077629
 Rigidbody2D:
   serializedVersion: 4
@@ -280,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _creatureState: 0
+  _isPlayerInputControll: 0
 --- !u!212 &8803994145430118361
 SpriteRenderer:
   m_ObjectHideFlags: 0
