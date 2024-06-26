@@ -179,10 +179,8 @@ public class StageRoot : InitBase
             return;
         }
 
+        // 범위 벗어남
         if (insertIndex <= 0)
-        {
-              
-        }
             insertIndex = StageSectionDict.Count + 1;
 
         // 사이에 삽입되는 경우
