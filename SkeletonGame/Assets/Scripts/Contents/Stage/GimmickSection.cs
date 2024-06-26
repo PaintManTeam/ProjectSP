@@ -84,7 +84,8 @@ public class GimmickSection : StageSectionBase
             EditGimmickComponentInfo editGimmickComponentInfo = child.gameObject.GetComponent<EditGimmickComponentInfo>();
             if (editGimmickComponentInfo != null)
             {
-                editGimmickComponentInfo.SetInfo(Editor_AddActiveObjectCondition, Editor_RemoveActiveObjectCondition,
+                editGimmickComponentInfo.SetInfo(
+                    Editor_AddActiveObjectCondition, Editor_RemoveActiveObjectCondition,
                     Editor_AddGimmickReadyConditionList, Editor_RemoveGimmickReadyConditionList);
             }
         }
