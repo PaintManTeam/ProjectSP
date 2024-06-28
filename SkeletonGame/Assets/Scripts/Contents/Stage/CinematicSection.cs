@@ -9,17 +9,18 @@ public class CinematicSection : StageSectionBase
         if (base.Init() == false)
             return false;
 
-
+        SectionType = Define.EStageSectionType.CinematicSection;
 
         return true;
     }
+
+
+#if UNITY_EDITOR
 
     protected override void Reset()
     {
         base.Reset();
     }
-
-#if UNITY_EDITOR
 
     public override void Editor_SaveSectionData()
     {

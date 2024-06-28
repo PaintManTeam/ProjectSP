@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.UIElements;
 using static Define;
 
 public class GimmickSection : StageSectionBase
@@ -25,6 +26,7 @@ public class GimmickSection : StageSectionBase
         if (base.Init() == false)
             return false;
 
+        SectionType = EStageSectionType.GimmickSection;
         SetGimmickComponentDict();
 
         foreach(GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
@@ -110,7 +112,7 @@ public class GimmickSection : StageSectionBase
         int emptyCount = 0;
         foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
         {
-            string savePath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}";
+            string savePath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}.json";
             List<int> intActiveObjectConditionList = gimmickComponentBase.Editor_GetIntActiveObjectConditionList();
             List<int> intGimmickReadyConditionList = gimmickComponentBase.Editor_GetIntGimmickReadyConditionList();
 

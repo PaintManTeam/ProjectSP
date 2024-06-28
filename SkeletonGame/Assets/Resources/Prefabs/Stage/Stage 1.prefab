@@ -544,7 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb236b9d7c212746af93b7f3fe72b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObjectId: 0
+  gimmickObjectId: 4
   activeObjectConditionList: []
   gimmickReadyConditionList: []
 --- !u!50 &4504687001980262856
@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb236b9d7c212746af93b7f3fe72b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObjectId: 0
+  gimmickObjectId: 5
   activeObjectConditionList: []
   gimmickReadyConditionList: []
 --- !u!50 &179421742155939254
@@ -1006,7 +1006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerStartPoint: {fileID: 3378160425001630091}
-  stageSectionId: 0
+  stageSectionId: 3
 --- !u!1 &5117428320136293564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,7 +1201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerStartPoint: {fileID: 374180383108982511}
-  stageSectionId: 0
+  stageSectionId: 2
 --- !u!1 &5510041815187095225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerStartPoint: {fileID: 8378901607032646928}
-  stageSectionId: 0
+  stageSectionId: 4
 --- !u!1 &8382880721526513391
 GameObject:
   m_ObjectHideFlags: 0

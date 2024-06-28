@@ -52,9 +52,23 @@ public class StageRoot : InitBase
             return;
         }
 
-        // 시작되는 섹션 받아오고 세팅
         currStageSection = StageSectionDict[stageSectionId];
-        player.transform.position = currStageSection.PlayerStartPoint.position;
+        switch(currStageSection.SectionType)
+        {
+            case EStageSectionType.GimmickSection:
+                // 플레이어가 바닥에 닿고 있는지 확인해야 함
+                UIFadeEffectParam param = new UIFadeEffectParam(
+                    fadeInEffectCondition: () => player.creatureFoot.IsLandingGround, 
+                    onFadeOutCallBack: () => currStageSection.StartSection(player));
+                Managers.UI.OpenPopupUI<UI_FadeEffectPopup>(param);
+                break;
+            case EStageSectionType.CinematicSection:
+                // 시네마틱 연출 도입부 구현 필요
+                break;
+            default:
+                Debug.LogError("없는 섹션이 들어옴");
+                break;
+        }
     }
 
     private void SetStageSectionDict()

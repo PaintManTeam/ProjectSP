@@ -92,7 +92,7 @@ public class Creature : BaseObject
 
     public ECreatureType CreatureType { get; protected set; }
 
-    protected CreatureFoot creatureFoot;
+    public CreatureFoot creatureFoot { get; protected set; }
 
     protected Rigidbody2D Rigid { get; private set; }
     public CapsuleCollider2D Collider { get; private set; }

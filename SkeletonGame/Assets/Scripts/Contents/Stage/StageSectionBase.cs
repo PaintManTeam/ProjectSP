@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public abstract class StageSectionBase : InitBase
 {
+    public EStageSectionType SectionType { get; protected set; }
+
     [SerializeField, ReadOnly] public Transform PlayerStartPoint;
 
     [SerializeField, ReadOnly] int stageSectionId = 0;
@@ -23,18 +26,6 @@ public abstract class StageSectionBase : InitBase
         private set { stageSectionId = value; }
     }
 
-    protected virtual void Reset()
-    {
-        PlayerStartPoint = gameObject.transform.Find("PlayerStartPoint");
-        
-        if(PlayerStartPoint == null) 
-        {
-            GameObject go = Util.Editor_InstantiateObject(transform);
-            go.name = "PlayerStartPoint";
-            PlayerStartPoint = go.transform;
-        }
-    }
-
     public override bool Init()
     {
         if (base.Init() == false)
@@ -44,7 +35,25 @@ public abstract class StageSectionBase : InitBase
         return true;
     }
 
+    public void StartSection(Player player)
+    {
+        player.transform.position = PlayerStartPoint.position;
+
+        
+    }
+
 #if UNITY_EDITOR
+    protected virtual void Reset()
+    {
+        PlayerStartPoint = gameObject.transform.Find("PlayerStartPoint");
+
+        if (PlayerStartPoint == null)
+        {
+            GameObject go = Util.Editor_InstantiateObject(transform);
+            go.name = "PlayerStartPoint";
+            PlayerStartPoint = go.transform;
+        }
+    }
 
     public abstract void Editor_SaveSectionData();
     public abstract void Editor_LoadSectionData();

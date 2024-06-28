@@ -42,7 +42,7 @@ public class GimmickSectionGenerator : Editor
         {
             gimmickSection.Editor_SaveSectionData();
             isSaveUnlocked = false;
-            Debug.LogWarning("기믹 섹션 데이터 저장 요청 완료\n시간이 걸릴 수 있습니다.!! 바로 종료하지 마세요.!");
+            Debug.Log("기믹 섹션 데이터 저장 완료");
         }
 
         // 데이터 불러오기

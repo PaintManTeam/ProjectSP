@@ -79,9 +79,9 @@ public class UI_FadeEffectPopup : UI_BasePopup
         tempColor.a = 1f;
         fadeEffectImage.color = tempColor;
 
-        // Wait Condition
         onFadeOutCallBack?.Invoke();
 
+        // Wait Condition
         if (fadeInEffectCondition != null)
         {
             var loadingPopup = Managers.UI.OpenPopupUI<UI_LoadingPopup>();
