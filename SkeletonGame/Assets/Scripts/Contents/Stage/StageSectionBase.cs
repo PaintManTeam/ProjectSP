@@ -35,11 +35,9 @@ public abstract class StageSectionBase : InitBase
         return true;
     }
 
-    public void StartSection(Player player)
+    public virtual void StartSection(Player player)
     {
         player.transform.position = PlayerStartPoint.position;
-
-        
     }
 
 #if UNITY_EDITOR

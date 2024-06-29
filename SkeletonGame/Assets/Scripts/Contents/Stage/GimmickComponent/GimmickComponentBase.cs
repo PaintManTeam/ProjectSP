@@ -80,23 +80,12 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
         GimmickType = EGimmickType.Interaction;
 
-        UpdateGimmickState();
-        
         return true;
     }
 
-    public void SetGimmickComponentData(List<GimmickComponentBase> activeObjectConditionList, List<GimmickComponentBase> gimmickReadyConditionList)
+    private void SetGimmickState()
     {
-        this.ActiveObjectConditionList = activeObjectConditionList;
-        this.GimmickReadyConditionList = gimmickReadyConditionList;
-    }
-
-    private void UpdateGimmickState()
-    {
-        
-
-        // 데이터 로드 해야 할 것
-
+        // 데이터는 박혀있음
 
 
         // 오브젝트 활성화
@@ -115,7 +104,7 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         CheckListOfActiveCondition();
         CheckListOfReadyCondition();
 
-        UpdateGimmickState();
+        SetGimmickState();
     }
 
     private void CheckListOfActiveCondition()
@@ -153,6 +142,12 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     protected virtual void Reset()
     {
         Editor_ResetComponentOperate();
+    }
+
+    public void Editor_SetGimmickComponentData(List<GimmickComponentBase> activeObjectConditionList, List<GimmickComponentBase> gimmickReadyConditionList)
+    {
+        this.ActiveObjectConditionList = activeObjectConditionList;
+        this.GimmickReadyConditionList = gimmickReadyConditionList;
     }
 
     public virtual void Editor_ResetComponentOperate()

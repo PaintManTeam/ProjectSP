@@ -27,11 +27,19 @@ public class GimmickSection : StageSectionBase
             return false;
 
         SectionType = EStageSectionType.GimmickSection;
+        
+        return true;
+    }
+
+    public override void StartSection(Player player)
+    {
+        base.StartSection(player);
+
         SetGimmickComponentDict();
 
-        foreach(GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
+        foreach (GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
         {
-            if(gimmickComponent is GimmickInteractionComponent gimmickInteractionComponent)
+            if (gimmickComponent is GimmickInteractionComponent gimmickInteractionComponent)
             {
                 gimmickInteractionComponent.SetInfo(OnInteractionEvent);
             }
@@ -40,8 +48,6 @@ public class GimmickSection : StageSectionBase
             if (editGimmickComponentInfo != null)
                 Destroy(editGimmickComponentInfo);
         }
-        
-        return true;
     }
 
     public void OnInteractionEvent(int gimmickObjectId)
@@ -172,7 +178,7 @@ public class GimmickSection : StageSectionBase
             foreach (int id in gimmickComponentData.GimmickReadyConditionList)
                 gimmickReadyConditionList.Add(GimmickComponentDict[id]);
 
-            gimmickComponentBase.SetGimmickComponentData(
+            gimmickComponentBase.Editor_SetGimmickComponentData(
                 activeObjectConditionList: activeObjectConditionList,
                 gimmickReadyConditionList: gimmickReadyConditionList);
         }
