@@ -32,19 +32,24 @@ public class StageRoot : InitBase
         if (base.Init() == false)
             return false;
 
+        
+
         return true;
     }
 
     public void StartStage(Player player, int stageSectionId = 1)
     {
+        // 스테이지 전체 정보 갱신
+        SetStageSectionDict();
+
+        foreach(var stageSection in StageSectionDict.Values)
+            stageSection.gameObject.SetActive(stageSection.StageSectionId == stageSectionId);
+
         StartSection(player, stageSectionId);
     }
 
     public void StartSection(Player player, int stageSectionId = 1)
     {
-        // 섹션 정보 갱신
-        SetStageSectionDict();
-
         // 마지막 섹션 클리어 - 스테이지 클리어
         while (StageSectionDict.ContainsKey(stageSectionId) == false)
         {
@@ -52,7 +57,11 @@ public class StageRoot : InitBase
             return;
         }
 
+        // 섹션 데이터 받아오고 세팅
+        StageSectionDict[stageSectionId].LoadSectionData();
         currStageSection = StageSectionDict[stageSectionId];
+
+        // 섹션 타입에 따라 실행
         switch(currStageSection.SectionType)
         {
             case EStageSectionType.GimmickSection:
@@ -118,7 +127,7 @@ public class StageRoot : InitBase
         Editor_SetStageInfo();
 
         foreach (StageSectionBase stageSectionBase in StageSectionDict.Values)
-            stageSectionBase.Editor_LoadSectionData();
+            stageSectionBase.LoadSectionData();
     }
 
     public void Editor_SectionObjectSort()

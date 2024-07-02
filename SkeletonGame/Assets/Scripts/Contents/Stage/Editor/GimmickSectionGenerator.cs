@@ -50,7 +50,7 @@ public class GimmickSectionGenerator : Editor
         isLoadUnlocked = EditorGUILayout.Toggle("불러오기 잠금 해제", isLoadUnlocked);
         if (GUILayout.Button("기믹 섹션 데이터 불러오기") && isLoadUnlocked)
         {
-            gimmickSection.Editor_LoadSectionData();
+            gimmickSection.LoadSectionData();
             isLoadUnlocked = false;
             Debug.Log("기믹 섹션 데이터 불러오기 완료");
         }

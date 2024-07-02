@@ -85,9 +85,6 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
 
     private void SetGimmickState()
     {
-        // 데이터는 박혀있음
-
-
         // 오브젝트 활성화
         this.gameObject.SetActive(ActiveObjectConditionList.Count == 0);
 

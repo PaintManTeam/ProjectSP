@@ -40,6 +40,8 @@ public abstract class StageSectionBase : InitBase
         player.transform.position = PlayerStartPoint.position;
     }
 
+    public abstract void LoadSectionData();
+
 #if UNITY_EDITOR
     protected virtual void Reset()
     {
@@ -54,7 +56,5 @@ public abstract class StageSectionBase : InitBase
     }
 
     public abstract void Editor_SaveSectionData();
-    public abstract void Editor_LoadSectionData();
-
 #endif
 }

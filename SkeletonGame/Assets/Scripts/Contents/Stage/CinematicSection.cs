@@ -14,6 +14,10 @@ public class CinematicSection : StageSectionBase
         return true;
     }
 
+    public override void LoadSectionData()
+    {
+
+    }
 
 #if UNITY_EDITOR
 
@@ -27,10 +31,6 @@ public class CinematicSection : StageSectionBase
 
     }
 
-    public override void Editor_LoadSectionData()
-    {
-
-    }
 
 #endif
 }

@@ -39,6 +39,8 @@ public class GimmickSection : StageSectionBase
 
         foreach (GimmickComponentBase gimmickComponent in GimmickComponentDict.Values)
         {
+            gimmickComponent.CheckListOfConditionToRemove();
+
             if (gimmickComponent is GimmickInteractionComponent gimmickInteractionComponent)
             {
                 gimmickInteractionComponent.SetInfo(OnInteractionEvent);
@@ -76,6 +78,43 @@ public class GimmickSection : StageSectionBase
             }
 #if UNITY_EDITOR
             Editor_SetSectionInfo();
+#endif
+        }
+    }
+
+    public override void LoadSectionData()
+    {
+        SetGimmickComponentDict();
+
+        string[] strs = transform.parent.name.Split(' ');
+        int stageId = int.Parse(strs[strs.Length - 1]);
+
+        string sectionPath = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}/{EStageSectionType.GimmickSection} {StageSectionId}";
+
+        // 섹션 데이터 로드
+        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
+        {
+            string loadPath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}.json";
+
+            // 불러올 데이터가 없는 경우
+            if (File.Exists(loadPath) == false)
+                continue;
+
+            string jsonData = File.ReadAllText(loadPath);
+            JGimmickComponentData gimmickComponentData = JsonUtility.FromJson<JGimmickComponentData>(jsonData);
+
+            List<GimmickComponentBase> activeObjectConditionList = new();
+            foreach (int id in gimmickComponentData.ActiveObjectConditionList)
+                activeObjectConditionList.Add(GimmickComponentDict[id]);
+
+            List<GimmickComponentBase> gimmickReadyConditionList = new();
+            foreach (int id in gimmickComponentData.GimmickReadyConditionList)
+                gimmickReadyConditionList.Add(GimmickComponentDict[id]);
+
+#if UNITY_EDITOR
+            gimmickComponentBase.Editor_SetGimmickComponentData(
+                activeObjectConditionList: activeObjectConditionList,
+                gimmickReadyConditionList: gimmickReadyConditionList);
 #endif
         }
     }
@@ -147,41 +186,6 @@ public class GimmickSection : StageSectionBase
 
 
 
-    }
-
-    public override void Editor_LoadSectionData()
-    {
-        SetGimmickComponentDict();
-
-        string[] strs = transform.parent.name.Split(' ');
-        int stageId = int.Parse(strs[strs.Length - 1]);
-
-        string sectionPath = Application.dataPath + DataPath.STAGEDATA_PATH + $"/Stage {stageId}/{EStageSectionType.GimmickSection} {StageSectionId}";
-
-        // 섹션 데이터 로드
-        foreach (GimmickComponentBase gimmickComponentBase in GimmickComponentDict.Values)
-        {
-            string loadPath = sectionPath + $"/{EStageSectionType.GimmickSection} {gimmickComponentBase.GimmickObjectId}.json";
-
-            // 불러올 데이터가 없는 경우
-            if (File.Exists(loadPath) == false)
-                continue;
-
-            string jsonData = File.ReadAllText(loadPath);
-            JGimmickComponentData gimmickComponentData = JsonUtility.FromJson<JGimmickComponentData>(jsonData);
-
-            List<GimmickComponentBase> activeObjectConditionList = new();
-            foreach (int id in gimmickComponentData.ActiveObjectConditionList)
-                activeObjectConditionList.Add(GimmickComponentDict[id]);
-
-            List<GimmickComponentBase> gimmickReadyConditionList = new();
-            foreach (int id in gimmickComponentData.GimmickReadyConditionList)
-                gimmickReadyConditionList.Add(GimmickComponentDict[id]);
-
-            gimmickComponentBase.Editor_SetGimmickComponentData(
-                activeObjectConditionList: activeObjectConditionList,
-                gimmickReadyConditionList: gimmickReadyConditionList);
-        }
     }
 
     /// <summary>

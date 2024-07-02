@@ -53,7 +53,7 @@ public class DataMgr
     public JSectionData GetSectionData(int stageId, int sectionId)
     {
         // 경로 확인
-        string path = Application.dataPath + $"Resource/Data/JsonData/StageData/Stage {stageId}/";
+        string path = Application.dataPath + $"Resources/Data/JsonData/StageData/Stage {stageId}/";
         string gimmickSectionPath = path + $"{EStageSectionType.GimmickSection}";
         string cinematicSectionPath = path + $"{EStageSectionType.CinematicSection}";
 
@@ -62,7 +62,6 @@ public class DataMgr
         DirectoryInfo gimmickInfo = new DirectoryInfo(gimmickSectionPath);
         foreach(FileInfo fileInfo in gimmickInfo.GetFiles("*.json"))
         {
-            // 뭔가 이 쪽이 잘못된 것 같은 느낌이 든다.
             string[] strs = fileInfo.Name.Split(' ');
             int objectId = int.Parse(strs[strs.Length - 1]);
             
@@ -90,9 +89,6 @@ public class DataMgr
 
         Dictionary<int, JSectionDataBase> SectionDict = new();
         
-        
-        
-
         return null;
     }
 }
