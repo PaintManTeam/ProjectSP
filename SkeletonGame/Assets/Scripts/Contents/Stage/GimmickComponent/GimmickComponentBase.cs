@@ -63,7 +63,6 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         }
     }
 
-
     public EGimmickObjectState GimmickState { get; protected set; }
     public EGimmickType GimmickType { get; protected set; }
 
@@ -81,6 +80,17 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
         GimmickType = EGimmickType.Interaction;
 
         return true;
+    }
+
+    public void SetInfo(Dictionary<int, GimmickComponentBase> gimmickComponentDict, JGimmickComponentData gimmickComponentData)
+    {
+        List<GimmickComponentBase> activeObjectConditionList = new();
+        foreach (int id in gimmickComponentData.ActiveObjectConditionList)
+            activeObjectConditionList.Add(gimmickComponentDict[id]);
+
+        List<GimmickComponentBase> gimmickReadyConditionList = new();
+        foreach (int id in gimmickComponentData.GimmickReadyConditionList)
+            gimmickReadyConditionList.Add(gimmickComponentDict[id]);
     }
 
     private void SetGimmickState()
@@ -139,12 +149,6 @@ public abstract class GimmickComponentBase : InitBase, IGimmickComponent
     protected virtual void Reset()
     {
         Editor_ResetComponentOperate();
-    }
-
-    public void Editor_SetGimmickComponentData(List<GimmickComponentBase> activeObjectConditionList, List<GimmickComponentBase> gimmickReadyConditionList)
-    {
-        this.ActiveObjectConditionList = activeObjectConditionList;
-        this.GimmickReadyConditionList = gimmickReadyConditionList;
     }
 
     public virtual void Editor_ResetComponentOperate()

@@ -60,6 +60,11 @@ public class GimmickSection : StageSectionBase
         }
     }
 
+    public Dictionary<int, GimmickComponentBase> GetGimmickComponentDict()
+    {
+        return GimmickComponentDict;
+    }
+
     public void SetGimmickComponentDict()
     {
         GimmickComponentDict.Clear();
@@ -103,19 +108,7 @@ public class GimmickSection : StageSectionBase
             string jsonData = File.ReadAllText(loadPath);
             JGimmickComponentData gimmickComponentData = JsonUtility.FromJson<JGimmickComponentData>(jsonData);
 
-            List<GimmickComponentBase> activeObjectConditionList = new();
-            foreach (int id in gimmickComponentData.ActiveObjectConditionList)
-                activeObjectConditionList.Add(GimmickComponentDict[id]);
-
-            List<GimmickComponentBase> gimmickReadyConditionList = new();
-            foreach (int id in gimmickComponentData.GimmickReadyConditionList)
-                gimmickReadyConditionList.Add(GimmickComponentDict[id]);
-
-#if UNITY_EDITOR
-            gimmickComponentBase.Editor_SetGimmickComponentData(
-                activeObjectConditionList: activeObjectConditionList,
-                gimmickReadyConditionList: gimmickReadyConditionList);
-#endif
+            gimmickComponentBase.SetInfo(GimmickComponentDict, gimmickComponentData);
         }
     }
 

@@ -20,7 +20,7 @@ public class CinematicSection : StageSectionBase
     }
 
 #if UNITY_EDITOR
-
+     
     protected override void Reset()
     {
         base.Reset();
