@@ -84,7 +84,7 @@ public class PlayerInteractionRange : InitBase
         }
     }
     
-    public void Interactioncomplete(IInteraction interaction)
+    public void InteractionComplete(IInteraction interaction)
     {
         if (interactionRangeList.Contains(interaction))
             interactionRangeList.Remove(interaction);

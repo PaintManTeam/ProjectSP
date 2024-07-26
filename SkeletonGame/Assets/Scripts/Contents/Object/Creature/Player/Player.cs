@@ -359,7 +359,7 @@ public class Player : Creature
             if(interactionTarget != null)
             {
                 interactionTarget.Interact();
-                interactionRange.Interactioncomplete(interactionTarget);
+                interactionRange.InteractionComplete(interactionTarget);
                 interactionTarget = null;
             }
 
