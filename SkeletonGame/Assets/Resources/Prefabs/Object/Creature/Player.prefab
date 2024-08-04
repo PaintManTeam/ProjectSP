@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1058f430f2572440804ce294afdd32d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notifyObject: {fileID: 0}
 --- !u!50 &3058586938735077629
 Rigidbody2D:
   serializedVersion: 4
@@ -108,7 +107,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.3}
   m_Radius: 0.5
 --- !u!1 &6558758808386240920
 GameObject:

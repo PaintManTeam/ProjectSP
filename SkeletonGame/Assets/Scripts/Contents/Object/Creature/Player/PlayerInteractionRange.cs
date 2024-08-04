@@ -2,7 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Define;
+
+public interface IInteraction
+{
+    EInteractionType InteractionType { get; set; }
+    void Interact(InteractionParam param = null);
+    bool IsInteractable();
+    Vector3 GetWorldPosition();
+}
 
 public class PlayerInteractionRange : InitBase
 {
@@ -19,7 +28,7 @@ public class PlayerInteractionRange : InitBase
             if(value == null)
             {
                 _interactionTarget = null;
-                notifyObject.gameObject.SetActive(false);
+                // notifyObject.gameObject.SetActive(false);
                 return;
             }
 
@@ -29,11 +38,11 @@ public class PlayerInteractionRange : InitBase
             _interactionTarget = value;
             onDetectTargetChanged?.Invoke(_interactionTarget);
 
-            notifyObject?.SetTarget(_interactionTarget);
+            // notifyObject?.SetTarget(_interactionTarget);
         }
     }
 
-    [SerializeField] private NotifyInteractionObject notifyObject = null;
+    // [SerializeField] private NotifyInteractionObject notifyObject = null;
 
     public override bool Init()
     {
@@ -43,8 +52,8 @@ public class PlayerInteractionRange : InitBase
         circleCollider = GetComponent<CircleCollider2D>();
         interactionRangeList = new List<IInteraction>();
 
-        notifyObject = Managers.Resource.Instantiate<NotifyInteractionObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<NotifyInteractionObject>();
-        notifyObject.gameObject.SetActive(false);
+        //notifyObject = Managers.Resource.Instantiate<NotifyInteractionObject>($"{PrefabPath.OBJECT_PATH}").GetComponent<NotifyInteractionObject>();
+        // notifyObject.gameObject.SetActive(false);
 
         return true;
     }
@@ -120,6 +129,7 @@ public class PlayerInteractionRange : InitBase
 
         foreach(IInteraction interactionTarget in interactionRangeList)
         {
+            /*
             // 상호작용 가능 상태인지 확인
             if (interactionTarget.IsInteractable() == false)
                 continue;
@@ -133,6 +143,7 @@ public class PlayerInteractionRange : InitBase
 
             target = interactionTarget;
             bestDistanceSqr = distToTargetSqr;
+            */
         }
 
         return target;

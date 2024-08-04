@@ -389,7 +389,7 @@ public class Player : Creature
 
         // 상호작용 방향 세팅
         SetRigidVelocityZero();
-        float dirX = transform.position.x - interactionTarget.WorldPosition.x;
+        float dirX = transform.position.x - interactionTarget.GetWorldPosition().x;
         LookLeft = dirX > 0;
 
         // 상호작용 물체에 따른 동작
@@ -471,6 +471,7 @@ public class Player : Creature
     {
         base.EnterPortalStateOperate();
 
+        /*
         if (interactionTarget is PortalObject portalObejct)
         {
             SetRigidVelocityZero();
@@ -478,6 +479,7 @@ public class Player : Creature
             // 순간이동(임시)
             this.transform.position = portalObejct.GetBottomPosition();
         }
+        */
 
         interactionTarget = null; // 상호작용 중인 타겟 제거
         ConnectInputActions(false); // 키 입력 제한

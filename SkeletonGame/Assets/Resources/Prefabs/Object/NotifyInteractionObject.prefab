@@ -184,7 +184,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4145616121599021883}
-  - component: {fileID: 4365716635541147810}
   - component: {fileID: 1526249068648188153}
   m_Layer: 0
   m_Name: NotifyInteractionObject
@@ -209,19 +208,6 @@ Transform:
   - {fileID: 4390604297440481726}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4365716635541147810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6971950696930842677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1933d8f11a6365c47889188e32460814, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textMeshRenderer: {fileID: 0}
 --- !u!212 &1526249068648188153
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameMgr
 {
-    public StageRoot CurrStage { get; private set; }
 
     public void Init()
     {

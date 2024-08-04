@@ -14,11 +14,9 @@ public class Managers : MonoBehaviour
     private static Managers Instance { get { Init(); return s_instance; } }
 
     #region InGame Contents
-    private InteractionMgr _interaction = new InteractionMgr();
     private GameMgr _game = new GameMgr();
     private ObjectMgr _object = new ObjectMgr();
 
-    public static InteractionMgr Interaction { get { return Instance?._interaction; } }
     public static GameMgr Game { get { return Instance?._game; } }
     public static ObjectMgr Object { get { return Instance?._object; } }
     #endregion
@@ -63,11 +61,11 @@ public class Managers : MonoBehaviour
 
             // 초기화
             s_instance = go.GetComponent<Managers>();
-            Instance._input = Instance._resource.Instantiate(PrefabPath.INPUTMANAGER_PATH, Instance.transform).GetComponent<InputMgr>();
-
-            Instance._input.Init();
-            Instance._ui.Init();
-            Instance._data.Init();
+            s_instance._input = Instance._resource.Instantiate(PrefabPath.INPUTMANAGER_PATH, s_instance.transform).GetComponent<InputMgr>();
+            s_instance._input.Init();
+            
+            s_instance._ui.Init();
+            s_instance._data.Init();
         }
     }
 
