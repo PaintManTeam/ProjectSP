@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class Define
 {
+    /// <summary>
+    /// 씬 이름과 같아야 함
+    /// </summary>
     public enum EScene
     {
         Unknown,
@@ -12,7 +15,6 @@ public static class Define
         LobbyScene,
         GameScene,
     }
-
     public enum ELayer
     {
         Default = 0,

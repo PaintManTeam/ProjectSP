@@ -38,7 +38,6 @@ public class InputMgr : MonoBehaviour
 
     public void Clear()
     {
-
     }
 
     #region Basic InputEvent

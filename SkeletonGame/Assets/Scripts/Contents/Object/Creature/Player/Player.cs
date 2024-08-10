@@ -213,8 +213,6 @@ public class Player : Creature
     protected override void MoveStateOperate()
     {
         base.MoveStateOperate();
-
-
     }
 
     private void MovementCheck()
